@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* {
+  font-family: 'Inter', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #6366F1 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient 8s linear infinite;
+}
+
+.glass {
+  background: rgba(21, 27, 43, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.btn-primary {
+  @apply px-6 py-3 bg-accent-primary hover:bg-accent-secondary text-white font-medium rounded-lg transition-all duration-200;
+}
+
+.btn-secondary {
+  @apply px-6 py-3 bg-bg-tertiary hover:bg-bg-secondary text-white font-medium rounded-lg transition-all duration-200 border border-gray-700;
+}

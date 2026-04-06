@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: inventory-pro-web
+    runtime: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://inventory-pro-api.onrender.com/api
