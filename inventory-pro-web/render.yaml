@@ -6,4 +6,4 @@ services:
     staticPublishPath: ./dist
     envVars:
       - key: VITE_API_URL
-        value: https://inventory-pro-api.onrender.com/api
+        value: https://inventory-pro-api-v2.onrender.com/api

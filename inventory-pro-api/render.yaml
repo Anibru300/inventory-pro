@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: inventory-pro-api
+    name: inventory-pro-api-v2
     runtime: docker
     dockerfilePath: ./Dockerfile
     plan: free
@@ -10,38 +10,14 @@ services:
       - key: APP_DEBUG
         value: false
       - key: APP_URL
-        value: https://inventory-pro-api.onrender.com
+        value: https://inventory-pro-api-v2.onrender.com
       - key: DB_CONNECTION
-        value: pgsql
-      - key: DB_HOST
-        fromDatabase:
-          name: inventory-pro-db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: inventory-pro-db
-          property: port
+        value: sqlite
       - key: DB_DATABASE
-        fromDatabase:
-          name: inventory-pro-db
-          property: database
-      - key: DB_USERNAME
-        fromDatabase:
-          name: inventory-pro-db
-          property: user
-      - key: DB_PASSWORD
-        fromDatabase:
-          name: inventory-pro-db
-          property: password
+        value: /var/www/html/database/database.sqlite
       - key: APP_KEY
         generateValue: true
       - key: CACHE_DRIVER
         value: file
       - key: SESSION_DRIVER
         value: file
-
-databases:
-  - name: inventory-pro-db
-    databaseName: inventory_pro
-    user: inventory_user
-    plan: free
