@@ -20,22 +20,23 @@ WORKDIR /var/www/html
 # Copy application
 COPY . .
 
-# Create SQLite database directory
-RUN mkdir -p database && touch database/database.sqlite && chmod 777 database/database.sqlite
+# Create directories and set permissions PRIMERO
+RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache database \
+    && chmod -R 777 storage bootstrap/cache database
 
-# Set environment for composer (evita errores de package:discover)
+# Create SQLite database
+RUN touch database/database.sqlite && chmod 777 database/database.sqlite
+
+# Set environment variables
 ENV APP_ENV=production
 ENV APP_KEY=base64:aca0d9abb108edcbe32e819ec2192e33
 ENV DB_CONNECTION=sqlite
 ENV DB_DATABASE=/var/www/html/database/database.sqlite
 
-# Install dependencies (sin scripts primero)
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+# Install dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Ahora correr scripts post-install manualmente
-RUN composer run-script post-autoload-dump
-
-# Set permissions
+# Set permissions again after composer
 RUN chmod -R 777 storage bootstrap/cache database
 
 # Run migrations
