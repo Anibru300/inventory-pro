@@ -3,6 +3,7 @@ services:
     name: inventory-pro-api
     runtime: docker
     dockerfilePath: ./Dockerfile
+    plan: free
     envVars:
       - key: APP_ENV
         value: production
