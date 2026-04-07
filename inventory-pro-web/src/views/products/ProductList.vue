@@ -1,15 +1,13 @@
 <template>
-  <div>
+  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
       <div>
-        <h1 class="text-2xl font-bold">Productos</h1>
-        <p class="text-text-secondary">Gestiona tu catálogo de productos</p>
+        <h1 class="text-3xl font-bold text-slate-800 mb-1">Productos</h1>
+        <p class="text-slate-500">Gestiona tu catálogo de productos</p>
       </div>
-      <router-link
-        to="/products/new"
-        class="btn-primary"
-      >
+      <router-link to="/products/new" 
+        class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 hover:shadow-xl hover:shadow-blue-600/30">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
@@ -18,28 +16,25 @@
     </div>
 
     <!-- Filters -->
-    <div class="card mb-6">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-6">
       <div class="flex flex-col md:flex-row gap-4">
         <div class="flex-1">
           <div class="relative">
-            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <input
-              v-model="filters.search"
-              @input="debouncedSearch"
-              type="text"
-              placeholder="Buscar productos..."
-              class="w-full pl-10 pr-4 py-2.5 bg-bg-tertiary border border-border-default rounded-lg focus:outline-none focus:border-accent-primary"
-            />
+            <input v-model="filters.search" @input="debouncedSearch" type="text" placeholder="Buscar productos..."
+              class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all" />
           </div>
         </div>
-        <div class="flex gap-4">
-          <select v-model="filters.category" @change="fetchProducts" class="bg-bg-tertiary border border-border-default rounded-lg px-4 py-2.5 focus:outline-none focus:border-accent-primary">
+        <div class="flex gap-3">
+          <select v-model="filters.category" @change="fetchProducts" 
+            class="px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 min-w-[180px]">
             <option value="">Todas las categorías</option>
             <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
           </select>
-          <select v-model="filters.stock_status" @change="fetchProducts" class="bg-bg-tertiary border border-border-default rounded-lg px-4 py-2.5 focus:outline-none focus:border-accent-primary">
+          <select v-model="filters.stock_status" @change="fetchProducts" 
+            class="px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 min-w-[160px]">
             <option value="">Estado de stock</option>
             <option value="in_stock">En stock</option>
             <option value="low_stock">Stock bajo</option>
@@ -50,79 +45,78 @@
     </div>
 
     <!-- Products Table -->
-    <div class="card overflow-hidden">
-      <div v-if="productsStore.loading" class="p-8 text-center">
-        <svg class="w-8 h-8 animate-spin mx-auto text-accent-primary" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div v-if="productsStore.loading" class="p-12 text-center">
+        <div class="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto"></div>
+        <p class="mt-4 text-slate-500">Cargando productos...</p>
       </div>
 
-      <div v-else-if="productsStore.products.length === 0" class="p-8 text-center text-text-secondary">
-        No se encontraron productos
+      <div v-else-if="productsStore.products.length === 0" class="p-12 text-center">
+        <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg>
+        </div>
+        <p class="text-slate-500 text-lg">No se encontraron productos</p>
+        <router-link to="/products/new" class="mt-4 inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium">
+          Crear primer producto
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </router-link>
       </div>
 
-      <table v-else class="data-table">
+      <table v-else class="w-full">
         <thead>
-          <tr>
-            <th>Producto</th>
-            <th>SKU</th>
-            <th>Categoría</th>
-            <th>Stock</th>
-            <th>Costo</th>
-            <th>Precio</th>
-            <th class="text-right">Acciones</th>
+          <tr class="border-b border-slate-100 bg-slate-50/50">
+            <th class="text-left py-4 px-6 text-sm font-semibold text-slate-700">Producto</th>
+            <th class="text-left py-4 px-6 text-sm font-semibold text-slate-700">SKU</th>
+            <th class="text-left py-4 px-6 text-sm font-semibold text-slate-700">Categoría</th>
+            <th class="text-left py-4 px-6 text-sm font-semibold text-slate-700">Stock</th>
+            <th class="text-left py-4 px-6 text-sm font-semibold text-slate-700">Precio</th>
+            <th class="text-right py-4 px-6 text-sm font-semibold text-slate-700">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="product in productsStore.products" :key="product.id" class="hover:bg-bg-tertiary/50">
-            <td>
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-bg-tertiary rounded-lg flex items-center justify-center">
-                  <img v-if="product.image" :src="product.image" class="w-full h-full object-cover rounded-lg" />
-                  <svg v-else class="w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <tr v-for="product in productsStore.products" :key="product.id" class="border-b border-slate-50 hover:bg-slate-50/80 transition-colors">
+            <td class="py-4 px-6">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center">
+                  <img v-if="product.image" :src="product.image" class="w-full h-full object-cover rounded-xl" />
+                  <svg v-else class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                 </div>
                 <div>
-                  <p class="font-medium">{{ product.name }}</p>
-                  <p v-if="product.description" class="text-xs text-text-tertiary truncate max-w-[200px]">{{ product.description }}</p>
+                  <p class="font-semibold text-slate-800">{{ product.name }}</p>
+                  <p v-if="product.description" class="text-xs text-slate-500 truncate max-w-[200px]">{{ product.description }}</p>
                 </div>
               </div>
             </td>
-            <td class="font-mono text-sm">{{ product.sku }}</td>
-            <td>
-              <span class="px-2 py-1 bg-bg-tertiary rounded-full text-xs">{{ product.category?.name || '-' }}</span>
+            <td class="py-4 px-6 font-mono text-sm text-slate-600">{{ product.sku || '-' }}</td>
+            <td class="py-4 px-6">
+              <span class="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-medium">{{ product.category?.name || '-' }}</span>
             </td>
-            <td>
+            <td class="py-4 px-6">
               <div class="flex items-center gap-2">
-                <span :class="[
-                  'w-2 h-2 rounded-full',
-                  product.stock_status === 'in_stock' ? 'bg-success' :
-                  product.stock_status === 'low_stock' ? 'bg-warning' : 'bg-danger'
-                ]"></span>
-                <span>{{ product.stock_quantity || 0 }}</span>
+                <span :class="['w-2.5 h-2.5 rounded-full', 
+                  product.stock_status === 'in_stock' ? 'bg-emerald-500' : 
+                  product.stock_status === 'low_stock' ? 'bg-amber-500' : 'bg-rose-500']">
+                </span>
+                <span class="font-medium text-slate-700">{{ product.stock_quantity || 0 }}</span>
               </div>
             </td>
-            <td class="text-text-secondary">${{ product.cost }}</td>
-            <td class="font-medium">${{ product.price }}</td>
-            <td class="text-right">
+            <td class="py-4 px-6 font-semibold text-slate-800">${{ product.price }}</td>
+            <td class="py-4 px-6 text-right">
               <div class="flex items-center justify-end gap-2">
-                <router-link
-                  :to="`/products/${product.id}`"
-                  class="p-2 text-text-secondary hover:text-accent-primary rounded-lg hover:bg-bg-tertiary transition-colors"
-                  title="Ver detalle"
-                >
+                <router-link :to="`/products/${product.id}/edit`" 
+                  class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all" title="Editar">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                 </router-link>
-                <button
-                  @click="deleteProduct(product.id)"
-                  class="p-2 text-text-secondary hover:text-danger rounded-lg hover:bg-danger/10 transition-colors"
-                  title="Eliminar"
-                >
+                <button @click="deleteProduct(product.id)" 
+                  class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all" title="Eliminar">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
@@ -134,23 +128,19 @@
       </table>
 
       <!-- Pagination -->
-      <div v-if="productsStore.pagination.last_page > 1" class="flex items-center justify-between px-4 py-3 border-t border-border-default">
-        <p class="text-sm text-text-secondary">
-          Mostrando {{ productsStore.products.length }} de {{ productsStore.pagination.total }} productos
+      <div v-if="productsStore.pagination.last_page > 1" class="flex items-center justify-between px-6 py-4 border-t border-slate-100">
+        <p class="text-sm text-slate-500">
+          Mostrando <span class="font-medium">{{ productsStore.products.length }}</span> de <span class="font-medium">{{ productsStore.pagination.total }}</span> productos
         </p>
         <div class="flex gap-2">
-          <button
-            :disabled="productsStore.pagination.current_page === 1"
+          <button :disabled="productsStore.pagination.current_page === 1" 
             @click="changePage(productsStore.pagination.current_page - 1)"
-            class="px-3 py-1.5 text-sm rounded-lg bg-bg-tertiary hover:bg-bg-elevated disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
+            class="px-4 py-2 text-sm font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
             Anterior
           </button>
-          <button
-            :disabled="productsStore.pagination.current_page === productsStore.pagination.last_page"
+          <button :disabled="productsStore.pagination.current_page === productsStore.pagination.last_page" 
             @click="changePage(productsStore.pagination.current_page + 1)"
-            class="px-3 py-1.5 text-sm rounded-lg bg-bg-tertiary hover:bg-bg-elevated disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
+            class="px-4 py-2 text-sm font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
             Siguiente
           </button>
         </div>
@@ -203,7 +193,6 @@ async function deleteProduct(id) {
 
 onMounted(async () => {
   await fetchProducts()
-  // Fetch categories
   try {
     const response = await apiClient.get('/categories')
     categories.value = response.data
