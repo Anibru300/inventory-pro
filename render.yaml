@@ -1,0 +1,63 @@
+services:
+  # Backend API
+  - type: web
+    name: inventory-pro-api-v2
+    runtime: docker
+    plan: free
+    region: oregon
+    branch: main
+    rootDir: 10_CODIGO_FUENTE/inventory-pro-api
+    dockerfilePath: ./Dockerfile.render
+    envVars:
+      - key: PHP_VERSION
+        value: 8.3
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        generateValue: true
+      - key: DB_CONNECTION
+        value: sqlite
+      - key: DB_DATABASE
+        value: /var/www/html/database/database.sqlite
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: CACHE_DRIVER
+        value: file
+      - key: SESSION_DRIVER
+        value: file
+      - key: QUEUE_DRIVER
+        value: sync
+    disk:
+      name: sqlite-data
+      mountPath: /var/www/html/database
+      sizeGB: 1
+
+  # Frontend Web
+  - type: web
+    name: inventory-pro-web
+    runtime: static
+    plan: free
+    region: oregon
+    branch: main
+    rootDir: 10_CODIGO_FUENTE/inventory-pro-web
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://inventory-pro-api-v2.onrender.com/api
+
+  # Landing Page
+  - type: web
+    name: inventory-pro-landing
+    runtime: static
+    plan: free
+    region: oregon
+    branch: main
+    rootDir: 10_CODIGO_FUENTE/inventory-pro-landing
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: NODE_VERSION
+        value: 20

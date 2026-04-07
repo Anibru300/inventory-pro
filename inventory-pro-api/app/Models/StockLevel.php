@@ -25,6 +25,7 @@ class StockLevel extends Model
     protected $casts = [
         'quantity' => 'decimal:4',
         'reserved_quantity' => 'decimal:4',
+        'in_transit_quantity' => 'decimal:4',
         'available_quantity' => 'decimal:4',
         'reorder_point' => 'decimal:4',
         'max_stock' => 'decimal:4',
@@ -44,7 +45,14 @@ class StockLevel extends Model
     // Accessors
     public function getAvailableQuantityAttribute()
     {
-        return $this->quantity - $this->reserved_quantity;
+        // Disponible = Total - Reservado - En Tránsito
+        return $this->quantity - $this->reserved_quantity - $this->in_transit_quantity;
+    }
+
+    public function getProjectedQuantityAttribute()
+    {
+        // Proyectado = Total + En Tránsito (lo que tendremos cuando lleguen las transferencias)
+        return $this->quantity + $this->in_transit_quantity;
     }
 
     public function getStockStatusAttribute()

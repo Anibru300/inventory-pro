@@ -3,9 +3,14 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\InventoryEventController;
+use App\Http\Controllers\Api\KardexController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ProductLotController;
 use App\Http\Controllers\Api\StockMovementController;
 use App\Http\Controllers\Api\WarehouseController;
+use App\Http\Controllers\Api\WarehouseTransferController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,6 +28,47 @@ Route::get('/health', function () {
     ]);
 });
 
+// TEMPORAL: Endpoint para ejecutar migraciones (solo desarrollo)
+// BORRAR DESPUÉS DE USAR EN PRODUCCIÓN
+Route::get('/run-migrations', function () {
+    try {
+        // Verificar que sea una petición segura (opcional: agregar token)
+        // if (request()->header('X-Migration-Token') !== env('MIGRATION_TOKEN')) {
+        //     return response()->json(['error' => 'Unauthorized'], 403);
+        // }
+        
+        Artisan::call('migrate', ['--force' => true]);
+        $output = Artisan::output();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Migraciones ejecutadas',
+            'output' => $output,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+});
+
+// TEMPORAL: Ver estado de migraciones
+Route::get('/migration-status', function () {
+    try {
+        Artisan::call('migrate:status');
+        $output = Artisan::output();
+        
+        return response()->json([
+            'output' => nl2br($output),
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+});
+
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -37,6 +83,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
+    Route::get('/dashboard/advanced-stats', [DashboardController::class, 'advancedStats']);
     
     // Products
     Route::apiResource('products', ProductController::class);
@@ -70,6 +117,32 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/receipts/{receipt}/preview', [\App\Http\Controllers\Api\ReceiptController::class, 'previewPdf']);
     Route::patch('/receipts/{receipt}/recipient', [\App\Http\Controllers\Api\ReceiptController::class, 'updateRecipient']);
     Route::get('/receipts/statistics', [\App\Http\Controllers\Api\ReceiptController::class, 'statistics']);
+    
+    // Product Lots
+    Route::apiResource('product-lots', ProductLotController::class);
+    Route::get('/product-lots/available/list', [ProductLotController::class, 'getAvailableLots']);
+    Route::get('/product-lots/expiring/list', [ProductLotController::class, 'getExpiringLots']);
+    Route::get('/product-lots/stats/overview', [ProductLotController::class, 'getLotStats']);
+    
+    // Warehouse Transfers
+    Route::apiResource('warehouse-transfers', WarehouseTransferController::class);
+    Route::post('/warehouse-transfers/{transfer}/send', [WarehouseTransferController::class, 'send']);
+    Route::post('/warehouse-transfers/{transfer}/receive', [WarehouseTransferController::class, 'receive']);
+    Route::post('/warehouse-transfers/{transfer}/cancel', [WarehouseTransferController::class, 'cancel']);
+    Route::get('/warehouse-transfers/stats/overview', [WarehouseTransferController::class, 'stats']);
+    
+    // Kardex & Reports
+    Route::get('/kardex', [KardexController::class, 'getKardex']);
+    Route::get('/kardex/valuation', [KardexController::class, 'getValuation']);
+    Route::get('/kardex/movements-by-type', [KardexController::class, 'getMovementsByType']);
+    Route::get('/kardex/inventory-turnover', [KardexController::class, 'getInventoryTurnover']);
+    
+    // Inventory Events
+    Route::apiResource('inventory-events', InventoryEventController::class)->only(['index', 'show', 'destroy']);
+    Route::get('/inventory-events/unread/list', [InventoryEventController::class, 'getUnread']);
+    Route::get('/inventory-events/stats/overview', [InventoryEventController::class, 'getStats']);
+    Route::post('/inventory-events/{event}/process', [InventoryEventController::class, 'markAsProcessed']);
+    Route::post('/inventory-events/{event}/notify', [InventoryEventController::class, 'markAsNotified']);
     
 });
 

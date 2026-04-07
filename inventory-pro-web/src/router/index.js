@@ -56,6 +56,33 @@ const routes = [
     name: 'Warehouses',
     component: () => import('../views/warehouses/WarehouseList.vue'),
   },
+  // Transfers
+  {
+    path: '/transfers',
+    name: 'Transfers',
+    component: () => import('../views/transfers/TransferList.vue'),
+  },
+  {
+    path: '/transfers/new',
+    name: 'TransferNew',
+    component: () => import('../views/transfers/TransferForm.vue'),
+  },
+  {
+    path: '/transfers/:id',
+    name: 'TransferDetail',
+    component: () => import('../views/transfers/TransferDetail.vue'),
+  },
+  // Product Lots
+  {
+    path: '/lots',
+    name: 'Lots',
+    component: () => import('../views/lots/LotList.vue'),
+  },
+  {
+    path: '/lots/new',
+    name: 'LotNew',
+    component: () => import('../views/lots/LotForm.vue'),
+  },
   // Categories
   {
     path: '/categories',

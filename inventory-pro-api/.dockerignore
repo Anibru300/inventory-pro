@@ -1,0 +1,52 @@
+# Git
+.git
+.gitignore
+
+# Composer
+composer.lock
+vendor/
+
+# Environment
+.env
+.env.backup
+.env.production
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Testing
+phpunit.xml
+phpunit.xml.dist
+tests/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Storage (will be created in container)
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+bootstrap/cache/*
+!storage/framework/cache/.gitignore
+!storage/framework/sessions/.gitignore
+!storage/framework/views/.gitignore
+!storage/logs/.gitignore
+!bootstrap/cache/.gitignore
+
+# Database (will be created in container)
+database/*.sqlite
+database/*.sqlite-journal
+
+# Documentation
+README.md
+*.md
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
