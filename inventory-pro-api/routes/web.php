@@ -2,12 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 
-// Simple text response for root
+// Health check - raíz
 Route::get('/', function () {
-    return 'Inventory Pro API - OK';
+    return 'Inventory Pro API v3 - OK';
 });
 
-// Health check endpoint (web)
+// Health check endpoint
 Route::get('/health', function () {
     return response()->json([
         'status' => 'ok',
@@ -16,7 +16,7 @@ Route::get('/health', function () {
     ]);
 });
 
-// Ruta temporal para ver logs
+// Ruta para ver logs
 Route::get('/logs', function () {
     $logFile = storage_path('logs/laravel.log');
     if (!file_exists($logFile)) {
