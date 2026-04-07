@@ -1,1 +1,4 @@
+# Render Static Site SPA Configuration
+# Redirect all routes to index.html for Vue Router hash mode
+
 /*    /index.html   200

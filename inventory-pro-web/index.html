@@ -16,10 +16,24 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Lato:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <script>
-      // Redirección inmediata si la URL contiene /home
-      if (window.location.pathname.indexOf('/home') === 0) {
-        window.location.replace(window.location.origin + '/#' + window.location.hash);
-      }
+      // SPA Routing fix for Render - redirect all routes to hash mode
+      (function() {
+        var path = window.location.pathname;
+        var hash = window.location.hash;
+        
+        // If not already on hash route and not a file
+        if (path !== '/' && !hash.startsWith('#/')) {
+          // Check if it's a known route
+          var knownRoutes = ['/login', '/register', '/dashboard', '/products', '/movements', '/warehouses', '/transfers', '/lots', '/categories', '/reports', '/receipts', '/import', '/settings'];
+          var isKnownRoute = knownRoutes.some(function(route) {
+            return path.startsWith(route);
+          });
+          
+          if (isKnownRoute || path === '/home') {
+            window.location.replace(window.location.origin + '/#' + path + window.location.search);
+          }
+        }
+      })();
     </script>
   </head>
   <body>
