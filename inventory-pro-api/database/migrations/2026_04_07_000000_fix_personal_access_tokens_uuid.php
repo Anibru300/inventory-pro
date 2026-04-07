@@ -8,9 +8,13 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // Eliminar tabla existente
+        Schema::dropIfExists('personal_access_tokens');
+        
+        // Recrear con soporte para UUIDs
         Schema::create('personal_access_tokens', function (Blueprint $table) {
             $table->id();
-            $table->uuidMorphs('tokenable'); // Cambiado a uuidMorphs para soportar UUIDs
+            $table->uuidMorphs('tokenable'); // Usa UUID en lugar de bigint
             $table->string('name');
             $table->string('token', 64)->unique();
             $table->text('abilities')->nullable();
@@ -23,5 +27,16 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('personal_access_tokens');
+        
+        Schema::create('personal_access_tokens', function (Blueprint $table) {
+            $table->id();
+            $table->morphs('tokenable');
+            $table->string('name');
+            $table->string('token', 64)->unique();
+            $table->text('abilities')->nullable();
+            $table->timestamp('last_used_at')->nullable();
+            $table->timestamp('expires_at')->nullable();
+            $table->timestamps();
+        });
     }
 };
