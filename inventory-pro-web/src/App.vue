@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="min-h-screen bg-bg-primary text-text-primary antialiased selection:bg-accent-primary selection:text-white">
+  <div id="app" class="min-h-screen bg-cj-navy text-white antialiased selection:bg-cj-electric selection:text-white">
     <RouterView />
   </div>
 </template>

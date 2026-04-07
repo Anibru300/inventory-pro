@@ -1,26 +1,28 @@
 <template>
-  <div class="min-h-screen bg-bg-primary flex items-center justify-center p-4">
+  <div class="min-h-screen bg-cj-navy flex items-center justify-center p-4">
     <div class="w-full max-w-md">
       <!-- Logo -->
-      <div class="text-center mb-8">
-        <div class="w-16 h-16 bg-gradient-to-br from-accent-primary to-accent-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-glow">
-          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-          </svg>
+      <div class="text-center mb-6">
+        <div class="flex items-center justify-center mb-4">
+          <img 
+            src="/logo-lobo.png" 
+            alt="CJ Consultoría" 
+            class="h-20 w-auto logo-glow"
+          />
         </div>
-        <h1 class="text-2xl font-bold gradient-text">Inventory Pro</h1>
-        <p class="text-text-secondary mt-1">Gestión inteligente de inventarios</p>
+        <h1 class="text-2xl font-bold gradient-text font-heading">CJ Consultoría</h1>
+        <p class="text-cj-silver font-tagline mt-1 italic">"Tu socio estratégico en gestión empresarial"</p>
       </div>
 
       <!-- Login Form -->
-      <div class="card">
-        <h2 class="text-xl font-semibold mb-2 text-text-primary">Bienvenido de vuelta</h2>
-        <p class="text-text-secondary text-sm mb-6">Inicia sesión para acceder a tu cuenta</p>
+      <div class="card border-cj-silver/20">
+        <h2 class="text-xl font-semibold mb-2 text-white font-heading">Bienvenido</h2>
+        <p class="text-cj-silver text-sm mb-6">Accede a tu sistema de gestión de inventarios</p>
         
         <form @submit.prevent="handleLogin" class="space-y-4">
           <!-- Email -->
           <div>
-            <label class="block text-sm font-medium mb-2 text-text-secondary">
+            <label class="block text-sm font-medium mb-2 text-cj-silver font-heading">
               Correo electrónico <span class="text-danger">*</span>
             </label>
             <input
@@ -34,7 +36,7 @@
 
           <!-- Contraseña -->
           <div>
-            <label class="block text-sm font-medium mb-2 text-text-secondary">
+            <label class="block text-sm font-medium mb-2 text-cj-silver font-heading">
               Contraseña <span class="text-danger">*</span>
             </label>
             <div class="relative">
@@ -48,7 +50,7 @@
               <button
                 type="button"
                 @click="showPassword = !showPassword"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-secondary transition-colors"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-cj-gray hover:text-cj-silver transition-colors"
               >
                 <svg v-if="showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
@@ -67,11 +69,11 @@
               <input 
                 v-model="form.remember" 
                 type="checkbox" 
-                class="rounded border-border-default bg-bg-secondary text-accent-primary focus:ring-accent-primary focus:ring-offset-bg-primary" 
+                class="rounded border-cj-navy-light bg-cj-navy text-cj-electric focus:ring-cj-electric focus:ring-offset-cj-navy" 
               />
-              <span class="text-text-secondary group-hover:text-text-primary transition-colors">Recordarme</span>
+              <span class="text-cj-gray group-hover:text-cj-silver transition-colors">Recordarme</span>
             </label>
-            <a href="#" class="text-accent-primary hover:text-accent-secondary transition-colors text-sm">
+            <a href="#" class="text-cj-electric hover:text-cj-electric-light transition-colors text-sm font-heading">
               ¿Olvidaste tu contraseña?
             </a>
           </div>
@@ -88,7 +90,7 @@
           <button
             type="submit"
             :disabled="authStore.loading"
-            class="w-full bg-accent-primary hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-white font-medium py-3 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-soft hover:shadow-glow hover:-translate-y-0.5"
+            class="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg v-if="authStore.loading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -101,10 +103,10 @@
         <!-- Divider -->
         <div class="relative my-6">
           <div class="absolute inset-0 flex items-center">
-            <div class="w-full border-t border-border-default"></div>
+            <div class="w-full border-t border-cj-navy-light"></div>
           </div>
           <div class="relative flex justify-center text-sm">
-            <span class="px-2 bg-bg-secondary text-text-tertiary">¿Eres nuevo?</span>
+            <span class="px-2 bg-cj-navy-light text-cj-gray">¿Eres nuevo?</span>
           </div>
         </div>
 
@@ -113,14 +115,22 @@
           to="/register" 
           class="w-full btn-secondary block text-center"
         >
-          Crear cuenta gratis
+          Crear cuenta nueva
         </router-link>
       </div>
 
       <!-- Footer -->
-      <p class="mt-8 text-center text-xs text-text-tertiary">
-        © 2026 Inventory Pro. Todos los derechos reservados.
-      </p>
+      <div class="mt-8 text-center">
+        <div class="flex items-center justify-center gap-4 mb-4">
+          <img src="/logo-cj.png" alt="CJ" class="h-8 w-auto opacity-60" />
+        </div>
+        <p class="text-xs text-cj-gray">
+          © 2026 CJ Consultoría. Todos los derechos reservados.
+        </p>
+        <p class="text-xs text-cj-gray-dark mt-1 font-tagline italic">
+          "De la improvisación a la excelencia operativa"
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -141,7 +151,6 @@ const form = reactive({
 })
 
 async function handleLogin() {
-  // Limpiar errores previos
   authStore.clearError()
 
   try {
@@ -150,11 +159,9 @@ async function handleLogin() {
       password: form.password,
     })
     
-    // Redirigir al dashboard
-    router.push('/')
+    router.push('/dashboard')
   } catch (err) {
     console.error('Login error:', err)
-    // El error ya se maneja en el store
   }
 }
 </script>

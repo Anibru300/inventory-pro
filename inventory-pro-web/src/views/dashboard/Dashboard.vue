@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="mb-8">
       <h1 class="text-2xl font-bold">Dashboard</h1>
-      <p class="text-text-secondary">Resumen de tu inventario</p>
+      <p class="text-cj-silver">Resumen de tu inventario</p>
     </div>
 
     <!-- Stats Grid -->
@@ -11,11 +11,11 @@
       <div class="card p-6">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-text-secondary text-sm">Productos Totales</p>
+            <p class="text-cj-gray text-sm">Productos Totales</p>
             <p class="text-2xl font-bold mt-1">{{ stats.totalProducts }}</p>
           </div>
-          <div class="w-12 h-12 bg-accent-primary/10 rounded-xl flex items-center justify-center">
-            <svg class="w-6 h-6 text-accent-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="w-12 h-12 bg-cj-electric/10 rounded-xl flex items-center justify-center">
+            <svg class="w-6 h-6 text-cj-electric" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
             </svg>
           </div>
@@ -25,7 +25,7 @@
       <div class="card p-6">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-text-secondary text-sm">Valor Inventario</p>
+            <p class="text-cj-gray text-sm">Valor Inventario</p>
             <p class="text-2xl font-bold mt-1">${{ formatNumber(stats.totalValue) }}</p>
           </div>
           <div class="w-12 h-12 bg-success/10 rounded-xl flex items-center justify-center">
@@ -39,7 +39,7 @@
       <div class="card p-6">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-text-secondary text-sm">Stock Bajo</p>
+            <p class="text-cj-gray text-sm">Stock Bajo</p>
             <p class="text-2xl font-bold mt-1 text-warning">{{ stats.lowStock }}</p>
           </div>
           <div class="w-12 h-12 bg-warning/10 rounded-xl flex items-center justify-center">
@@ -53,7 +53,7 @@
       <div class="card p-6">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-text-secondary text-sm">Sin Stock</p>
+            <p class="text-cj-gray text-sm">Sin Stock</p>
             <p class="text-2xl font-bold mt-1 text-danger">{{ stats.outOfStock }}</p>
           </div>
           <div class="w-12 h-12 bg-danger/10 rounded-xl flex items-center justify-center">
@@ -71,7 +71,7 @@
       <div class="lg:col-span-2 card">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-lg font-semibold">Movimientos Recientes</h2>
-          <router-link to="/inventory/movements" class="text-accent-primary hover:text-accent-secondary text-sm">
+          <router-link to="/inventory/movements" class="text-cj-electric hover:text-cj-electric-light text-sm">
             Ver todos →
           </router-link>
         </div>
@@ -116,10 +116,10 @@
           <div
             v-for="product in lowStockProducts.slice(0, 5)"
             :key="product.id"
-            class="flex items-center gap-3 p-3 bg-bg-tertiary rounded-lg"
+            class="flex items-center gap-3 p-3 bg-cj-navy-light rounded-lg"
           >
-            <div class="w-10 h-10 bg-bg-elevated rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-10 h-10 bg-cj-navy rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-cj-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
               </svg>
             </div>
@@ -133,7 +133,7 @@
         </div>
         <router-link
           to="/products"
-          class="block w-full mt-4 py-2 text-center text-accent-primary hover:text-accent-secondary text-sm border border-accent-primary/30 rounded-lg hover:bg-accent-primary/5 transition-colors"
+          class="block w-full mt-4 py-2 text-center text-cj-electric hover:text-cj-electric-light text-sm border border-accent-primary/30 rounded-lg hover:bg-accent-primary/5 transition-colors"
         >
           Gestionar inventario
         </router-link>

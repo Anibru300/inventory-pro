@@ -8,16 +8,33 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Background colors - tonos más suaves
-        'bg-primary': '#0F172A',
-        'bg-secondary': '#1E293B',
-        'bg-tertiary': '#334155',
-        'bg-elevated': '#475569',
+        // CJ Consultoria - Paleta Corporativa
+        'cj-navy': '#0B1F3A',
+        'cj-navy-light': '#152B4D',
+        'cj-navy-dark': '#061428',
         
-        // Accent colors - Azul corporativo profesional
-        'accent-primary': '#3B82F6',
-        'accent-secondary': '#60A5FA',
-        'accent-hover': '#2563EB',
+        'cj-silver': '#C0C0C0',
+        'cj-silver-light': '#E8E8E8',
+        'cj-silver-dark': '#8A8A8A',
+        
+        'cj-electric': '#2E7DE8',
+        'cj-electric-light': '#5B9EF0',
+        'cj-electric-dark': '#1A5FC0',
+        
+        'cj-gray': '#6B7280',
+        'cj-gray-light': '#9CA3AF',
+        'cj-gray-dark': '#4B5563',
+        
+        // Background colors
+        'bg-primary': '#0B1F3A',
+        'bg-secondary': '#152B4D',
+        'bg-tertiary': '#1E3A5F',
+        'bg-elevated': '#2A4A73',
+        
+        // Accent colors
+        'accent-primary': '#2E7DE8',
+        'accent-secondary': '#5B9EF0',
+        'accent-hover': '#1A5FC0',
         
         // Semantic colors
         'success': '#10B981',
@@ -26,16 +43,18 @@ export default {
         'info': '#06B6D4',
         
         // Text colors
-        'text-primary': '#F1F5F9',
-        'text-secondary': '#CBD5E1',
-        'text-tertiary': '#94A3B8',
+        'text-primary': '#F8FAFC',
+        'text-secondary': '#C0C0C0',
+        'text-tertiary': '#6B7280',
         
         // Border colors
-        'border-default': '#334155',
-        'border-hover': '#475569',
+        'border-default': '#2A4A73',
+        'border-hover': '#3B5998',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Open Sans', 'system-ui', 'sans-serif'],
+        heading: ['Montserrat', 'system-ui', 'sans-serif'],
+        display: ['Playfair Display', 'serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-in-out',
@@ -54,7 +73,8 @@ export default {
       },
       boxShadow: {
         'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.3)',
-        'glow': '0 0 20px rgba(59, 130, 246, 0.3)',
+        'glow': '0 0 20px rgba(46, 125, 232, 0.3)',
+        'silver': '0 0 30px rgba(192, 192, 192, 0.15)',
       },
     },
   },

@@ -1,11 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 * {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
+}
+
+/* Headings use Montserrat */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat', system-ui, sans-serif;
+}
+
+/* Taglines use Playfair Display Italic */
+.font-tagline {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
 }
 
 /* Smooth scrolling */
@@ -13,23 +24,23 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - CJ colors */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1E293B;
+  background: #0B1F3A;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #475569;
+  background: #2A4A73;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748B;
+  background: #3B5998;
 }
 
 /* Animations */
@@ -43,31 +54,39 @@ html {
   opacity: 0;
 }
 
-/* Glass effect - más sutil */
+/* Glass effect - CJ style */
 .glass {
-  background: rgba(30, 41, 59, 0.8);
+  background: rgba(21, 43, 77, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(192, 192, 192, 0.1);
 }
 
-/* Gradient text - azul corporativo */
+/* Gradient text - CJ Electric Blue */
 .gradient-text {
-  background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #2563EB 100%);
+  background: linear-gradient(135deg, #5B9EF0 0%, #2E7DE8 50%, #1A5FC0 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Input styles - más elegantes v2 */
+/* Silver gradient text */
+.gradient-silver {
+  background: linear-gradient(135deg, #E8E8E8 0%, #C0C0C0 50%, #8A8A8A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Input styles - CJ style */
 input, textarea, select {
   @apply bg-bg-secondary border border-border-default rounded-lg px-4 py-3 text-text-primary placeholder-text-tertiary transition-all duration-200;
   font-size: 16px;
 }
 
 input:focus, textarea:focus, select:focus {
-  @apply outline-none border-accent-primary;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  @apply outline-none border-cj-electric;
+  box-shadow: 0 0 0 3px rgba(46, 125, 232, 0.15);
 }
 
 input:hover, textarea:hover, select:hover {
@@ -77,10 +96,11 @@ input:hover, textarea:hover, select:hover {
 /* Button base */
 .btn {
   @apply px-5 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2;
+  font-family: 'Montserrat', system-ui, sans-serif;
 }
 
 .btn-primary {
-  @apply btn bg-accent-primary hover:bg-accent-hover text-white shadow-soft;
+  @apply btn bg-cj-electric hover:bg-cj-electric-dark text-white shadow-soft;
 }
 
 .btn-primary:hover {
@@ -91,11 +111,15 @@ input:hover, textarea:hover, select:hover {
   @apply btn bg-bg-secondary hover:bg-bg-tertiary text-text-primary border border-border-default;
 }
 
+.btn-silver {
+  @apply btn bg-gradient-to-r from-cj-silver-dark to-cj-silver text-cj-navy hover:shadow-silver;
+}
+
 .btn-danger {
   @apply btn bg-danger/10 hover:bg-danger/20 text-danger border border-danger/30;
 }
 
-/* Card - más elegante */
+/* Card - CJ style */
 .card {
   @apply bg-bg-secondary border border-border-default rounded-xl p-6 shadow-soft;
 }
@@ -115,6 +139,7 @@ input:hover, textarea:hover, select:hover {
 
 .data-table th {
   @apply px-4 py-3 text-sm font-semibold text-text-secondary border-b border-border-default bg-bg-secondary;
+  font-family: 'Montserrat', system-ui, sans-serif;
 }
 
 .data-table td {
@@ -136,7 +161,12 @@ input:hover, textarea:hover, select:hover {
   animation: spin 2s linear infinite;
 }
 
-/* Focus visible para accesibilidad */
+/* Focus visible for accessibility */
 *:focus-visible {
-  @apply outline-none ring-2 ring-accent-primary ring-offset-2 ring-offset-bg-primary;
+  @apply outline-none ring-2 ring-cj-electric ring-offset-2 ring-offset-bg-primary;
+}
+
+/* Logo glow effect */
+.logo-glow {
+  filter: drop-shadow(0 0 10px rgba(46, 125, 232, 0.5));
 }

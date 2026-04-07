@@ -1,20 +1,20 @@
 <template>
-  <div class="min-h-screen bg-bg-primary flex">
+  <div class="min-h-screen bg-cj-navy flex">
     <!-- Sidebar -->
     <aside 
       :class="[
-        'fixed lg:static inset-y-0 left-0 z-50 w-64 bg-bg-secondary border-r border-border-default transition-transform duration-300',
+        'fixed lg:static inset-y-0 left-0 z-50 w-64 bg-cj-navy-light border-r border-cj-navy-light transition-transform duration-300',
         sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       ]"
     >
       <!-- Logo -->
-      <div class="h-16 flex items-center px-6 border-b border-border-default">
-        <div class="w-8 h-8 bg-gradient-to-br from-accent-primary to-accent-secondary rounded-lg flex items-center justify-center mr-3">
-          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-          </svg>
-        </div>
-        <span class="font-bold text-lg">Inventory Pro</span>
+      <div class="h-16 flex items-center px-6 border-b border-cj-navy-light">
+        <img 
+          src="/logo-cj.png" 
+          alt="CJ" 
+          class="h-8 w-auto mr-3"
+        />
+        <span class="font-bold text-lg font-heading">CJ Consultoría</span>
       </div>
 
       <!-- Navigation -->
@@ -24,10 +24,10 @@
           :key="item.name"
           :to="item.to"
           :class="[
-            'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
+            'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors font-heading',
             $route.path === item.to
-              ? 'bg-accent-primary/10 text-accent-primary'
-              : 'text-text-secondary hover:text-text-primary hover:bg-bg-tertiary'
+              ? 'bg-cj-electric/10 text-cj-electric'
+              : 'text-cj-gray hover:text-white hover:bg-cj-navy'
           ]"
         >
           <component :is="item.icon" class="w-5 h-5" />
@@ -36,18 +36,18 @@
       </nav>
 
       <!-- Bottom section -->
-      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-border-default">
+      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-cj-navy-light">
         <div class="flex items-center gap-3 px-4 py-2">
-          <div class="w-8 h-8 bg-accent-primary rounded-full flex items-center justify-center text-sm font-medium">
+          <div class="w-8 h-8 bg-cj-electric rounded-full flex items-center justify-center text-sm font-medium font-heading">
             {{ userInitials }}
           </div>
           <div class="flex-1 min-w-0">
-            <p class="text-sm font-medium truncate">{{ authStore.user?.name }}</p>
-            <p class="text-xs text-text-tertiary truncate">{{ authStore.user?.email }}</p>
+            <p class="text-sm font-medium truncate font-heading">{{ authStore.user?.name }}</p>
+            <p class="text-xs text-cj-gray truncate">{{ authStore.user?.email }}</p>
           </div>
           <button
             @click="handleLogout"
-            class="p-2 text-text-tertiary hover:text-danger rounded-lg hover:bg-danger/10 transition-colors"
+            class="p-2 text-cj-gray hover:text-danger rounded-lg hover:bg-danger/10 transition-colors"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -67,10 +67,10 @@
     <!-- Main content -->
     <div class="flex-1 flex flex-col min-w-0">
       <!-- Header -->
-      <header class="h-16 bg-bg-secondary border-b border-border-default flex items-center justify-between px-4 lg:px-8">
+      <header class="h-16 bg-cj-navy-light border-b border-cj-navy-light flex items-center justify-between px-4 lg:px-8">
         <button
           @click="sidebarOpen = !sidebarOpen"
-          class="lg:hidden p-2 text-text-secondary hover:text-text-primary"
+          class="lg:hidden p-2 text-cj-gray hover:text-white"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -79,16 +79,16 @@
 
         <!-- Tenant info -->
         <div class="hidden sm:flex items-center gap-2 text-sm">
-          <span class="text-text-secondary">Empresa:</span>
-          <span class="font-medium">{{ authStore.tenant?.name }}</span>
-          <span class="px-2 py-0.5 bg-accent-primary/10 text-accent-primary text-xs rounded-full">
+          <span class="text-cj-gray">Empresa:</span>
+          <span class="font-medium font-heading">{{ authStore.tenant?.name }}</span>
+          <span class="px-2 py-0.5 bg-cj-electric/10 text-cj-electric text-xs rounded-full font-heading">
             {{ authStore.tenant?.plan }}
           </span>
         </div>
 
         <!-- Actions -->
         <div class="flex items-center gap-2">
-          <button class="p-2 text-text-secondary hover:text-text-primary rounded-lg hover:bg-bg-tertiary transition-colors relative">
+          <button class="p-2 text-cj-gray hover:text-white rounded-lg hover:bg-cj-navy transition-colors relative">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
             </svg>
@@ -101,6 +101,14 @@
       <main class="flex-1 overflow-auto p-4 lg:p-8">
         <RouterView />
       </main>
+      
+      <!-- Footer -->
+      <footer class="bg-cj-navy-light border-t border-cj-navy-light px-4 py-3">
+        <div class="flex items-center justify-between text-xs text-cj-gray">
+          <span class="font-tagline italic">"Transformamos procesos en resultados sostenibles"</span>
+          <span>© 2026 CJ Consultoría</span>
+        </div>
+      </footer>
     </div>
   </div>
 </template>
@@ -149,12 +157,8 @@ const CogIcon = {
 }
 
 const navigation = [
-  { name: 'Dashboard', to: '/', icon: HomeIcon },
+  { name: 'Dashboard', to: '/dashboard', icon: HomeIcon },
   { name: 'Productos', to: '/products', icon: PackageIcon },
-  { name: 'Movimientos', to: '/inventory/movements', icon: ArrowsRightLeftIcon },
-  { name: 'Almacenes', to: '/warehouses', icon: BuildingStorefrontIcon },
-  { name: 'Reportes', to: '/reports', icon: ChartPieIcon },
-  { name: 'Configuración', to: '/settings', icon: CogIcon },
 ]
 
 const userInitials = computed(() => {
