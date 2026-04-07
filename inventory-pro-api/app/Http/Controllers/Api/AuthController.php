@@ -15,51 +15,81 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $validated = $request->validate([
-            'company_name' => 'required|string|max:255',
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+        try {
+            \Log::info('Register attempt started', ['email' => $request->email]);
+            
+            $validated = $request->validate([
+                'company_name' => 'required|string|max:255',
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|string|min:8|confirmed',
+            ]);
 
-        $nameParts = explode(' ', $validated['name'], 2);
-        $firstName = $nameParts[0];
-        $lastName = $nameParts[1] ?? '';
+            \Log::info('Validation passed');
 
-        // Create tenant
-        $tenant = Tenant::create([
-            'name' => $validated['company_name'],
-            'slug' => $this->generateSlug($validated['company_name']),
-            'email' => $validated['email'],
-            'plan' => 'starter',
-            'status' => 'active',
-            'trial_ends_at' => now()->addDays(14),
-        ]);
+            $nameParts = explode(' ', $validated['name'], 2);
+            $firstName = $nameParts[0];
+            $lastName = $nameParts[1] ?? '';
 
-        // Create admin user
-        $user = User::create([
-            'tenant_id' => $tenant->id,
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'first_name' => $firstName,
-            'last_name' => $lastName,
-            'role' => 'admin',
-            'email_verified_at' => now(),
-            'is_active' => true,
-        ]);
+            // Create tenant
+            $tenant = Tenant::create([
+                'name' => $validated['company_name'],
+                'slug' => $this->generateSlug($validated['company_name']),
+                'email' => $validated['email'],
+                'plan' => 'starter',
+                'status' => 'active',
+                'trial_ends_at' => now()->addDays(14),
+            ]);
+            
+            \Log::info('Tenant created', ['tenant_id' => $tenant->id]);
 
-        // Run tenant seeders (creates default warehouse and categories)
-        $seeder = new TenantSeeder();
-        $seeder->run($tenant->id);
+            // Create admin user
+            $user = User::create([
+                'tenant_id' => $tenant->id,
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'role' => 'admin',
+                'email_verified_at' => now(),
+                'is_active' => true,
+            ]);
+            
+            \Log::info('User created', ['user_id' => $user->id]);
 
-        $token = $user->createToken('auth-token')->plainTextToken;
+            // Run tenant seeders (creates default warehouse and categories)
+            $seeder = new TenantSeeder();
+            $seeder->run($tenant->id);
+            
+            \Log::info('Tenant seeded');
 
-        return response()->json([
-            'message' => 'Tenant created successfully',
-            'tenant' => $tenant,
-            'user' => $user->load('tenant'),
-            'token' => $token,
-        ], 201);
+            $token = $user->createToken('auth-token')->plainTextToken;
+            
+            \Log::info('Token created');
+
+            return response()->json([
+                'message' => 'Tenant created successfully',
+                'tenant' => $tenant,
+                'user' => $user->load('tenant'),
+                'token' => $token,
+            ], 201);
+            
+        } catch (ValidationException $e) {
+            \Log::error('Validation failed', ['errors' => $e->errors()]);
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Registration failed: ' . $e->getMessage());
+            \Log::error($e->getTraceAsString());
+            return response()->json([
+                'message' => 'Registration failed',
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ], 500);
+        }
     }
 
     public function login(Request $request)
