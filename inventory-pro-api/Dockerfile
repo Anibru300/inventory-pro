@@ -53,9 +53,6 @@ RUN chmod -R 777 storage bootstrap/cache database \
 # Create SQLite database
 RUN touch database/database.sqlite && chmod 777 database/database.sqlite
 
-# Generate APP_KEY
-RUN php artisan key:generate --force
-
 # Configure Apache DocumentRoot
 RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/*.conf \
     && sed -ri -e 's!<Directory /var/www/>!<Directory /var/www/html/public>!g' /etc/apache2/apache2.conf \
