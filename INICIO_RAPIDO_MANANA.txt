@@ -1,0 +1,68 @@
+═══════════════════════════════════════════════════════════
+  INVENTORY PRO - INICIO RÁPIDO MAÑANA
+═══════════════════════════════════════════════════════════
+
+📋 COPIA Y PEGA ESTO AL NUEVO KIMI:
+
+Estamos trabajando en Inventory Pro para CJ Consultoría.
+Es un sistema de gestión de inventarios deployado en Render.
+
+URLs:
+• Frontend: https://inventory-pro-9ef8.onrender.com/#/login
+• Backend:  https://inventory-pro-api-v2.onrender.com
+• GitHub:   https://github.com/Anibru300/inventory-pro
+
+ESTADO ACTUAL:
+✅ Login/Register funcionan
+✅ Seeders crean almacén + 10 categorías automáticamente
+✅ Todas las páginas creadas (Dashboard, Productos, Movimientos, Almacenes, Categorías, Reportes, Config)
+✅ Diseño premium con colores CJ (dorado #c9a962, azul marino #0a1628, plata)
+
+❌ ERRORES PENDIENTES:
+• Error 422 al crear productos (validación)
+• Error 404 en /api/dashboard
+• Reportes solo tienen UI, falta backend
+
+PRIORIDAD HOY:
+1. Arreglar error 422 en creación de productos
+2. Arreglar endpoint /api/dashboard
+3. Probar movimientos de entrada/salida
+4. Crear importación masiva de productos (Excel)
+
+ARCHIVOS IMPORTANTES:
+• RESUMEN_SESION.md - Resumen completo
+• CONTEXT_NUEVO_KIMI.md - Contexto técnico
+
+═══════════════════════════════════════════════════════════
+
+🚀 COMANDOS RÁPIDOS:
+
+git status
+git log --oneline -5
+
+// Para subir cambios:
+git add .
+git commit -m "fix: descripción"
+git push
+
+// Deploy automático se activa en GitHub Actions
+
+═══════════════════════════════════════════════════════════
+
+✅ CHECKLIST PARA HOY:
+
+[ ] Login funciona
+[ ] Verificar categorías y almacenes existen
+[ ] Arreglar crear producto (error 422)
+[ ] Arreglar dashboard (error 404)
+[ ] Crear importación masiva Excel
+
+═══════════════════════════════════════════════════════════
+
+📞 SI HAY PROBLEMAS:
+
+• Limpiar caché: Ctrl + Shift + R
+• Modo incógnito: Ctrl + Shift + N
+• Ver logs: https://dashboard.render.com → seleccionar servicio → Logs
+
+═══════════════════════════════════════════════════════════
