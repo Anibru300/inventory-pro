@@ -2,103 +2,155 @@
 
 import Link from 'next/link'
 
-const footerLinks = {
-  Producto: [
-    { name: 'Características', href: '#features' },
-    { name: 'Precios', href: '#pricing' },
-    { name: 'Integraciones', href: '#' },
-    { name: 'API Docs', href: '#' },
-  ],
-  Compañía: [
-    { name: 'Nosotros', href: '#' },
-    { name: 'Blog', href: '#' },
-    { name: 'Carreras', href: '#' },
-    { name: 'Contacto', href: '#contact' },
-  ],
-  Recursos: [
-    { name: 'Documentación', href: '#' },
-    { name: 'Guías', href: '#' },
-    { name: 'Soporte', href: '#' },
-    { name: 'Estado', href: '#' },
-  ],
-  Legal: [
-    { name: 'Privacidad', href: '#' },
-    { name: 'Términos', href: '#' },
-    { name: 'Seguridad', href: '#' },
-  ],
-}
-
 export default function Footer() {
+  const currentYear = new Date().getFullYear()
+
+  const footerLinks = {
+    producto: [
+      { name: 'Funciones', href: '#funciones' },
+      { name: 'Planes', href: '#planes' },
+      { name: 'Demo', href: 'https://inventory-pro-9ef8.onrender.com/#/login' },
+      { name: 'Actualizaciones', href: '#' },
+    ],
+    empresa: [
+      { name: 'Sobre Nosotros', href: '#' },
+      { name: 'CJ Consultoría', href: 'https://cjconsultoria.com' },
+      { name: 'Blog', href: '#' },
+      { name: 'Carreras', href: '#' },
+    ],
+    soporte: [
+      { name: 'Centro de Ayuda', href: '#' },
+      { name: 'Documentación', href: '#' },
+      { name: 'API', href: '#' },
+      { name: 'Contacto', href: '#contacto' },
+    ],
+    legal: [
+      { name: 'Términos de Servicio', href: '#' },
+      { name: 'Política de Privacidad', href: '#' },
+      { name: 'Seguridad', href: '#' },
+    ],
+  }
+
   return (
-    <footer className="bg-bg-secondary border-t border-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
-          {/* Brand */}
+    <footer id="contacto" className="bg-cj-navy-dark border-t border-white/5">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Main Footer */}
+        <div className="py-16 grid grid-cols-2 md:grid-cols-6 gap-8">
+          {/* Brand Column */}
           <div className="col-span-2">
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-accent-primary to-accent-secondary rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            <Link href="/" className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-br from-cj-gold to-cj-gold-dark rounded-lg flex items-center justify-center">
+                <svg className="w-6 h-6 text-cj-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
               </div>
-              <span className="font-bold text-xl">Inventory Pro</span>
+              <div>
+                <span className="text-xl font-heading font-bold text-white">Inventory</span>
+                <span className="text-xl font-heading font-bold text-cj-gold">Pro</span>
+              </div>
             </Link>
-            <p className="text-gray-400 text-sm mb-4 max-w-xs">
-              Sistema profesional de gestión de inventarios diseñado para empresas modernas.
+            <p className="text-cj-silver-dark text-sm mb-6 max-w-xs">
+              Sistema profesional de gestión de inventarios diseñado para impulsar el crecimiento de tu negocio.
             </p>
-            <div className="flex gap-4">
-              {/* Social icons */}
-              {['twitter', 'github', 'linkedin'].map((social) => (
+            <p className="text-xs text-cj-silver-dark/60">
+              Una solución de <span className="text-cj-gold">CJ Consultoría</span>
+            </p>
+            
+            {/* Social Links */}
+            <div className="flex gap-4 mt-6">
+              {[
+                { name: 'LinkedIn', icon: 'M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z' },
+                { name: 'Twitter', icon: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' },
+                { name: 'YouTube', icon: 'M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z' },
+              ].map((social) => (
                 <a
-                  key={social}
+                  key={social.name}
                   href="#"
-                  className="w-8 h-8 bg-bg-tertiary rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-accent-primary transition-colors"
+                  className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-cj-silver-dark hover:bg-cj-gold/10 hover:text-cj-gold transition-colors"
+                  aria-label={social.name}
                 >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    {social === 'twitter' && (
-                      <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-                    )}
-                    {social === 'github' && (
-                      <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-                    )}
-                    {social === 'linkedin' && (
-                      <path fillRule="evenodd" clipRule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                    )}
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d={social.icon} />
                   </svg>
                 </a>
               ))}
             </div>
           </div>
 
-          {/* Links */}
-          {Object.entries(footerLinks).map(([category, links]) => (
-            <div key={category}>
-              <h4 className="font-semibold mb-4">{category}</h4>
-              <ul className="space-y-2">
-                {links.map((link) => (
-                  <li key={link.name}>
-                    <a
-                      href={link.href}
-                      className="text-gray-400 hover:text-white text-sm transition-colors"
-                    >
-                      {link.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Links Columns */}
+          <div>
+            <h4 className="text-white font-heading font-semibold mb-4">Producto</h4>
+            <ul className="space-y-3">
+              {footerLinks.producto.map((link) => (
+                <li key={link.name}>
+                  <Link href={link.href} className="text-sm text-cj-silver-dark hover:text-cj-gold transition-colors">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-white font-heading font-semibold mb-4">Empresa</h4>
+            <ul className="space-y-3">
+              {footerLinks.empresa.map((link) => (
+                <li key={link.name}>
+                  <Link href={link.href} className="text-sm text-cj-silver-dark hover:text-cj-gold transition-colors">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-white font-heading font-semibold mb-4">Soporte</h4>
+            <ul className="space-y-3">
+              {footerLinks.soporte.map((link) => (
+                <li key={link.name}>
+                  <Link href={link.href} className="text-sm text-cj-silver-dark hover:text-cj-gold transition-colors">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-white font-heading font-semibold mb-4">Legal</h4>
+            <ul className="space-y-3">
+              {footerLinks.legal.map((link) => (
+                <li key={link.name}>
+                  <Link href={link.href} className="text-sm text-cj-silver-dark hover:text-cj-gold transition-colors">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-gray-400 text-sm">
-            © {new Date().getFullYear()} Inventory Pro. Todos los derechos reservados.
-          </p>
-          <div className="flex items-center gap-6">
-            <span className="flex items-center gap-2 text-sm text-gray-400">
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              Sistema operativo
-            </span>
+        {/* Contact Bar */}
+        <div className="py-6 border-t border-white/5">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center gap-6">
+              <a href="mailto:soporte@cjconsultoria.com" className="flex items-center gap-2 text-sm text-cj-silver-dark hover:text-cj-gold transition-colors">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                soporte@cjconsultoria.com
+              </a>
+              <a href="tel:+521234567890" className="flex items-center gap-2 text-sm text-cj-silver-dark hover:text-cj-gold transition-colors">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                +52 123 456 7890
+              </a>
+            </div>
+            <p className="text-sm text-cj-silver-dark/60">
+              © {currentYear} CJ Consultoría. Todos los derechos reservados.
+            </p>
           </div>
         </div>
       </div>

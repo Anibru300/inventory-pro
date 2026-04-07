@@ -2,18 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
 
 * {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
+/* Font classes */
+.font-heading {
+  font-family: 'Montserrat', system-ui, sans-serif;
+}
+
+.font-body {
+  font-family: 'Open Sans', system-ui, sans-serif;
+}
+
+.font-tagline {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+}
+
+/* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #6366F1 100%);
+  background: linear-gradient(135deg, #c9a962 0%, #d4b978 50%, #a88b4a 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -21,16 +37,74 @@ html {
   animation: gradient 8s linear infinite;
 }
 
+/* Glass effect */
 .glass {
-  background: rgba(21, 27, 43, 0.8);
+  background: rgba(17, 29, 50, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a1628;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(201, 169, 98, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 169, 98, 0.5);
+}
+
+/* Animations */
+@keyframes gradient {
+  0%, 100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Button styles */
 .btn-primary {
-  @apply px-6 py-3 bg-accent-primary hover:bg-accent-secondary text-white font-medium rounded-lg transition-all duration-200;
+  @apply px-6 py-3 bg-cj-gold hover:bg-cj-gold-light text-cj-navy font-heading font-semibold rounded-lg transition-all duration-200;
 }
 
 .btn-secondary {
-  @apply px-6 py-3 bg-bg-tertiary hover:bg-bg-secondary text-white font-medium rounded-lg transition-all duration-200 border border-gray-700;
+  @apply px-6 py-3 bg-white/5 hover:bg-white/10 text-white font-heading font-semibold rounded-lg transition-all duration-200 border border-white/10;
+}
+
+/* Card styles */
+.card-premium {
+  @apply bg-cj-navy-light border border-white/5 rounded-2xl;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Selection */
+::selection {
+  background: rgba(201, 169, 98, 0.3);
+  color: white;
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid #c9a962;
+  outline-offset: 2px;
 }
