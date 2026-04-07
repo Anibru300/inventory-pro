@@ -101,6 +101,29 @@ input:hover, textarea:hover, select:hover {
   @apply border-white/15;
 }
 
+/* Select dropdown styles - Fix white text on white background */
+select {
+  @apply bg-cj-navy/90;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23c9a962'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 20px;
+  padding-right: 40px;
+}
+
+select option {
+  @apply bg-cj-navy text-white;
+  padding: 10px;
+}
+
+select option:hover,
+select option:focus,
+select option:active,
+select option:checked {
+  @apply bg-cj-gold/20 text-cj-gold;
+}
+
 /* Botones premium */
 .btn {
   @apply px-6 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2;

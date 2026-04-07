@@ -29,11 +29,6 @@ class ProductController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
-        // Stock status filter
-        if ($request->has('stock_status')) {
-            $query->where('stock_status', $request->stock_status);
-        }
-
         $products = $query->latest()->paginate($request->per_page ?? 25);
 
         return response()->json($products);

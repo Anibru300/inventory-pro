@@ -19,36 +19,31 @@ class DashboardController extends Controller
         $totalProducts = Product::where('tenant_id', $tenantId)->count();
         
         // Valor total del inventario (suma de cantidad * costo unitario)
-        $totalValue = StockLevel::where('tenant_id', $tenantId)
+        $totalValue = StockLevel::where('stock_levels.tenant_id', $tenantId)
             ->join('products', 'stock_levels.product_id', '=', 'products.id')
             ->sum(DB::raw('stock_levels.quantity * products.unit_cost'));
         
-        // Productos con stock bajo (usando relación stockLevels)
-        $lowStockProducts = Product::where('tenant_id', $tenantId)
-            ->whereHas('stockLevels', function ($q) {
-                $q->whereColumn('stock_levels.quantity', '<=', 'products.stock_min')
-                  ->where('stock_levels.quantity', '>', 0);
-            })
-            ->with('stockLevels')
-            ->limit(5)
+        // Productos con stock bajo - consulta simplificada para SQLite
+        $productsWithStock = Product::where('tenant_id', $tenantId)
+            ->with(['stockLevels', 'category'])
             ->get();
         
-        $lowStockCount = Product::where('tenant_id', $tenantId)
-            ->whereHas('stockLevels', function ($q) {
-                $q->whereColumn('stock_levels.quantity', '<=', 'products.stock_min')
-                  ->where('stock_levels.quantity', '>', 0);
-            })
-            ->count();
+        $lowStockProducts = [];
+        $lowStockCount = 0;
+        $outOfStockCount = 0;
         
-        // Productos sin stock
-        $outOfStockCount = Product::where('tenant_id', $tenantId)
-            ->whereDoesntHave('stockLevels', function ($q) {
-                $q->where('quantity', '>', 0);
-            })
-            ->orWhereHas('stockLevels', function ($q) {
-                $q->where('quantity', '<=', 0);
-            })
-            ->count();
+        foreach ($productsWithStock as $product) {
+            $totalStock = $product->stockLevels->sum('quantity');
+            
+            if ($totalStock <= 0) {
+                $outOfStockCount++;
+            } elseif ($totalStock <= $product->stock_min) {
+                $lowStockCount++;
+                if (count($lowStockProducts) < 5) {
+                    $lowStockProducts[] = $product;
+                }
+            }
+        }
         
         // Recent movements
         $recentMovements = StockMovement::where('tenant_id', $tenantId)
@@ -60,7 +55,7 @@ class DashboardController extends Controller
         return response()->json([
             'stats' => [
                 'totalProducts' => $totalProducts,
-                'totalValue' => round($totalValue, 2),
+                'totalValue' => round($totalValue ?? 0, 2),
                 'lowStock' => $lowStockCount,
                 'outOfStock' => $outOfStockCount,
             ],
