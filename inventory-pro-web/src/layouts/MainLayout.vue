@@ -106,7 +106,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, h } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
@@ -114,28 +114,7 @@ const router = useRouter()
 const authStore = useAuthStore()
 const sidebarOpen = ref(false)
 
-const navigation = [
-  { name: 'Dashboard', to: '/', icon: 'HomeIcon' },
-  { name: 'Productos', to: '/products', icon: 'PackageIcon' },
-  { name: 'Movimientos', to: '/inventory/movements', icon: 'ArrowsRightLeftIcon' },
-  { name: 'Almacenes', to: '/warehouses', icon: 'BuildingStorefrontIcon' },
-  { name: 'Reportes', to: '/reports', icon: 'ChartPieIcon' },
-  { name: 'Configuración', to: '/settings', icon: 'CogIcon' },
-]
-
-const userInitials = computed(() => {
-  const name = authStore.user?.name || ''
-  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
-})
-
-async function handleLogout() {
-  await authStore.logout()
-  router.push('/login')
-}
-</script>
-
-<script>
-// Icon components (inline for simplicity)
+// Icon components
 const HomeIcon = {
   render: () => h('svg', { class: 'w-5 h-5', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' }, [
     h('path', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-width': '2', d: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' })
@@ -168,8 +147,23 @@ const CogIcon = {
     h('path', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-width': '2', d: 'M15 12a3 3 0 11-6 0 3 3 0 016 0z' })
   ])
 }
-</script>
 
-<script setup>
-import { h } from 'vue'
+const navigation = [
+  { name: 'Dashboard', to: '/', icon: HomeIcon },
+  { name: 'Productos', to: '/products', icon: PackageIcon },
+  { name: 'Movimientos', to: '/inventory/movements', icon: ArrowsRightLeftIcon },
+  { name: 'Almacenes', to: '/warehouses', icon: BuildingStorefrontIcon },
+  { name: 'Reportes', to: '/reports', icon: ChartPieIcon },
+  { name: 'Configuración', to: '/settings', icon: CogIcon },
+]
+
+const userInitials = computed(() => {
+  const name = authStore.user?.name || ''
+  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+})
+
+async function handleLogout() {
+  await authStore.logout()
+  router.push('/login')
+}
 </script>
