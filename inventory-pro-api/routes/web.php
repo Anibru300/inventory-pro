@@ -3,7 +3,22 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect('/api/health');
+    return response()->json([
+        'status' => 'ok',
+        'service' => 'Inventory Pro API',
+        'version' => '1.0.0',
+        'timestamp' => now()->toIso8601String(),
+    ]);
+});
+
+// Health check endpoint (web)
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'ok',
+        'service' => 'Inventory Pro API',
+        'version' => '1.0.0',
+        'timestamp' => now()->toIso8601String(),
+    ]);
 });
 
 // Ruta temporal para ver logs
