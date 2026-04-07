@@ -28,41 +28,41 @@ const routes = [
         name: 'Products',
         component: () => import('../views/products/ProductList.vue'),
       },
-      {
-        path: '/products/:id',
-        name: 'ProductDetail',
-        component: () => import('../views/products/ProductDetail.vue'),
-      },
+      // {
+      //   path: '/products/:id',
+      //   name: 'ProductDetail',
+      //   component: () => import('../views/products/ProductDetail.vue'),
+      // },
       {
         path: '/products/new',
         name: 'ProductNew',
         component: () => import('../views/products/ProductForm.vue'),
       },
-      {
-        path: '/inventory/movements',
-        name: 'StockMovements',
-        component: () => import('../views/inventory/StockMovements.vue'),
-      },
-      {
-        path: '/inventory/movements/new',
-        name: 'StockMovementNew',
-        component: () => import('../views/inventory/StockMovementForm.vue'),
-      },
-      {
-        path: '/warehouses',
-        name: 'Warehouses',
-        component: () => import('../views/inventory/Warehouses.vue'),
-      },
-      {
-        path: '/reports',
-        name: 'Reports',
-        component: () => import('../views/reports/Reports.vue'),
-      },
-      {
-        path: '/settings',
-        name: 'Settings',
-        component: () => import('../views/settings/Settings.vue'),
-      },
+      // {
+      //   path: '/inventory/movements',
+      //   name: 'StockMovements',
+      //   component: () => import('../views/inventory/StockMovements.vue'),
+      // },
+      // {
+      //   path: '/inventory/movements/new',
+      //   name: 'StockMovementNew',
+      //   component: () => import('../views/inventory/StockMovementForm.vue'),
+      // },
+      // {
+      //   path: '/warehouses',
+      //   name: 'Warehouses',
+      //   component: () => import('../views/inventory/Warehouses.vue'),
+      // },
+      // {
+      //   path: '/reports',
+      //   name: 'Reports',
+      //   component: () => import('../views/reports/Reports.vue'),
+      // },
+      // {
+      //   path: '/settings',
+      //   name: 'Settings',
+      //   component: () => import('../views/settings/Settings.vue'),
+      // },
     ],
   },
   {
