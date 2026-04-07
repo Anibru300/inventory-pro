@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/test', function () {
     try {
         // Test database connection
-        $dbVersion = \DB::select('SELECT sqlite_version() as version')[0]->version ?? 'unknown';
+        $dbVersion = DB::select('SELECT sqlite_version() as version')[0]->version ?? 'unknown';
         $tenantCount = \App\Models\Tenant::count();
         $userCount = \App\Models\User::count();
         
@@ -51,7 +51,7 @@ Route::get('/health', function () {
         $dbStatus = 'ok';
         $dbError = null;
         try {
-            \DB::connection()->getPdo();
+            DB::connection()->getPdo();
         } catch (\Exception $e) {
             $dbStatus = 'error';
             $dbError = $e->getMessage();
