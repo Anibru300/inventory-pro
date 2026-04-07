@@ -8,7 +8,6 @@ use App\Models\User;
 use Database\Seeders\TenantSeeder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -17,16 +16,12 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         try {
-            Log::info('Register attempt started', ['email' => $request->email]);
-            
             $validated = $request->validate([
                 'company_name' => 'required|string|max:255',
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required|string|min:8|confirmed',
             ]);
-
-            Log::info('Validation passed');
 
             $nameParts = explode(' ', $validated['name'], 2);
             $firstName = $nameParts[0];
@@ -41,8 +36,6 @@ class AuthController extends Controller
                 'status' => 'active',
                 'trial_ends_at' => now()->addDays(14),
             ]);
-            
-            Log::info('Tenant created', ['tenant_id' => $tenant->id]);
 
             // Create admin user
             $user = User::create([
@@ -55,18 +48,12 @@ class AuthController extends Controller
                 'email_verified_at' => now(),
                 'is_active' => true,
             ]);
-            
-            Log::info('User created', ['user_id' => $user->id]);
 
             // Run tenant seeders (creates default warehouse and categories)
             $seeder = new TenantSeeder();
             $seeder->run($tenant->id);
-            
-            Log::info('Tenant seeded');
 
             $token = $user->createToken('auth-token')->plainTextToken;
-            
-            Log::info('Token created');
 
             return response()->json([
                 'message' => 'Tenant created successfully',
@@ -74,29 +61,17 @@ class AuthController extends Controller
                 'user' => $user->load('tenant'),
                 'token' => $token,
             ], 201);
-            
+
         } catch (ValidationException $e) {
-            Log::error('Validation failed', ['errors' => $e->errors()]);
             return response()->json([
                 'message' => 'Validation failed',
                 'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
-            $errorId = uniqid('ERR_');
-            
-            // Log detallado
-            Log::error("Registration failed [$errorId]: " . $e->getMessage());
-            Log::error("File: " . $e->getFile() . " Line: " . $e->getLine());
-            Log::error("Trace: " . $e->getTraceAsString());
-            
-            // TEMPORAL: Siempre mostrar detalles para diagnóstico
             return response()->json([
-                'message' => 'Registration failed',
-                'error_id' => $errorId,
-                'error' => $e->getMessage(),
+                'message' => 'Registration failed: ' . $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
-                'trace' => array_slice($e->getTrace(), 0, 5),
             ], 500);
         }
     }
