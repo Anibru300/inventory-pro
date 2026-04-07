@@ -53,26 +53,20 @@ RUN chmod -R 777 storage bootstrap/cache database \
 # Create SQLite database
 RUN touch database/database.sqlite && chmod 777 database/database.sqlite
 
-# Generate APP_KEY if not set
-RUN php artisan key:generate --force || true
+# Generate APP_KEY
+RUN php artisan key:generate --force
 
 # Configure Apache DocumentRoot
 RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/*.conf \
     && sed -ri -e 's!<Directory /var/www/>!<Directory /var/www/html/public>!g' /etc/apache2/apache2.conf \
     && sed -ri -e 's!AllowOverride None!AllowOverride All!g' /etc/apache2/apache2.conf
 
-# Clear all caches and optimize
-RUN php artisan optimize:clear || true \
-    && php artisan config:clear || true \
-    && php artisan cache:clear || true \
-    && php artisan route:clear || true \
-    && php artisan view:clear || true
-
-# Run post-autoload
-RUN composer run-script post-autoload-dump || true
+# Copy and set permissions for entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Expose port
 EXPOSE 80
 
-# Start Apache
-CMD ["apache2-foreground"]
+# Use entrypoint script
+ENTRYPOINT ["docker-entrypoint.sh"]
