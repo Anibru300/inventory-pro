@@ -4,38 +4,13 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/logo-cj.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Inventory Pro - Sistema profesional de gestión de inventarios ERP. Transformamos procesos en resultados sostenibles." />
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="-1" />
-    <meta name="build-version" content="2.0.1-2026-04-07" />
+    <meta name="description" content="Inventory Pro - Sistema profesional de gestión de inventarios ERP" />
     <title>Inventory Pro | Sistema ERP de Gestión de Inventarios</title>
     
-    <!-- Fonts: Inter (principal) + Lato (secundaria) + DM Sans (display) -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Lato:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <script>
-      // SPA Routing fix for Render - redirect all routes to hash mode
-      (function() {
-        var path = window.location.pathname;
-        var hash = window.location.hash;
-        
-        // If not already on hash route and not a file
-        if (path !== '/' && !hash.startsWith('#/')) {
-          // Check if it's a known route
-          var knownRoutes = ['/login', '/register', '/dashboard', '/products', '/movements', '/warehouses', '/transfers', '/lots', '/categories', '/reports', '/receipts', '/import', '/settings'];
-          var isKnownRoute = knownRoutes.some(function(route) {
-            return path.startsWith(route);
-          });
-          
-          if (isKnownRoute || path === '/home') {
-            window.location.replace(window.location.origin + '/#' + path + window.location.search);
-          }
-        }
-      })();
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
     <div id="app"></div>
