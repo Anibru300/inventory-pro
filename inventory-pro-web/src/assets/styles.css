@@ -1,11 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
 * {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
 }
 
 /* Custom scrollbar */
@@ -15,22 +20,22 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #151B2B;
+  background: #1E293B;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #252D42;
+  background: #475569;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3B4256;
+  background: #64748B;
 }
 
 /* Animations */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.2s ease;
+  transition: opacity 0.3s ease;
 }
 
 .fade-enter-from,
@@ -38,46 +43,67 @@
   opacity: 0;
 }
 
-/* Glass effect */
+/* Glass effect - más sutil */
 .glass {
-  background: rgba(21, 27, 43, 0.8);
+  background: rgba(30, 41, 59, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Gradient text */
+/* Gradient text - azul corporativo */
 .gradient-text {
-  background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+  background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #2563EB 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Input styles */
+/* Input styles - más elegantes */
 input, textarea, select {
-  @apply bg-bg-tertiary border border-border-default rounded-lg px-4 py-2.5 text-text-primary placeholder-text-tertiary focus:outline-none focus:border-accent-primary transition-colors;
+  @apply bg-bg-secondary border border-border-default rounded-lg px-4 py-3 text-text-primary placeholder-text-tertiary transition-all duration-200;
+}
+
+input:focus, textarea:focus, select:focus {
+  @apply outline-none border-accent-primary ring-2 ring-accent-primary/20;
+}
+
+input:hover, textarea:hover, select:hover {
+  @apply border-border-hover;
 }
 
 /* Button base */
 .btn {
-  @apply px-4 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2;
+  @apply px-5 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2;
 }
 
 .btn-primary {
-  @apply btn bg-accent-primary hover:bg-accent-secondary text-white;
+  @apply btn bg-accent-primary hover:bg-accent-hover text-white shadow-soft;
+}
+
+.btn-primary:hover {
+  @apply shadow-glow transform -translate-y-0.5;
 }
 
 .btn-secondary {
-  @apply btn bg-bg-tertiary hover:bg-bg-elevated text-text-primary border border-border-default;
+  @apply btn bg-bg-secondary hover:bg-bg-tertiary text-text-primary border border-border-default;
 }
 
 .btn-danger {
-  @apply btn bg-danger/20 hover:bg-danger/30 text-danger;
+  @apply btn bg-danger/10 hover:bg-danger/20 text-danger border border-danger/30;
 }
 
-/* Card */
+/* Card - más elegante */
 .card {
-  @apply bg-bg-secondary border border-border-default rounded-xl p-6;
+  @apply bg-bg-secondary border border-border-default rounded-xl p-6 shadow-soft;
+}
+
+.card-hover {
+  @apply card transition-all duration-300;
+}
+
+.card-hover:hover {
+  @apply border-border-hover shadow-lg transform -translate-y-1;
 }
 
 /* Table */
@@ -86,7 +112,7 @@ input, textarea, select {
 }
 
 .data-table th {
-  @apply px-4 py-3 text-sm font-medium text-text-secondary border-b border-border-default bg-bg-secondary;
+  @apply px-4 py-3 text-sm font-semibold text-text-secondary border-b border-border-default bg-bg-secondary;
 }
 
 .data-table td {
@@ -95,4 +121,20 @@ input, textarea, select {
 
 .data-table tr:hover {
   @apply bg-bg-tertiary/50;
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin 2s linear infinite;
+}
+
+/* Focus visible para accesibilidad */
+*:focus-visible {
+  @apply outline-none ring-2 ring-accent-primary ring-offset-2 ring-offset-bg-primary;
 }
