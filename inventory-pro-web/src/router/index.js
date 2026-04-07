@@ -68,6 +68,18 @@ const routes = [
     name: 'Reports',
     component: () => import('../views/reports/Reports.vue'),
   },
+  // Receipts (Vales)
+  {
+    path: '/receipts',
+    name: 'Receipts',
+    component: () => import('../views/receipts/ReceiptList.vue'),
+  },
+  // Import
+  {
+    path: '/import',
+    name: 'Import',
+    component: () => import('../views/import/ImportProducts.vue'),
+  },
   // Settings
   {
     path: '/settings',

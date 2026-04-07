@@ -120,13 +120,42 @@ class StockMovementController extends Controller
             // Check if alert should be created
             $this->checkStockAlert($product, $stockLevel);
 
+            // Generate receipt/vale automatically for entries and exits
+            $receipt = null;
+            if (in_array($validated['movement_type'], [
+                StockMovement::TYPE_PURCHASE,
+                StockMovement::TYPE_SALE,
+                StockMovement::TYPE_RETURN_CUSTOMER,
+                StockMovement::TYPE_RETURN_SUPPLIER,
+                StockMovement::TYPE_TRANSFER_IN,
+                StockMovement::TYPE_TRANSFER_OUT,
+            ])) {
+                $type = in_array($validated['movement_type'], StockMovement::getEntryTypes()) ? 'entry' : 'exit';
+                $receipt = ReceiptController::createFromMovement($movement, [
+                    'recipient_name' => $request->input('recipient_name'),
+                    'recipient_department' => $request->input('recipient_department'),
+                ]);
+            }
+
             DB::commit();
 
-            return response()->json([
+            $response = [
                 'message' => 'Stock movement created successfully',
                 'movement' => $movement->load(['product', 'warehouse']),
                 'stock_level' => $stockLevel,
-            ], 201);
+            ];
+
+            if ($receipt) {
+                $response['receipt'] = [
+                    'id' => $receipt->id,
+                    'folio' => $receipt->folio,
+                    'type' => $receipt->type,
+                    'download_url' => "/api/receipts/{$receipt->id}/pdf",
+                    'preview_url' => "/api/receipts/{$receipt->id}/preview",
+                ];
+            }
+
+            return response()->json($response, 201);
 
         } catch (\Exception $e) {
             DB::rollBack();

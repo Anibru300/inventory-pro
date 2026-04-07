@@ -52,6 +52,25 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('stock-movements', StockMovementController::class);
     Route::get('/products/{product}/kardex', [StockMovementController::class, 'kardex']);
     
+    // Reports
+    Route::prefix('reports')->group(function () {
+        Route::get('/inventory-valuation', [\App\Http\Controllers\Api\ReportController::class, 'inventoryValuation']);
+        Route::get('/movements', [\App\Http\Controllers\Api\ReportController::class, 'movementsReport']);
+        Route::get('/low-stock', [\App\Http\Controllers\Api\ReportController::class, 'lowStock']);
+        Route::get('/top-products', [\App\Http\Controllers\Api\ReportController::class, 'topProducts']);
+    });
+    
+    // Import
+    Route::post('/import/products', [\App\Http\Controllers\Api\ImportController::class, 'importProducts']);
+    Route::get('/import/template', [\App\Http\Controllers\Api\ImportController::class, 'downloadTemplate']);
+    
+    // Receipts (Vales)
+    Route::apiResource('receipts', \App\Http\Controllers\Api\ReceiptController::class);
+    Route::get('/receipts/{receipt}/pdf', [\App\Http\Controllers\Api\ReceiptController::class, 'generatePdf']);
+    Route::get('/receipts/{receipt}/preview', [\App\Http\Controllers\Api\ReceiptController::class, 'previewPdf']);
+    Route::patch('/receipts/{receipt}/recipient', [\App\Http\Controllers\Api\ReceiptController::class, 'updateRecipient']);
+    Route::get('/receipts/statistics', [\App\Http\Controllers\Api\ReceiptController::class, 'statistics']);
+    
 });
 
 // Webhook for Stripe (public but secured by signature)
