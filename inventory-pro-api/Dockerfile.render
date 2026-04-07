@@ -32,6 +32,9 @@ COPY composer.json ./
 # Install dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
+# Copy env file
+COPY .env.render .env
+
 # Copy the rest of the application
 COPY . .
 
