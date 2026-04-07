@@ -10,7 +10,6 @@ use App\Http\Controllers\Api\ProductLotController;
 use App\Http\Controllers\Api\StockMovementController;
 use App\Http\Controllers\Api\WarehouseController;
 use App\Http\Controllers\Api\WarehouseTransferController;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,100 +18,13 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Simple test endpoint
-Route::get('/test', function () {
-    try {
-        // Test database connection
-        $dbVersion = DB::select('SELECT sqlite_version() as version')[0]->version ?? 'unknown';
-        $tenantCount = \App\Models\Tenant::count();
-        $userCount = \App\Models\User::count();
-        
-        return response()->json([
-            'status' => 'ok',
-            'database' => 'connected',
-            'sqlite_version' => $dbVersion,
-            'tenants' => $tenantCount,
-            'users' => $userCount,
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'status' => 'error',
-            'error' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-        ], 500);
-    }
-});
-
 // Health check endpoint
 Route::get('/health', function () {
-    try {
-        // Verificar conexión a base de datos
-        $dbStatus = 'ok';
-        $dbError = null;
-        try {
-            DB::connection()->getPdo();
-        } catch (\Exception $e) {
-            $dbStatus = 'error';
-            $dbError = $e->getMessage();
-        }
-        
-        return response()->json([
-            'status' => 'ok',
-            'timestamp' => now()->toIso8601String(),
-            'version' => '1.0.0',
-            'database' => $dbStatus,
-            'database_error' => $dbError,
-            'php_version' => PHP_VERSION,
-            'laravel_version' => app()->version(),
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'status' => 'error',
-            'error' => $e->getMessage(),
-        ], 500);
-    }
-});
-
-// TEMPORAL: Ver logs de Laravel (últimos errores)
-Route::get('/view-logs', function () {
-    try {
-        $logFile = storage_path('logs/laravel.log');
-        
-        // Si no existe, crearlo
-        if (!file_exists($logFile)) {
-            $dir = dirname($logFile);
-            if (!is_dir($dir)) {
-                mkdir($dir, 0755, true);
-            }
-            file_put_contents($logFile, "# Log created at " . now() . "\n");
-        }
-        
-        // Leer últimas líneas
-        $content = file_get_contents($logFile);
-        $lines = explode("\n", $content);
-        $lastLines = array_slice($lines, -100);
-        
-        // Filtrar solo errores relevantes
-        $errorLines = array_filter($lastLines, function($line) {
-            return strpos($line, 'ERROR') !== false || 
-                   strpos($line, 'register') !== false ||
-                   strpos($line, 'TenantSeeder') !== false ||
-                   strpos($line, 'ERR_') !== false;
-        });
-        
-        return response()->json([
-            'log_file' => $logFile,
-            'exists' => file_exists($logFile),
-            'writable' => is_writable($logFile),
-            'total_lines' => count($lines),
-            'error_lines' => count($errorLines),
-            'recent_errors' => array_values($errorLines),
-            'raw_content' => implode("\n", array_slice($lines, -30))
-        ]);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()], 500);
-    }
+    return response()->json([
+        'status' => 'ok',
+        'timestamp' => now()->toIso8601String(),
+        'version' => '1.0.0',
+    ]);
 });
 
 // Public routes
