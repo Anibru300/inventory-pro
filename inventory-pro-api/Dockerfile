@@ -1,6 +1,6 @@
 FROM php:8.3-apache
 
-# Install system dependencies
+# Install system dependencies including GD dependencies
 RUN apt-get update && apt-get install -y \
     libsqlite3-dev \
     libzip-dev \
@@ -8,10 +8,15 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
+    # Dependencies for GD
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_sqlite zip
+# Install PHP extensions including GD
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd pdo_sqlite zip
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -25,7 +30,7 @@ WORKDIR /var/www/html
 # Copy composer files first (for better caching)
 COPY composer.json ./
 
-# Install dependencies (without lock file to avoid conflicts)
+# Install dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
 # Copy the rest of the application
