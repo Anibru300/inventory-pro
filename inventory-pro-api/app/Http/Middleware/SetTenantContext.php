@@ -15,10 +15,12 @@ class SetTenantContext
             $user = auth()->user();
             $tenantId = $user->tenant_id;
 
-            // Establecer el contexto de RLS en PostgreSQL
-            DB::statement("SET app.current_tenant_id = ?", [$tenantId]);
+            // Solo establecer contexto de RLS si usamos PostgreSQL
+            if (DB::getDriverName() === 'pgsql') {
+                DB::statement("SET app.current_tenant_id = ?", [$tenantId]);
+            }
             
-            // También almacenar en el request para uso posterior
+            // Almacenar en el request para uso posterior
             $request->attributes->set('tenant_id', $tenantId);
         }
 
