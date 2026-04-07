@@ -3,13 +3,13 @@ set -e
 
 echo "🚀 Starting Inventory Pro API..."
 
-# Debug: Show APP_KEY value
-echo "🔑 DEBUG - APP_KEY value: $APP_KEY"
-php -r "echo 'PHP sees APP_KEY: ' . getenv('APP_KEY') . PHP_EOL;"
+# FORZAR APP_KEY correcta - sobrescribe cualquier variable de entorno
+export APP_KEY="base64:GKeBjry+gf8vc+uhMm73SC6wqtRNdQcFE8Oy+okKXb8="
+echo "🔑 FORCED APP_KEY: $APP_KEY"
 
-# Check .env file
-echo "📄 DEBUG - .env APP_KEY line:"
-grep APP_KEY .env || echo "APP_KEY not found in .env"
+# Actualizar el archivo .env con la clave correcta
+sed -i "s|^APP_KEY=.*|APP_KEY=$APP_KEY|" /var/www/html/.env
+echo "📄 .env actualizado con APP_KEY correcta"
 
 # Run migrations only
 echo "📊 Running database migrations..."
