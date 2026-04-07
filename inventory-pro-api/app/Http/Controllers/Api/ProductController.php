@@ -47,29 +47,38 @@ class ProductController extends Controller
             'barcode' => 'nullable|string|max:100|unique:products',
             'description' => 'nullable|string',
             'category_id' => 'nullable|exists:categories,id',
-            'unit' => 'required|string|max:50',
+            'unit' => 'nullable|string|max:50',
             'cost' => 'required|numeric|min:0',
             'price' => 'required|numeric|min:0',
             'min_stock' => 'nullable|numeric|min:0',
             'max_stock' => 'nullable|numeric|min:0',
             'initial_stock' => 'nullable|numeric|min:0',
             'warehouse_id' => 'nullable|exists:warehouses,id',
-            'valuation_method' => 'required|in:FIFO,AVERAGE,LIFO',
+            'valuation_method' => 'nullable|in:FIFO,AVERAGE,LIFO',
             'is_active' => 'boolean',
         ]);
 
         $initialStock = $validated['initial_stock'] ?? 0;
         $warehouseId = $validated['warehouse_id'] ?? null;
         
-        unset($validated['initial_stock']);
-        unset($validated['warehouse_id']);
+        // Mapear campos del frontend a nombres de BD
+        $productData = [
+            'name' => $validated['name'],
+            'sku' => $validated['sku'],
+            'barcode' => $validated['barcode'] ?? null,
+            'description' => $validated['description'] ?? null,
+            'category_id' => $validated['category_id'] ?? null,
+            'unit_of_measure' => $validated['unit'] ?? 'piece',
+            'unit_cost' => $validated['cost'],
+            'selling_price' => $validated['price'],
+            'stock_min' => $validated['min_stock'] ?? 0,
+            'stock_max' => $validated['max_stock'] ?? null,
+            'reorder_point' => $validated['min_stock'] ?? 0,
+            'valuation_method' => $validated['valuation_method'] ?? 'FIFO',
+            'is_active' => $validated['is_active'] ?? true,
+        ];
 
-        // Set default stock values
-        $validated['quantity'] = $initialStock;
-        $validated['available_quantity'] = $initialStock;
-        $validated['stock_status'] = $initialStock > 0 ? 'in_stock' : 'out_of_stock';
-
-        $product = Product::create($validated);
+        $product = Product::create($productData);
 
         // Create stock level if warehouse specified
         if ($warehouseId && $initialStock > 0) {
@@ -78,13 +87,14 @@ class ProductController extends Controller
                 'product_id' => $product->id,
                 'warehouse_id' => $warehouseId,
                 'quantity' => $initialStock,
+                'available_quantity' => $initialStock,
                 'reserved_quantity' => 0,
-                'reorder_point' => $validated['min_stock'] ?? 0,
-                'max_stock' => $validated['max_stock'] ?? 0,
+                'reorder_point' => $productData['stock_min'],
+                'max_stock' => $productData['stock_max'],
             ]);
         }
 
-        return response()->json($product->load('stockLevels'), 201);
+        return response()->json($product->load(['category', 'stockLevels.warehouse']), 201);
     }
 
     public function show(Product $product)
@@ -115,9 +125,27 @@ class ProductController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $product->update($validated);
+        // Mapear campos del frontend a nombres de BD
+        $productData = [];
+        if (isset($validated['name'])) $productData['name'] = $validated['name'];
+        if (isset($validated['sku'])) $productData['sku'] = $validated['sku'];
+        if (isset($validated['barcode'])) $productData['barcode'] = $validated['barcode'];
+        if (isset($validated['description'])) $productData['description'] = $validated['description'];
+        if (isset($validated['category_id'])) $productData['category_id'] = $validated['category_id'];
+        if (isset($validated['unit'])) $productData['unit_of_measure'] = $validated['unit'];
+        if (isset($validated['cost'])) $productData['unit_cost'] = $validated['cost'];
+        if (isset($validated['price'])) $productData['selling_price'] = $validated['price'];
+        if (isset($validated['min_stock'])) {
+            $productData['stock_min'] = $validated['min_stock'];
+            $productData['reorder_point'] = $validated['min_stock'];
+        }
+        if (isset($validated['max_stock'])) $productData['stock_max'] = $validated['max_stock'];
+        if (isset($validated['valuation_method'])) $productData['valuation_method'] = $validated['valuation_method'];
+        if (isset($validated['is_active'])) $productData['is_active'] = $validated['is_active'];
 
-        return response()->json($product->load('category', 'stockLevels'));
+        $product->update($productData);
+
+        return response()->json($product->load(['category', 'stockLevels.warehouse']));
     }
 
     public function destroy(Product $product)
