@@ -4,13 +4,23 @@ import axios from 'axios'
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://inventory-pro-api-v3.onrender.com/api'
 
-// Create axios instance
-const api = axios.create({
+// Create axios instance for public routes (no auth needed)
+const publicApi = axios.create({
   baseURL: API_URL,
-  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest',
+  },
+})
+
+// Create axios instance for authenticated routes
+const authApi = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest',
   },
 })
 
@@ -23,16 +33,16 @@ export const useAuthStore = defineStore('auth', () => {
 
   // Setup axios interceptor for token
   if (token.value) {
-    api.defaults.headers.common['Authorization'] = `Bearer ${token.value}`
+    authApi.defaults.headers.common['Authorization'] = `Bearer ${token.value}`
   }
 
   // Response interceptor for error handling
-  api.interceptors.response.use(
+  authApi.interceptors.response.use(
     (response) => response,
     (error) => {
       if (error.response?.status === 401) {
         clearAuth()
-        window.location.href = '/login'
+        window.location.href = '/#/login'
       }
       return Promise.reject(error)
     }
@@ -53,13 +63,13 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null
 
     try {
-      const response = await api.post('/login', credentials)
+      const response = await publicApi.post('/login', credentials)
       
       token.value = response.data.token
       user.value = response.data.user
       
       localStorage.setItem('token', token.value)
-      api.defaults.headers.common['Authorization'] = `Bearer ${token.value}`
+      authApi.defaults.headers.common['Authorization'] = `Bearer ${token.value}`
       
       return response.data
     } catch (err) {
@@ -75,13 +85,13 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null
 
     try {
-      const response = await api.post('/register', data)
+      const response = await publicApi.post('/register', data)
       
       token.value = response.data.token
       user.value = response.data.user
       
       localStorage.setItem('token', token.value)
-      api.defaults.headers.common['Authorization'] = `Bearer ${token.value}`
+      authApi.defaults.headers.common['Authorization'] = `Bearer ${token.value}`
       
       return response.data
     } catch (err) {
@@ -102,7 +112,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function logout() {
     try {
-      await api.post('/logout')
+      await authApi.post('/logout')
     } catch (err) {
       console.error('Logout error:', err)
     } finally {
@@ -112,7 +122,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function fetchUser() {
     try {
-      const response = await api.get('/me')
+      const response = await authApi.get('/me')
       user.value = response.data.user
       return response.data.user
     } catch (err) {
@@ -125,7 +135,7 @@ export const useAuthStore = defineStore('auth', () => {
     const savedToken = localStorage.getItem('token')
     if (savedToken) {
       token.value = savedToken
-      api.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`
+      authApi.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`
       fetchUser().catch(() => clearAuth())
     }
   }
@@ -134,7 +144,7 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = null
     token.value = null
     localStorage.removeItem('token')
-    delete api.defaults.headers.common['Authorization']
+    delete authApi.defaults.headers.common['Authorization']
   }
 
   function clearError() {
