@@ -61,10 +61,12 @@ RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-avail
     && sed -ri -e 's!<Directory /var/www/>!<Directory /var/www/html/public>!g' /etc/apache2/apache2.conf \
     && sed -ri -e 's!AllowOverride None!AllowOverride All!g' /etc/apache2/apache2.conf
 
-# Clear and cache config
-RUN php artisan config:clear || true \
+# Clear all caches and optimize
+RUN php artisan optimize:clear || true \
+    && php artisan config:clear || true \
     && php artisan cache:clear || true \
-    && php artisan config:cache || true
+    && php artisan route:clear || true \
+    && php artisan view:clear || true
 
 # Run post-autoload
 RUN composer run-script post-autoload-dump || true
