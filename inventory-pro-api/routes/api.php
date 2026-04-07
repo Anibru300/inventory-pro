@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\ProductLotController;
 use App\Http\Controllers\Api\StockMovementController;
 use App\Http\Controllers\Api\WarehouseController;
 use App\Http\Controllers\Api\WarehouseTransferController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +26,23 @@ Route::get('/health', function () {
         'timestamp' => now()->toIso8601String(),
         'version' => '1.0.0',
     ]);
+});
+
+// TEMP: Run migrations
+Route::get('/setup', function () {
+    try {
+        Artisan::call('migrate', ['--force' => true]);
+        return response()->json([
+            'status' => 'ok',
+            'message' => 'Migrations completed',
+            'output' => Artisan::output(),
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+        ], 500);
+    }
 });
 
 // Public routes
