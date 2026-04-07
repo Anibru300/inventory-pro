@@ -26,21 +26,21 @@ html {
 
 /* Custom scrollbar - CJ colors */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0B1F3A;
+  background: rgba(11, 31, 58, 0.5);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2A4A73;
-  border-radius: 4px;
+  background: rgba(46, 125, 232, 0.3);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3B5998;
+  background: rgba(46, 125, 232, 0.5);
 }
 
 /* Animations */
@@ -54,12 +54,25 @@ html {
   opacity: 0;
 }
 
-/* Glass effect - CJ style */
+/* Glass effect - More subtle */
 .glass {
-  background: rgba(21, 43, 77, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(192, 192, 192, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(192, 192, 192, 0.08);
+}
+
+/* Card style - Modern */
+.card-modern {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(192, 192, 192, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+}
+
+.card-modern:hover {
+  border-color: rgba(192, 192, 192, 0.15);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
 }
 
 /* Gradient text - CJ Electric Blue */
@@ -78,50 +91,54 @@ html {
   background-clip: text;
 }
 
-/* Input styles - CJ style */
+/* Input styles - Modern */
 input, textarea, select {
-  @apply bg-bg-secondary border border-border-default rounded-lg px-4 py-3 text-text-primary placeholder-text-tertiary transition-all duration-200;
+  @apply bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 transition-all duration-200;
   font-size: 16px;
 }
 
 input:focus, textarea:focus, select:focus {
-  @apply outline-none border-cj-electric;
-  box-shadow: 0 0 0 3px rgba(46, 125, 232, 0.15);
+  @apply outline-none border-cj-electric/50;
+  box-shadow: 0 0 0 3px rgba(46, 125, 232, 0.1);
 }
 
 input:hover, textarea:hover, select:hover {
-  @apply border-border-hover;
+  @apply border-white/20;
 }
 
 /* Button base */
 .btn {
-  @apply px-5 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2;
+  @apply px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2;
   font-family: 'Montserrat', system-ui, sans-serif;
 }
 
 .btn-primary {
-  @apply btn bg-cj-electric hover:bg-cj-electric-dark text-white shadow-soft;
+  @apply btn bg-cj-electric hover:bg-cj-electric-dark text-white;
+  box-shadow: 0 4px 15px rgba(46, 125, 232, 0.3);
 }
 
 .btn-primary:hover {
-  @apply shadow-glow transform -translate-y-0.5;
+  box-shadow: 0 6px 20px rgba(46, 125, 232, 0.4);
+  transform: translateY(-1px);
 }
 
 .btn-secondary {
-  @apply btn bg-bg-secondary hover:bg-bg-tertiary text-text-primary border border-border-default;
+  @apply btn bg-white/5 hover:bg-white/10 text-white border border-white/10;
 }
 
 .btn-silver {
-  @apply btn bg-gradient-to-r from-cj-silver-dark to-cj-silver text-cj-navy hover:shadow-silver;
+  @apply btn bg-gradient-to-r from-cj-silver to-cj-silver-light text-cj-navy;
+  box-shadow: 0 4px 15px rgba(192, 192, 192, 0.2);
 }
 
 .btn-danger {
   @apply btn bg-danger/10 hover:bg-danger/20 text-danger border border-danger/30;
 }
 
-/* Card - CJ style */
+/* Card - Modern style */
 .card {
-  @apply bg-bg-secondary border border-border-default rounded-xl p-6 shadow-soft;
+  @apply bg-white/[0.02] border border-white/[0.08] rounded-2xl p-6;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
 }
 
 .card-hover {
@@ -129,25 +146,27 @@ input:hover, textarea:hover, select:hover {
 }
 
 .card-hover:hover {
-  @apply border-border-hover shadow-lg transform -translate-y-1;
+  @apply border-white/[0.15];
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
 }
 
-/* Table */
+/* Table - Modern */
 .data-table {
   @apply w-full text-left border-collapse;
 }
 
 .data-table th {
-  @apply px-4 py-3 text-sm font-semibold text-text-secondary border-b border-border-default bg-bg-secondary;
+  @apply px-4 py-3 text-sm font-semibold text-cj-silver border-b border-white/10;
   font-family: 'Montserrat', system-ui, sans-serif;
 }
 
 .data-table td {
-  @apply px-4 py-3 text-sm border-b border-border-default;
+  @apply px-4 py-3 text-sm border-b border-white/5;
 }
 
 .data-table tr:hover {
-  @apply bg-bg-tertiary/50;
+  @apply bg-white/5;
 }
 
 /* Loading spinner */
@@ -163,10 +182,39 @@ input:hover, textarea:hover, select:hover {
 
 /* Focus visible for accessibility */
 *:focus-visible {
-  @apply outline-none ring-2 ring-cj-electric ring-offset-2 ring-offset-bg-primary;
+  @apply outline-none ring-2 ring-cj-electric/50 ring-offset-2 ring-offset-cj-navy;
 }
 
 /* Logo glow effect */
 .logo-glow {
-  filter: drop-shadow(0 0 10px rgba(46, 125, 232, 0.5));
+  filter: drop-shadow(0 0 20px rgba(46, 125, 232, 0.3));
+}
+
+/* Stats card - Modern */
+.stat-card {
+  @apply card-modern p-6 relative overflow-hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(46, 125, 232, 0.5), transparent);
+}
+
+/* Navigation item */
+.nav-item {
+  @apply flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200;
+  font-family: 'Montserrat', system-ui, sans-serif;
+}
+
+.nav-item:hover {
+  @apply bg-white/5;
+}
+
+.nav-item.active {
+  @apply bg-cj-electric/10 text-cj-electric;
 }

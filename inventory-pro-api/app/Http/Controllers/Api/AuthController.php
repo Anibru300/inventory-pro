@@ -12,19 +12,15 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    /**
-     * Register a new tenant and admin user
-     */
     public function register(Request $request)
     {
         $validated = $request->validate([
             'company_name' => 'required|string|max:255',
-            'name' => 'required|string|max:255',  // Full name from frontend
+            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // Split full name into first and last name
         $nameParts = explode(' ', $validated['name'], 2);
         $firstName = $nameParts[0];
         $lastName = $nameParts[1] ?? '';
@@ -34,7 +30,7 @@ class AuthController extends Controller
             'name' => $validated['company_name'],
             'slug' => $this->generateSlug($validated['company_name']),
             'email' => $validated['email'],
-            'plan' => 'starter',  // Default plan
+            'plan' => 'starter',
             'status' => 'active',
             'trial_ends_at' => now()->addDays(14),
         ]);
@@ -48,6 +44,7 @@ class AuthController extends Controller
             'last_name' => $lastName,
             'role' => 'admin',
             'email_verified_at' => now(),
+            'is_active' => true,
         ]);
 
         // Create default warehouse
@@ -57,7 +54,6 @@ class AuthController extends Controller
             'is_primary' => true,
         ]);
 
-        // Create token
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
@@ -68,9 +64,6 @@ class AuthController extends Controller
         ], 201);
     }
 
-    /**
-     * Login user
-     */
     public function login(Request $request)
     {
         $request->validate([
@@ -81,9 +74,10 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['Las credenciales son incorrectas.'],
-            ]);
+            return response()->json([
+                'message' => 'Las credenciales son incorrectas.',
+                'errors' => ['email' => ['Las credenciales son incorrectas.']]
+            ], 422);
         }
 
         if (! $user->is_active) {
@@ -98,7 +92,10 @@ class AuthController extends Controller
             ], 403);
         }
 
-        $user->updateLastLogin();
+        // Update last login
+        $user->update([
+            'last_login_at' => now(),
+        ]);
 
         $token = $user->createToken('auth-token')->plainTextToken;
 
@@ -108,9 +105,6 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * Logout user
-     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
@@ -120,9 +114,6 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * Get current user
-     */
     public function me(Request $request)
     {
         return response()->json([
@@ -130,9 +121,11 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * Generate unique slug
-     */
+    public function webhook(Request $request)
+    {
+        return response()->json(['message' => 'Webhook received']);
+    }
+
     private function generateSlug(string $name): string
     {
         $base = Str::slug($name);

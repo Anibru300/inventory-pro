@@ -4,62 +4,59 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Models\StockLevel;
 use App\Models\StockMovement;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json([
-            'stats' => $this->getStats(),
-            'recent_movements' => $this->getRecentMovements(),
-            'low_stock_products' => $this->getLowStockProducts(),
-        ]);
-    }
-
-    public function stats()
-    {
-        return response()->json($this->getStats());
-    }
-
-    private function getStats()
-    {
-        $products = Product::count();
+        $tenantId = $request->user()->tenant_id;
         
-        $stockLevels = StockLevel::selectRaw('
-            SUM(quantity * products.cost) as total_value,
-            SUM(quantity) as total_quantity
-        ')
-        ->join('products', 'stock_levels.product_id', '=', 'products.id')
-        ->first();
-
-        $lowStock = StockLevel::lowStock()->count();
-        $outOfStock = StockLevel::outOfStock()->count();
-
-        return [
-            'total_products' => $products,
-            'total_value' => round($stockLevels->total_value ?? 0, 2),
-            'total_quantity' => $stockLevels->total_quantity ?? 0,
-            'low_stock' => $lowStock,
-            'out_of_stock' => $outOfStock,
-        ];
-    }
-
-    private function getRecentMovements()
-    {
-        return StockMovement::with(['product', 'warehouse'])
-            ->latest()
-            ->limit(10)
-            ->get();
-    }
-
-    private function getLowStockProducts()
-    {
-        return StockLevel::with(['product', 'warehouse'])
-            ->lowStock()
+        // Stats
+        $totalProducts = Product::where('tenant_id', $tenantId)->count();
+        $totalValue = Product::where('tenant_id', $tenantId)->sum('unit_cost');
+        $lowStock = Product::where('tenant_id', $tenantId)
+            ->whereColumn('stock_quantity', '<=', 'min_stock')
+            ->count();
+        $outOfStock = Product::where('tenant_id', $tenantId)
+            ->where('stock_quantity', 0)
+            ->count();
+        
+        // Recent movements
+        $recentMovements = StockMovement::where('tenant_id', $tenantId)
+            ->with('product')
+            ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
+        
+        // Low stock products
+        $lowStockProducts = Product::where('tenant_id', $tenantId)
+            ->whereColumn('stock_quantity', '<=', 'min_stock')
+            ->limit(5)
+            ->get();
+        
+        return response()->json([
+            'stats' => [
+                'totalProducts' => $totalProducts,
+                'totalValue' => $totalValue,
+                'lowStock' => $lowStock,
+                'outOfStock' => $outOfStock,
+            ],
+            'recent_movements' => $recentMovements,
+            'low_stock_products' => $lowStockProducts,
+        ]);
+    }
+    
+    public function stats(Request $request)
+    {
+        $tenantId = $request->user()->tenant_id;
+        
+        return response()->json([
+            'products_count' => Product::where('tenant_id', $tenantId)->count(),
+            'movements_today' => StockMovement::where('tenant_id', $tenantId)
+                ->whereDate('created_at', today())
+                ->count(),
+        ]);
     }
 }
