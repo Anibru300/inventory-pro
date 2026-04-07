@@ -8,7 +8,6 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
-    # Dependencies for GD
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
@@ -27,7 +26,7 @@ RUN a2enmod rewrite
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy composer files first (for better caching)
+# Copy composer files first
 COPY composer.json ./
 
 # Install dependencies
@@ -36,21 +35,35 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-script
 # Copy the rest of the application
 COPY . .
 
-# Create necessary directories
-RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache database
+# Create necessary directories with proper permissions
+RUN mkdir -p storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/logs \
+    bootstrap/cache \
+    database
 
-# Set permissions
-RUN chmod -R 777 storage bootstrap/cache database
+# Set permissions (777 for free tier compatibility)
+RUN chmod -R 777 storage bootstrap/cache database \
+    && chown -R www-data:www-data storage bootstrap/cache
 
-# Create SQLite database if it doesn't exist
+# Create SQLite database
 RUN touch database/database.sqlite && chmod 777 database/database.sqlite
+
+# Generate APP_KEY if not set
+RUN php artisan key:generate --force || true
 
 # Configure Apache DocumentRoot
 RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/*.conf \
     && sed -ri -e 's!<Directory /var/www/>!<Directory /var/www/html/public>!g' /etc/apache2/apache2.conf \
     && sed -ri -e 's!AllowOverride None!AllowOverride All!g' /etc/apache2/apache2.conf
 
-# Run post-autoload scripts
+# Clear and cache config
+RUN php artisan config:clear || true \
+    && php artisan cache:clear || true \
+    && php artisan config:cache || true
+
+# Run post-autoload
 RUN composer run-script post-autoload-dump || true
 
 # Expose port
