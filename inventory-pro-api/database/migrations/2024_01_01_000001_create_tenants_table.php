@@ -9,11 +9,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Enable UUID extension
-        DB::statement('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
+        // Enable UUID extension (PostgreSQL only)
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
+        }
         
         Schema::create('tenants', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
+            // Use different default for SQLite vs PostgreSQL
+            if (DB::getDriverName() === 'sqlite') {
+                $table->uuid('id')->primary();
+            } else {
+                $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
+            }
             $table->string('name');
             $table->string('slug')->unique();
             $table->string('email');

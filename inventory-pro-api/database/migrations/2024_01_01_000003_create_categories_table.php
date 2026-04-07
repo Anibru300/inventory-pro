@@ -10,7 +10,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('categories', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
+            if (DB::getDriverName() === 'sqlite') {
+                $table->uuid('id')->primary();
+            } else {
+                $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
+            }
             $table->foreignUuid('tenant_id')->constrained()->onDelete('cascade');
             $table->uuid('parent_id')->nullable();
             
