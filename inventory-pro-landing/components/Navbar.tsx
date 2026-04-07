@@ -36,7 +36,7 @@ export default function Navbar() {
           <Link href="/" className="flex items-center gap-3 group">
             <div className="w-10 h-10 bg-gradient-to-br from-cj-gold to-cj-gold-dark rounded-lg flex items-center justify-center shadow-lg shadow-cj-gold/20 group-hover:shadow-cj-gold/40 transition-shadow">
               <svg className="w-6 h-6 text-cj-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinecap="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
               </svg>
             </div>
             <div>
