@@ -1,48 +1,52 @@
 <template>
-  <div class="min-h-screen flex">
+  <div class="min-h-screen flex bg-silver-50">
     <!-- Sidebar -->
     <aside 
       :class="[
-        'fixed lg:static inset-y-0 left-0 z-50 w-72 bg-cj-navy/95 backdrop-blur-xl border-r border-cj-silver-dim transition-transform duration-300',
+        'fixed lg:static inset-y-0 left-0 z-50 w-64 bg-silver-900 border-r border-silver-200 transition-transform duration-300',
         sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       ]"
     >
       <!-- Logo -->
-      <div class="h-20 flex items-center px-6 border-b border-cj-silver-dim">
-        <img src="/logo-lobo.png" alt="CJ" class="h-10 w-auto mr-3" />
+      <div class="h-16 flex items-center px-5 border-b border-silver-700">
+        <div class="w-8 h-8 bg-electric rounded-lg flex items-center justify-center mr-3">
+          <svg class="w-5 h-5 text-silver-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg>
+        </div>
         <div>
-          <h1 class="font-bold text-lg font-heading tracking-wide">CJ Consultoría</h1>
-          <p class="text-xs text-cj-silver-dark font-tagline italic">Excelencia Operativa</p>
+          <h1 class="font-semibold text-base text-white tracking-tight">Inventory Pro</h1>
+          <p class="text-xs text-silver-400">Sistema ERP</p>
         </div>
       </div>
 
       <!-- Navigation -->
-      <nav class="p-4 space-y-1">
+      <nav class="p-3 space-y-1">
         <router-link
           v-for="item in navigation"
           :key="item.name"
           :to="item.to"
           :class="[
             'nav-item',
-            $route.path === item.to ? 'active' : 'text-cj-silver-dark hover:text-cj-silver'
+            $route.path === item.to || $route.path.startsWith(item.to + '/') ? 'active' : 'text-silver-400 hover:text-silver-200'
           ]"
         >
-          <component :is="item.icon" class="w-5 h-5" />
-          {{ item.name }}
+          <component :is="item.icon" class="w-5 h-5 flex-shrink-0" />
+          <span class="truncate">{{ item.name }}</span>
         </router-link>
       </nav>
 
       <!-- Quick Actions -->
-      <div class="px-4 mt-6">
-        <p class="text-xs text-cj-silver-dark uppercase tracking-wider mb-3 px-4 font-heading">Acciones Rápidas</p>
+      <div class="px-3 mt-6">
+        <p class="text-xs font-medium text-silver-500 uppercase tracking-wider mb-2 px-3">Acciones Rápidas</p>
         <div class="space-y-2">
-          <button @click="$router.push('/movements/new')" class="w-full btn-primary text-sm py-2">
+          <button @click="$router.push('/movements/new')" class="btn btn-primary btn-sm w-full justify-start">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
             Nuevo Movimiento
           </button>
-          <button @click="$router.push('/products/new')" class="w-full btn-secondary text-sm py-2">
+          <button @click="$router.push('/products/new')" class="btn btn-secondary btn-sm w-full justify-start border-silver-600 text-silver-300 hover:bg-silver-800">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
@@ -52,17 +56,17 @@
       </div>
 
       <!-- User Profile -->
-      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-cj-silver-dim">
-        <div class="glass rounded-xl p-3">
+      <div class="absolute bottom-0 left-0 right-0 p-3 border-t border-silver-700">
+        <div class="bg-silver-800/50 rounded-lg p-3">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-gradient-to-br from-cj-gold to-cj-gold-dark rounded-full flex items-center justify-center text-cj-navy font-bold font-heading">
+            <div class="w-9 h-9 bg-electric rounded-full flex items-center justify-center text-silver-900 font-semibold text-sm">
               {{ userInitials }}
             </div>
             <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium truncate font-heading">{{ authStore.user?.name }}</p>
-              <p class="text-xs text-cj-silver-dark truncate">{{ authStore.tenant?.name }}</p>
+              <p class="text-sm font-medium text-white truncate">{{ authStore.user?.name }}</p>
+              <p class="text-xs text-silver-400 truncate">{{ authStore.tenant?.name }}</p>
             </div>
-            <button @click="handleLogout" class="p-2 text-cj-silver-dark hover:text-danger transition-colors">
+            <button @click="handleLogout" class="p-2 text-silver-400 hover:text-semantic-error transition-colors rounded-lg hover:bg-silver-800">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>
@@ -78,28 +82,30 @@
     <!-- Main Content -->
     <div class="flex-1 flex flex-col min-w-0">
       <!-- Header -->
-      <header class="h-16 glass border-b border-cj-silver-dim flex items-center justify-between px-6">
-        <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden p-2 text-cj-silver-dark hover:text-cj-silver">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-
-        <!-- Breadcrumb -->
-        <div class="hidden md:flex items-center gap-2 text-sm text-cj-silver-dark">
-          <span class="font-tagline italic">"Transformamos procesos en resultados"</span>
+      <header class="h-16 bg-white border-b border-silver-200 flex items-center justify-between px-6 sticky top-0 z-30">
+        <div class="flex items-center gap-4">
+          <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden p-2 text-silver-600 hover:text-silver-900 hover:bg-silver-100 rounded-lg transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          
+          <!-- Breadcrumb -->
+          <nav class="hidden md:flex items-center gap-2 text-sm text-silver-600">
+            <span class="text-silver-900 font-medium">{{ currentPageTitle }}</span>
+          </nav>
         </div>
 
         <!-- Actions -->
         <div class="flex items-center gap-3">
-          <span class="badge-gold hidden sm:inline-block">
-            {{ authStore.tenant?.plan?.toUpperCase() }}
+          <span class="badge" :class="planBadgeClass">
+            {{ authStore.tenant?.plan?.toUpperCase() || 'STARTER' }}
           </span>
-          <button class="p-2 text-cj-silver-dark hover:text-cj-gold transition-colors relative">
+          <button class="p-2 text-silver-500 hover:text-electric-dark transition-colors relative rounded-lg hover:bg-silver-100">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
             </svg>
-            <span class="absolute top-1 right-1 w-2 h-2 bg-cj-gold rounded-full"></span>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-semantic-error rounded-full"></span>
           </button>
         </div>
       </header>
@@ -114,12 +120,46 @@
 
 <script setup>
 import { ref, computed, h } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 const sidebarOpen = ref(false)
+
+// Page title based on current route
+const currentPageTitle = computed(() => {
+  const titles = {
+    '/dashboard': 'Dashboard',
+    '/products': 'Productos',
+    '/products/new': 'Nuevo Producto',
+    '/movements': 'Movimientos',
+    '/movements/new': 'Nuevo Movimiento',
+    '/transfers': 'Transferencias',
+    '/transfers/new': 'Nueva Transferencia',
+    '/lots': 'Lotes',
+    '/lots/new': 'Nuevo Lote',
+    '/warehouses': 'Almacenes',
+    '/categories': 'Categorías',
+    '/receipts': 'Vales',
+    '/reports': 'Reportes',
+    '/import': 'Importar Productos',
+    '/settings': 'Configuración',
+  }
+  return titles[route.path] || 'Inventory Pro'
+})
+
+// Plan badge class
+const planBadgeClass = computed(() => {
+  const plan = authStore.tenant?.plan?.toLowerCase()
+  switch (plan) {
+    case 'enterprise': return 'bg-purple-100 text-purple-700 border border-purple-200'
+    case 'professional': return 'bg-electric-muted text-electric-dark border border-electric'
+    case 'starter': return 'bg-silver-100 text-silver-600 border border-silver-200'
+    default: return 'bg-silver-100 text-silver-600 border border-silver-200'
+  }
+})
 
 // Icons
 const HomeIcon = { render: () => h('svg', { class: 'w-5 h-5', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' }, [h('path', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-width': '2', d: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' })] ) }
