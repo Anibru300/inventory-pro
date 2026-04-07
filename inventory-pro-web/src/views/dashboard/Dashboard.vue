@@ -145,7 +145,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useProductsStore } from '../../stores/products'
-import axios from 'axios'
+import apiClient from '../../services/api'
 
 const productsStore = useProductsStore()
 
@@ -178,7 +178,7 @@ onMounted(async () => {
   
   // Fetch dashboard data
   try {
-    const response = await axios.get('/api/dashboard')
+    const response = await apiClient.get('/dashboard')
     stats.value = response.data.stats
     recentMovements.value = response.data.recent_movements
     lowStockProducts.value = response.data.low_stock_products

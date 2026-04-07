@@ -162,7 +162,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useProductsStore } from '../../stores/products'
-import axios from 'axios'
+import apiClient from '../../services/api'
 
 const productsStore = useProductsStore()
 const categories = ref([])
@@ -205,7 +205,7 @@ onMounted(async () => {
   await fetchProducts()
   // Fetch categories
   try {
-    const response = await axios.get('/api/categories')
+    const response = await apiClient.get('/categories')
     categories.value = response.data
   } catch (err) {
     console.error('Error fetching categories:', err)

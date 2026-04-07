@@ -185,7 +185,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useProductsStore } from '../../stores/products'
-import axios from 'axios'
+import apiClient from '../../services/api'
 
 const router = useRouter()
 const productsStore = useProductsStore()
@@ -223,8 +223,8 @@ onMounted(async () => {
   // Fetch categories and warehouses
   try {
     const [catRes, whRes] = await Promise.all([
-      axios.get('/api/categories'),
-      axios.get('/api/warehouses'),
+      apiClient.get('/categories'),
+      apiClient.get('/warehouses'),
     ])
     categories.value = catRes.data
     warehouses.value = whRes.data
