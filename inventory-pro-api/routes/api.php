@@ -55,6 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // Stock Movements
     Route::apiResource('stock-movements', StockMovementController::class);
+    Route::get('/stock-movements/summary', [StockMovementController::class, 'summary']);
     Route::get('/products/{product}/kardex', [StockMovementController::class, 'kardex']);
     
     // Reports

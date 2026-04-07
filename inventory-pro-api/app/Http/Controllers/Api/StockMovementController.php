@@ -167,6 +167,47 @@ class StockMovementController extends Controller
     }
 
     /**
+     * Get movements summary
+     */
+    public function summary(Request $request)
+    {
+        $tenantId = $request->header('X-Tenant-ID', 'default');
+        
+        $today = now()->startOfDay();
+        $thisWeek = now()->startOfWeek();
+        $thisMonth = now()->startOfMonth();
+        
+        // Get entry and exit totals
+        $entries = StockMovement::where('tenant_id', $tenantId)
+            ->whereIn('movement_type', StockMovement::getEntryTypes())
+            ->whereMonth('created_at', now()->month)
+            ->sum('quantity');
+            
+        $exits = StockMovement::where('tenant_id', $tenantId)
+            ->whereIn('movement_type', StockMovement::getExitTypes())
+            ->whereMonth('created_at', now()->month)
+            ->sum('quantity');
+        
+        // Get today's movements
+        $todayCount = StockMovement::where('tenant_id', $tenantId)
+            ->whereDate('created_at', $today)
+            ->count();
+            
+        // Get this month's count
+        $monthCount = StockMovement::where('tenant_id', $tenantId)
+            ->whereMonth('created_at', now()->month)
+            ->count();
+        
+        return response()->json([
+            'entries' => (int) $entries,
+            'exits' => (int) $exits,
+            'today_count' => $todayCount,
+            'month_count' => $monthCount,
+            'balance' => (int) ($entries - $exits),
+        ]);
+    }
+
+    /**
      * Get product kardex
      */
     public function kardex(Request $request, Product $product)
