@@ -59,13 +59,15 @@ html {
   background-clip: text;
 }
 
-/* Input styles - más elegantes */
+/* Input styles - más elegantes v2 */
 input, textarea, select {
   @apply bg-bg-secondary border border-border-default rounded-lg px-4 py-3 text-text-primary placeholder-text-tertiary transition-all duration-200;
+  font-size: 16px;
 }
 
 input:focus, textarea:focus, select:focus {
-  @apply outline-none border-accent-primary ring-2 ring-accent-primary/20;
+  @apply outline-none border-accent-primary;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
 input:hover, textarea:hover, select:hover {
