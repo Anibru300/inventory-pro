@@ -2,25 +2,20 @@
 
 use Illuminate\Support\Facades\Route;
 
-// Health check - raíz
+// Root - simple text response
 Route::get('/', function () {
-    return 'Inventory Pro API v3 - OK';
+    return response('OK - Inventory Pro API v3', 200)
+        ->header('Content-Type', 'text/plain');
 });
 
-// Health check endpoint
+// Health check
 Route::get('/health', function () {
-    return response()->json([
-        'status' => 'ok',
-        'service' => 'Inventory Pro API',
-        'version' => '1.0.0',
-    ]);
+    return response()->json(['status' => 'ok']);
 });
 
-// Ruta para ver logs
+// Logs
 Route::get('/logs', function () {
     $logFile = storage_path('logs/laravel.log');
-    if (!file_exists($logFile)) {
-        return 'Log file not found';
-    }
-    return nl2br(implode("", array_slice(file($logFile), -100)));
+    if (!file_exists($logFile)) return 'No logs';
+    return nl2br(implode("", array_slice(file($logFile), -50)));
 });

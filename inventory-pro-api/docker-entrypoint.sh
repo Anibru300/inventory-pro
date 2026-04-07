@@ -3,21 +3,23 @@ set -e
 
 echo "🚀 Starting Inventory Pro API..."
 
-# Generate a fresh APP_KEY on startup (ensures valid key)
+# Generate fresh APP_KEY
 echo "🔑 Generating application key..."
 php artisan key:generate --force
 
+# Clear all caches first
+echo "🧹 Clearing all caches..."
+php artisan cache:clear 2>/dev/null || true
+php artisan config:clear 2>/dev/null || true
+php artisan route:clear 2>/dev/null || true
+php artisan view:clear 2>/dev/null || true
+
 # Run migrations
 echo "📊 Running database migrations..."
-php artisan migrate --force --seed || php artisan migrate --force
+php artisan migrate --force
 
-# Clear and rebuild caches
-echo "🧹 Clearing caches..."
-php artisan config:clear
-php artisan cache:clear
-php artisan view:clear
+# Skip seeding if it fails (due to TenantSeeder issue)
+php artisan db:seed --force 2>/dev/null || echo "⚠️ Seeding skipped"
 
 echo "✅ Setup complete! Starting Apache..."
-
-# Start Apache in foreground
 exec apache2-foreground
