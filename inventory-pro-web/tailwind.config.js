@@ -8,48 +8,55 @@ export default {
   theme: {
     extend: {
       colors: {
-        // CJ Consultoria - Paleta Corporativa
-        'cj-navy': '#0B1F3A',
-        'cj-navy-light': '#152B4D',
-        'cj-navy-dark': '#061428',
+        // CJ Consultoria - Paleta Ejecutiva Premium
+        'cj-navy': '#0a1628',
+        'cj-navy-light': '#132238',
+        'cj-navy-dark': '#050d18',
         
-        'cj-silver': '#C0C0C0',
-        'cj-silver-light': '#E8E8E8',
-        'cj-silver-dark': '#8A8A8A',
+        // Plata premium
+        'cj-silver': '#e8e8e8',
+        'cj-silver-light': '#f5f5f5',
+        'cj-silver-dark': '#a0a0a0',
+        'cj-silver-dim': 'rgba(232, 232, 232, 0.1)',
         
-        'cj-electric': '#2E7DE8',
-        'cj-electric-light': '#5B9EF0',
-        'cj-electric-dark': '#1A5FC0',
+        // Dorado ejecutivo (sutil)
+        'cj-gold': '#c9a962',
+        'cj-gold-light': '#d4b978',
+        'cj-gold-dark': '#a88b4a',
+        'cj-gold-dim': 'rgba(201, 169, 98, 0.15)',
         
-        'cj-gray': '#6B7280',
-        'cj-gray-light': '#9CA3AF',
-        'cj-gray-dark': '#4B5563',
+        // Azul corporativo
+        'cj-blue': '#1e3a5f',
+        'cj-blue-light': '#2a4a73',
+        'cj-blue-accent': '#3b5998',
         
-        // Fondos - Más profesionales
-        'bg-primary': '#0B1F3A',
-        'bg-secondary': 'rgba(21, 43, 77, 0.95)',
-        'bg-tertiary': 'rgba(30, 58, 95, 0.9)',
-        'bg-card': 'rgba(255, 255, 255, 0.03)',
+        // Eléctrico para acentos
+        'cj-electric': '#2563eb',
+        'cj-electric-light': '#3b82f6',
+        'cj-electric-dark': '#1d4ed8',
         
-        // Accent colors
-        'accent-primary': '#2E7DE8',
-        'accent-secondary': '#5B9EF0',
-        'accent-hover': '#1A5FC0',
+        // Fondos
+        'bg-primary': '#0a1628',
+        'bg-secondary': 'rgba(19, 34, 56, 0.98)',
+        'bg-tertiary': 'rgba(30, 58, 95, 0.6)',
+        'bg-card': 'rgba(255, 255, 255, 0.02)',
+        'bg-hover': 'rgba(201, 169, 98, 0.05)',
         
-        // Semantic colors
-        'success': '#10B981',
-        'warning': '#F59E0B',
-        'danger': '#EF4444',
-        'info': '#06B6D4',
+        // Bordes elegantes
+        'border-subtle': 'rgba(232, 232, 232, 0.06)',
+        'border-silver': 'rgba(232, 232, 232, 0.12)',
+        'border-gold': 'rgba(201, 169, 98, 0.3)',
         
-        // Text colors
-        'text-primary': '#F8FAFC',
-        'text-secondary': '#C0C0C0',
-        'text-tertiary': '#6B7280',
+        // Texto
+        'text-primary': '#f8fafc',
+        'text-secondary': '#e8e8e8',
+        'text-muted': '#94a3b8',
         
-        // Border colors - Más sutiles
-        'border-default': 'rgba(192, 192, 192, 0.1)',
-        'border-hover': 'rgba(192, 192, 192, 0.2)',
+        // Estados
+        'success': '#10b981',
+        'warning': '#f59e0b',
+        'danger': '#ef4444',
+        'info': '#06b6d4',
       },
       fontFamily: {
         sans: ['Open Sans', 'system-ui', 'sans-serif'],
@@ -57,29 +64,17 @@ export default {
         display: ['Playfair Display', 'serif'],
       },
       backgroundImage: {
-        'gradient-radial': 'radial-gradient(ellipse at top, rgba(46, 125, 232, 0.15) 0%, transparent 50%)',
-        'gradient-mesh': 'linear-gradient(135deg, rgba(11, 31, 58, 1) 0%, rgba(21, 43, 77, 0.98) 50%, rgba(11, 31, 58, 1) 100%)',
-      },
-      animation: {
-        'fade-in': 'fadeIn 0.3s ease-in-out',
-        'slide-in': 'slideIn 0.3s ease-out',
-        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-      },
-      keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
-        },
-        slideIn: {
-          '0%': { transform: 'translateY(-10px)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
-        },
+        'gradient-radial': 'radial-gradient(ellipse at top right, rgba(201, 169, 98, 0.08) 0%, transparent 50%)',
+        'gradient-mesh': 'linear-gradient(135deg, #0a1628 0%, #0f172a 50%, #0a1628 100%)',
+        'gradient-gold': 'linear-gradient(135deg, rgba(201, 169, 98, 0.1) 0%, transparent 50%)',
+        'gradient-silver': 'linear-gradient(180deg, rgba(232, 232, 232, 0.03) 0%, transparent 100%)',
       },
       boxShadow: {
-        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.3)',
-        'glow': '0 0 20px rgba(46, 125, 232, 0.3)',
-        'silver': '0 0 30px rgba(192, 192, 192, 0.1)',
-        'card': '0 8px 32px rgba(0, 0, 0, 0.3)',
+        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.4)',
+        'glow': '0 0 30px rgba(201, 169, 98, 0.15)',
+        'silver': '0 0 20px rgba(232, 232, 232, 0.08)',
+        'card': '0 8px 32px rgba(0, 0, 0, 0.4)',
+        'gold': '0 4px 20px rgba(201, 169, 98, 0.2)',
       },
     },
   },

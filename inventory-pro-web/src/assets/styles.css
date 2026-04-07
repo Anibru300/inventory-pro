@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -8,137 +8,131 @@
   font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
 }
 
-/* Headings use Montserrat */
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Montserrat', system-ui, sans-serif;
+  font-weight: 600;
 }
 
-/* Taglines use Playfair Display Italic */
 .font-tagline {
   font-family: 'Playfair Display', serif;
   font-style: italic;
 }
 
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* Custom scrollbar - CJ colors */
+/* Scrollbar elegante */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(11, 31, 58, 0.5);
+  background: rgba(10, 22, 40, 0.5);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(46, 125, 232, 0.3);
+  background: rgba(201, 169, 98, 0.2);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(46, 125, 232, 0.5);
+  background: rgba(201, 169, 98, 0.4);
 }
 
-/* Animations */
-.fade-enter-active,
-.fade-leave-active {
+/* Animaciones */
+.fade-enter-active, .fade-leave-active {
   transition: opacity 0.3s ease;
 }
 
-.fade-enter-from,
-.fade-leave-to {
+.fade-enter-from, .fade-leave-to {
   opacity: 0;
 }
 
-/* Glass effect - More subtle */
+/* Glass effect premium */
 .glass {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(192, 192, 192, 0.08);
-}
-
-/* Card style - Modern */
-.card-modern {
   background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(192, 192, 192, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(232, 232, 232, 0.06);
+}
+
+/* Card moderno */
+.card-premium {
+  background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+  border: 1px solid rgba(232, 232, 232, 0.08);
   border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
 }
 
-.card-modern:hover {
-  border-color: rgba(192, 192, 192, 0.15);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+.card-premium:hover {
+  border-color: rgba(201, 169, 98, 0.2);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(201, 169, 98, 0.1);
 }
 
-/* Gradient text - CJ Electric Blue */
+/* Gradientes de texto */
 .gradient-text {
-  background: linear-gradient(135deg, #5B9EF0 0%, #2E7DE8 50%, #1A5FC0 100%);
+  background: linear-gradient(135deg, #e8e8e8 0%, #c9a962 50%, #e8e8e8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Silver gradient text */
-.gradient-silver {
-  background: linear-gradient(135deg, #E8E8E8 0%, #C0C0C0 50%, #8A8A8A 100%);
+.gradient-gold {
+  background: linear-gradient(135deg, #d4b978 0%, #c9a962 50%, #a88b4a 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Input styles - Modern */
+/* Inputs premium */
 input, textarea, select {
-  @apply bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 transition-all duration-200;
+  @apply bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3 text-white placeholder-white/20 transition-all duration-300;
   font-size: 16px;
 }
 
 input:focus, textarea:focus, select:focus {
-  @apply outline-none border-cj-electric/50;
-  box-shadow: 0 0 0 3px rgba(46, 125, 232, 0.1);
+  @apply outline-none border-cj-gold/40;
+  box-shadow: 0 0 0 3px rgba(201, 169, 98, 0.08);
 }
 
 input:hover, textarea:hover, select:hover {
-  @apply border-white/20;
+  @apply border-white/15;
 }
 
-/* Button base */
+/* Botones premium */
 .btn {
-  @apply px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2;
+  @apply px-6 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2;
   font-family: 'Montserrat', system-ui, sans-serif;
 }
 
 .btn-primary {
-  @apply btn bg-cj-electric hover:bg-cj-electric-dark text-white;
-  box-shadow: 0 4px 15px rgba(46, 125, 232, 0.3);
+  @apply btn bg-cj-gold text-cj-navy;
+  box-shadow: 0 4px 15px rgba(201, 169, 98, 0.3);
 }
 
 .btn-primary:hover {
-  box-shadow: 0 6px 20px rgba(46, 125, 232, 0.4);
+  box-shadow: 0 6px 25px rgba(201, 169, 98, 0.4);
   transform: translateY(-1px);
 }
 
 .btn-secondary {
-  @apply btn bg-white/5 hover:bg-white/10 text-white border border-white/10;
+  @apply btn bg-white/[0.05] hover:bg-white/[0.08] text-white border border-white/10;
 }
 
-.btn-silver {
-  @apply btn bg-gradient-to-r from-cj-silver to-cj-silver-light text-cj-navy;
-  box-shadow: 0 4px 15px rgba(192, 192, 192, 0.2);
+.btn-navy {
+  @apply btn bg-cj-navy-light hover:bg-cj-blue text-white border border-white/10;
 }
 
 .btn-danger {
   @apply btn bg-danger/10 hover:bg-danger/20 text-danger border border-danger/30;
 }
 
-/* Card - Modern style */
+/* Card estándar */
 .card {
-  @apply bg-white/[0.02] border border-white/[0.08] rounded-2xl p-6;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  @apply bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
 }
 
 .card-hover {
@@ -146,18 +140,18 @@ input:hover, textarea:hover, select:hover {
 }
 
 .card-hover:hover {
-  @apply border-white/[0.15];
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+  @apply border-cj-gold/20;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35), 0 0 30px rgba(201, 169, 98, 0.08);
   transform: translateY(-2px);
 }
 
-/* Table - Modern */
+/* Tablas */
 .data-table {
   @apply w-full text-left border-collapse;
 }
 
 .data-table th {
-  @apply px-4 py-3 text-sm font-semibold text-cj-silver border-b border-white/10;
+  @apply px-4 py-3 text-sm font-semibold text-cj-silver-dark border-b border-white/10;
   font-family: 'Montserrat', system-ui, sans-serif;
 }
 
@@ -166,33 +160,31 @@ input:hover, textarea:hover, select:hover {
 }
 
 .data-table tr:hover {
-  @apply bg-white/5;
+  @apply bg-cj-gold/5;
 }
 
-/* Loading spinner */
+/* Loading */
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 .animate-spin-slow {
   animation: spin 2s linear infinite;
 }
 
-/* Focus visible for accessibility */
+/* Focus */
 *:focus-visible {
-  @apply outline-none ring-2 ring-cj-electric/50 ring-offset-2 ring-offset-cj-navy;
+  @apply outline-none ring-2 ring-cj-gold/30 ring-offset-2 ring-offset-cj-navy;
 }
 
-/* Logo glow effect */
+/* Logo glow */
 .logo-glow {
-  filter: drop-shadow(0 0 20px rgba(46, 125, 232, 0.3));
+  filter: drop-shadow(0 0 25px rgba(201, 169, 98, 0.4));
 }
 
-/* Stats card - Modern */
+/* Stat cards */
 .stat-card {
-  @apply card-modern p-6 relative overflow-hidden;
+  @apply card-premium p-6 relative overflow-hidden;
 }
 
 .stat-card::before {
@@ -202,12 +194,12 @@ input:hover, textarea:hover, select:hover {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(46, 125, 232, 0.5), transparent);
+  background: linear-gradient(90deg, transparent, rgba(201, 169, 98, 0.5), transparent);
 }
 
-/* Navigation item */
+/* Nav items */
 .nav-item {
-  @apply flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200;
+  @apply flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300;
   font-family: 'Montserrat', system-ui, sans-serif;
 }
 
@@ -216,5 +208,18 @@ input:hover, textarea:hover, select:hover {
 }
 
 .nav-item.active {
-  @apply bg-cj-electric/10 text-cj-electric;
+  @apply bg-cj-gold/10 text-cj-gold border border-cj-gold/20;
+}
+
+/* Badges */
+.badge {
+  @apply px-2.5 py-1 rounded-full text-xs font-medium;
+}
+
+.badge-gold {
+  @apply badge bg-cj-gold/10 text-cj-gold border border-cj-gold/20;
+}
+
+.badge-silver {
+  @apply badge bg-white/5 text-cj-silver border border-white/10;
 }
