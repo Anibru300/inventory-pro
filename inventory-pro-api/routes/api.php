@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\ProductLotController;
 use App\Http\Controllers\Api\StockMovementController;
 use App\Http\Controllers\Api\WarehouseController;
 use App\Http\Controllers\Api\WarehouseTransferController;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,7 +28,94 @@ Route::get('/health', function () {
     ]);
 });
 
-// Endpoints temporales eliminados por seguridad después del deploy inicial
+// TEMPORAL: Diagnóstico de errores
+Route::get('/debug', function () {
+    try {
+        $checks = [
+            'php_version' => PHP_VERSION,
+            'laravel_version' => app()->version(),
+            'database_connection' => config('database.default'),
+            'database_driver' => DB::getDriverName(),
+            'tables' => DB::getDoctrineSchemaManager()->listTableNames(),
+            'users_count' => \App\Models\User::count(),
+            'tenants_count' => \App\Models\Tenant::count(),
+        ];
+        return response()->json(['success' => true, 'data' => $checks]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ], 500);
+    }
+});
+
+// TEMPORAL: Test de registro con debug
+Route::post('/debug-register', function (\Illuminate\Http\Request $request) {
+    try {
+        \Log::info('Debug register attempt', $request->all());
+        
+        $validated = $request->validate([
+            'company_name' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+        
+        \Log::info('Validation passed', $validated);
+        
+        // Create tenant
+        $tenant = \App\Models\Tenant::create([
+            'name' => $validated['company_name'],
+            'slug' => \Illuminate\Support\Str::slug($validated['company_name']),
+            'email' => $validated['email'],
+            'plan' => 'starter',
+            'status' => 'active',
+            'trial_ends_at' => now()->addDays(14),
+        ]);
+        
+        \Log::info('Tenant created', ['tenant_id' => $tenant->id]);
+        
+        $nameParts = explode(' ', $validated['name'], 2);
+        
+        // Create user
+        $user = \App\Models\User::create([
+            'tenant_id' => $tenant->id,
+            'email' => $validated['email'],
+            'password' => \Illuminate\Support\Facades\Hash::make($validated['password']),
+            'first_name' => $nameParts[0],
+            'last_name' => $nameParts[1] ?? '',
+            'role' => 'admin',
+            'email_verified_at' => now(),
+            'is_active' => true,
+        ]);
+        
+        \Log::info('User created', ['user_id' => $user->id]);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'User created successfully',
+            'tenant' => $tenant,
+            'user' => $user,
+        ], 201);
+        
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'success' => false,
+            'error' => 'Validation failed',
+            'messages' => $e->errors(),
+        ], 422);
+    } catch (\Exception $e) {
+        \Log::error('Registration error: ' . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => $e->getTraceAsString(),
+        ], 500);
+    }
+});
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
