@@ -4,7 +4,7 @@ import { useAuthStore } from '../stores/auth'
 const routes = [
   {
     path: '/',
-    redirect: '/login',
+    redirect: '/dashboard',
   },
   {
     path: '/login',
@@ -23,6 +23,7 @@ const routes = [
     name: 'Dashboard',
     component: () => import('../views/dashboard/Dashboard.vue'),
   },
+  // Products
   {
     path: '/products',
     name: 'Products',
@@ -33,6 +34,47 @@ const routes = [
     name: 'ProductNew',
     component: () => import('../views/products/ProductForm.vue'),
   },
+  {
+    path: '/products/:id/edit',
+    name: 'ProductEdit',
+    component: () => import('../views/products/ProductForm.vue'),
+  },
+  // Movements
+  {
+    path: '/movements',
+    name: 'Movements',
+    component: () => import('../views/movements/MovementList.vue'),
+  },
+  {
+    path: '/movements/new',
+    name: 'MovementNew',
+    component: () => import('../views/movements/MovementForm.vue'),
+  },
+  // Warehouses
+  {
+    path: '/warehouses',
+    name: 'Warehouses',
+    component: () => import('../views/warehouses/WarehouseList.vue'),
+  },
+  // Categories
+  {
+    path: '/categories',
+    name: 'Categories',
+    component: () => import('../views/categories/CategoryList.vue'),
+  },
+  // Reports
+  {
+    path: '/reports',
+    name: 'Reports',
+    component: () => import('../views/reports/Reports.vue'),
+  },
+  // Settings
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import('../views/settings/Settings.vue'),
+  },
+  // 404
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',

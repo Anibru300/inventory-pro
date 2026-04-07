@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant;
 use App\Models\User;
+use Database\Seeders\TenantSeeder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -47,12 +48,9 @@ class AuthController extends Controller
             'is_active' => true,
         ]);
 
-        // Create default warehouse
-        $tenant->warehouses()->create([
-            'name' => 'Almacén Principal',
-            'code' => 'ALM-01',
-            'is_primary' => true,
-        ]);
+        // Run tenant seeders (creates default warehouse and categories)
+        $seeder = new TenantSeeder();
+        $seeder->run($tenant->id);
 
         $token = $user->createToken('auth-token')->plainTextToken;
 

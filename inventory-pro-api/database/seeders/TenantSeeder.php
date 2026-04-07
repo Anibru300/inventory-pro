@@ -3,80 +3,85 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
-use App\Models\Tenant;
-use App\Models\User;
 use App\Models\Warehouse;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class TenantSeeder extends Seeder
 {
-    public function run(): void
+    /**
+     * Run the database seeds for a new tenant.
+     */
+    public function run(string $tenantId): void
     {
-        // Create demo tenant
-        $tenant = Tenant::create([
-            'name' => 'Empresa Demo S.A.',
-            'slug' => 'empresa-demo',
-            'email' => 'admin@empresademo.com',
-            'phone' => '+52 55 1234 5678',
-            'address' => 'Av. Principal 123, Ciudad de México',
-            'plan' => 'pro',
-            'status' => 'active',
-            'max_users' => 10,
-            'max_products' => 0, // unlimited
-            'max_warehouses' => 5,
-            'trial_ends_at' => now()->addDays(14),
-        ]);
-
-        // Create admin user
-        $admin = User::create([
-            'tenant_id' => $tenant->id,
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password'),
-            'first_name' => 'Administrador',
-            'last_name' => 'Sistema',
-            'role' => 'admin',
-            'is_active' => true,
-            'email_verified_at' => now(),
-        ]);
-
-        // Create regular user
-        $user = User::create([
-            'tenant_id' => $tenant->id,
-            'email' => 'user@example.com',
-            'password' => Hash::make('password'),
-            'first_name' => 'Usuario',
-            'last_name' => 'Regular',
-            'role' => 'user',
-            'is_active' => true,
-            'email_verified_at' => now(),
-        ]);
-
         // Create default warehouse
-        $warehouse = Warehouse::create([
-            'tenant_id' => $tenant->id,
+        Warehouse::create([
+            'tenant_id' => $tenantId,
             'name' => 'Almacén Principal',
             'code' => 'ALM-01',
-            'address' => 'Av. Principal 123',
-            'city' => 'Ciudad de México',
-            'state' => 'CDMX',
-            'country' => 'México',
             'is_primary' => true,
-            'is_active' => true,
+            'address' => 'Dirección principal',
+            'city' => 'Ciudad',
+            'state' => 'Estado',
+            'country' => 'México',
         ]);
 
-        // Create categories
+        // Create default categories
         $categories = [
-            ['name' => 'Electrónicos', 'color' => '#6366F1', 'icon' => 'device-phone'],
-            ['name' => 'Ropa', 'color' => '#EC4899', 'icon' => 'shopping-bag'],
-            ['name' => 'Alimentos', 'color' => '#10B981', 'icon' => 'cake'],
-            ['name' => 'Hogar', 'color' => '#F59E0B', 'icon' => 'home'],
-            ['name' => 'Deportes', 'color' => '#3B82F6', 'icon' => 'sport'],
+            [
+                'name' => 'Electrónicos',
+                'color' => '#3b82f6',
+                'icon' => 'DevicePhoneMobileIcon',
+            ],
+            [
+                'name' => 'Ropa y Accesorios',
+                'color' => '#ec4899',
+                'icon' => 'ShoppingBagIcon',
+            ],
+            [
+                'name' => 'Alimentos y Bebidas',
+                'color' => '#10b981',
+                'icon' => 'BeakerIcon',
+            ],
+            [
+                'name' => 'Hogar y Jardín',
+                'color' => '#f59e0b',
+                'icon' => 'HomeIcon',
+            ],
+            [
+                'name' => 'Deportes',
+                'color' => '#8b5cf6',
+                'icon' => 'TrophyIcon',
+            ],
+            [
+                'name' => 'Libros y Papelería',
+                'color' => '#ef4444',
+                'icon' => 'BookOpenIcon',
+            ],
+            [
+                'name' => 'Salud y Belleza',
+                'color' => '#06b6d4',
+                'icon' => 'HeartIcon',
+            ],
+            [
+                'name' => 'Automotriz',
+                'color' => '#6366f1',
+                'icon' => 'TruckIcon',
+            ],
+            [
+                'name' => 'Ferretería',
+                'color' => '#84cc16',
+                'icon' => 'WrenchIcon',
+            ],
+            [
+                'name' => 'Juguetes',
+                'color' => '#f97316',
+                'icon' => 'FaceSmileIcon',
+            ],
         ];
 
         foreach ($categories as $category) {
             Category::create([
-                'tenant_id' => $tenant->id,
+                'tenant_id' => $tenantId,
                 'name' => $category['name'],
                 'slug' => \Illuminate\Support\Str::slug($category['name']),
                 'color' => $category['color'],
@@ -84,11 +89,5 @@ class TenantSeeder extends Seeder
                 'is_active' => true,
             ]);
         }
-
-        $this->command->info('✅ Tenant creado: ' . $tenant->name);
-        $this->command->info('✅ Usuario admin: admin@example.com / password');
-        $this->command->info('✅ Usuario regular: user@example.com / password');
-        $this->command->info('✅ Almacén: ' . $warehouse->name);
-        $this->command->info('✅ ' . count($categories) . ' categorías creadas');
     }
 }
