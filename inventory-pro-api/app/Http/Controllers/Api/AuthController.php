@@ -81,13 +81,24 @@ class AuthController extends Controller
                 'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
-            \Log::error('Registration failed: ' . $e->getMessage());
-            \Log::error($e->getTraceAsString());
+            $errorId = uniqid('ERR_');
+            \Log::error("Registration failed [$errorId]: " . $e->getMessage());
+            \Log::error("Trace [$errorId]: " . $e->getTraceAsString());
+            
+            // En producción, no exponer detalles internos
+            if (config('app.debug')) {
+                return response()->json([
+                    'message' => 'Registration failed',
+                    'error_id' => $errorId,
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ], 500);
+            }
+            
             return response()->json([
-                'message' => 'Registration failed',
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
+                'message' => 'Registration failed. Please try again later.',
+                'error_id' => $errorId,
             ], 500);
         }
     }
