@@ -19,6 +19,31 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
+// Simple test endpoint
+Route::get('/test', function () {
+    try {
+        // Test database connection
+        $dbVersion = \DB::select('SELECT sqlite_version() as version')[0]->version ?? 'unknown';
+        $tenantCount = \App\Models\Tenant::count();
+        $userCount = \App\Models\User::count();
+        
+        return response()->json([
+            'status' => 'ok',
+            'database' => 'connected',
+            'sqlite_version' => $dbVersion,
+            'tenants' => $tenantCount,
+            'users' => $userCount,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'error' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+        ], 500);
+    }
+});
+
 // Health check endpoint
 Route::get('/health', function () {
     try {
