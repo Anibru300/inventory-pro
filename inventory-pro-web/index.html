@@ -4,27 +4,17 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Inventory Pro - Sistema profesional de gestión de inventarios multi-tenant" />
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    <title>Inventory Pro - Gestión de Inventarios</title>
+    <meta name="description" content="Inventory Pro - Sistema de gestión de inventarios" />
+    <title>Inventory Pro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- REDIRECCIÓN INMEDIATA: Si la URL contiene /home, redirigir a raíz -->
     <script>
-      (function() {
-        var path = window.location.pathname;
-        var hash = window.location.hash;
-        
-        // Si estamos en /home o /home/, redirigir a /
-        if (path === '/home' || path.indexOf('/home/') === 0) {
-          var newPath = path.replace('/home', '');
-          window.location.replace(window.location.origin + newPath + hash);
-        }
-      })();
+      // Redirección inmediata si la URL contiene /home
+      if (window.location.pathname.indexOf('/home') === 0) {
+        window.location.replace(window.location.origin + '/#' + window.location.hash);
+      }
     </script>
   </head>
   <body>

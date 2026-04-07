@@ -1,6 +1,0 @@
-# Redirect /home paths to root
-/home    /    301
-/home/*  /:splat  301
-
-# SPA fallback - all routes to index.html
-/*    /index.html   200

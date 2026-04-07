@@ -2,28 +2,10 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
 const routes = [
-  // Redirección específica para /home
-  {
-    path: '/home',
-    redirect: '/',
-  },
-  {
-    path: '/home/:pathMatch(.*)*',
-    redirect: (to) => {
-      return { path: '/' + to.params.pathMatch[0], hash: to.hash }
-    },
-  },
-  
-  // Ruta raíz - redirige según autenticación
   {
     path: '/',
-    redirect: () => {
-      const token = localStorage.getItem('token')
-      return token ? '/dashboard' : '/login'
-    },
+    redirect: '/login',
   },
-  
-  // Auth routes
   {
     path: '/login',
     name: 'Login',
@@ -36,15 +18,11 @@ const routes = [
     component: () => import('../views/auth/Register.vue'),
     meta: { public: true },
   },
-  
-  // Dashboard (main)
   {
     path: '/dashboard',
     name: 'Dashboard',
     component: () => import('../views/dashboard/Dashboard.vue'),
   },
-  
-  // Products
   {
     path: '/products',
     name: 'Products',
@@ -55,8 +33,6 @@ const routes = [
     name: 'ProductNew',
     component: () => import('../views/products/ProductForm.vue'),
   },
-  
-  // 404
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
@@ -69,11 +45,9 @@ const router = createRouter({
   routes,
 })
 
-// Navigation guard
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
 
-  // Initialize auth if token exists
   if (!authStore.user && authStore.token) {
     try {
       await authStore.fetchUser()
@@ -82,7 +56,6 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 
-  // Check authentication
   if (!to.meta.public && !authStore.isAuthenticated) {
     next('/login')
   } else if (to.meta.public && authStore.isAuthenticated && to.path !== '/') {
