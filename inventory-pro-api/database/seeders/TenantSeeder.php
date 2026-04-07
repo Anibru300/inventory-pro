@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Warehouse;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 
 class TenantSeeder extends Seeder
 {
@@ -13,81 +14,54 @@ class TenantSeeder extends Seeder
      */
     public function run(string $tenantId): void
     {
-        // Create default warehouse
-        Warehouse::create([
-            'tenant_id' => $tenantId,
-            'name' => 'Almacén Principal',
-            'code' => 'ALM-01',
-            'is_primary' => true,
-            'address' => 'Dirección principal',
-            'city' => 'Ciudad',
-            'state' => 'Estado',
-            'country' => 'México',
-        ]);
+        Log::info('TenantSeeder started', ['tenant_id' => $tenantId]);
 
-        // Create default categories
-        $categories = [
-            [
-                'name' => 'Electrónicos',
-                'color' => '#3b82f6',
-                'icon' => 'DevicePhoneMobileIcon',
-            ],
-            [
-                'name' => 'Ropa y Accesorios',
-                'color' => '#ec4899',
-                'icon' => 'ShoppingBagIcon',
-            ],
-            [
-                'name' => 'Alimentos y Bebidas',
-                'color' => '#10b981',
-                'icon' => 'BeakerIcon',
-            ],
-            [
-                'name' => 'Hogar y Jardín',
-                'color' => '#f59e0b',
-                'icon' => 'HomeIcon',
-            ],
-            [
-                'name' => 'Deportes',
-                'color' => '#8b5cf6',
-                'icon' => 'TrophyIcon',
-            ],
-            [
-                'name' => 'Libros y Papelería',
-                'color' => '#ef4444',
-                'icon' => 'BookOpenIcon',
-            ],
-            [
-                'name' => 'Salud y Belleza',
-                'color' => '#06b6d4',
-                'icon' => 'HeartIcon',
-            ],
-            [
-                'name' => 'Automotriz',
-                'color' => '#6366f1',
-                'icon' => 'TruckIcon',
-            ],
-            [
-                'name' => 'Ferretería',
-                'color' => '#84cc16',
-                'icon' => 'WrenchIcon',
-            ],
-            [
-                'name' => 'Juguetes',
-                'color' => '#f97316',
-                'icon' => 'FaceSmileIcon',
-            ],
-        ];
-
-        foreach ($categories as $category) {
-            Category::create([
+        try {
+            // Create default warehouse - without global scope
+            $warehouse = Warehouse::withoutGlobalScopes()->create([
                 'tenant_id' => $tenantId,
-                'name' => $category['name'],
-                'slug' => \Illuminate\Support\Str::slug($category['name']),
-                'color' => $category['color'],
-                'icon' => $category['icon'],
-                'is_active' => true,
+                'name' => 'Almacén Principal',
+                'code' => 'ALM-01',
+                'is_primary' => true,
+                'address' => 'Dirección principal',
+                'city' => 'Ciudad',
+                'state' => 'Estado',
+                'country' => 'México',
             ]);
+            
+            Log::info('Warehouse created', ['warehouse_id' => $warehouse->id]);
+
+            // Create default categories - without global scope
+            $categories = [
+                ['name' => 'Electrónicos', 'color' => '#3b82f6', 'icon' => 'DevicePhoneMobileIcon'],
+                ['name' => 'Ropa y Accesorios', 'color' => '#ec4899', 'icon' => 'ShoppingBagIcon'],
+                ['name' => 'Alimentos y Bebidas', 'color' => '#10b981', 'icon' => 'BeakerIcon'],
+                ['name' => 'Hogar y Jardín', 'color' => '#f59e0b', 'icon' => 'HomeIcon'],
+                ['name' => 'Deportes', 'color' => '#8b5cf6', 'icon' => 'TrophyIcon'],
+                ['name' => 'Libros y Papelería', 'color' => '#ef4444', 'icon' => 'BookOpenIcon'],
+                ['name' => 'Salud y Belleza', 'color' => '#06b6d4', 'icon' => 'HeartIcon'],
+                ['name' => 'Automotriz', 'color' => '#6366f1', 'icon' => 'TruckIcon'],
+                ['name' => 'Ferretería', 'color' => '#84cc16', 'icon' => 'WrenchIcon'],
+                ['name' => 'Juguetes', 'color' => '#f97316', 'icon' => 'FaceSmileIcon'],
+            ];
+
+            foreach ($categories as $category) {
+                $cat = Category::withoutGlobalScopes()->create([
+                    'tenant_id' => $tenantId,
+                    'name' => $category['name'],
+                    'slug' => \Illuminate\Support\Str::slug($category['name']),
+                    'color' => $category['color'],
+                    'icon' => $category['icon'],
+                    'is_active' => true,
+                ]);
+            }
+            
+            Log::info('Categories created', ['count' => count($categories)]);
+
+        } catch (\Exception $e) {
+            Log::error('TenantSeeder error: ' . $e->getMessage());
+            Log::error($e->getTraceAsString());
+            throw $e;
         }
     }
 }
