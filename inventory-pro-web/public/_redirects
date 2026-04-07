@@ -1,2 +1,6 @@
-/home/* /:splat 200
+# Redirect /home to root
+/home / 301
+/home/* /:splat 301
+
+# SPA fallback
 /* /index.html 200
