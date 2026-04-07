@@ -2,7 +2,17 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import axios from 'axios'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
+const API_URL = import.meta.env.VITE_API_URL || 'https://inventory-pro-api-v2.onrender.com/api'
+
+// Create axios instance with auth header
+function getAuthHeaders() {
+  const token = localStorage.getItem('token')
+  return {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+  }
+}
 
 export const useProductsStore = defineStore('products', () => {
   // State
@@ -32,7 +42,10 @@ export const useProductsStore = defineStore('products', () => {
     error.value = null
 
     try {
-      const response = await axios.get(`${API_URL}/products`, { params })
+      const response = await axios.get(`${API_URL}/products`, { 
+        params,
+        headers: getAuthHeaders()
+      })
       products.value = response.data.data
       pagination.value = {
         current_page: response.data.current_page,
@@ -54,7 +67,9 @@ export const useProductsStore = defineStore('products', () => {
     error.value = null
 
     try {
-      const response = await axios.get(`${API_URL}/products/${id}`)
+      const response = await axios.get(`${API_URL}/products/${id}`, {
+        headers: getAuthHeaders()
+      })
       currentProduct.value = response.data
       return response.data
     } catch (err) {
@@ -70,7 +85,9 @@ export const useProductsStore = defineStore('products', () => {
     error.value = null
 
     try {
-      const response = await axios.post(`${API_URL}/products`, data)
+      const response = await axios.post(`${API_URL}/products`, data, {
+        headers: getAuthHeaders()
+      })
       products.value.unshift(response.data.product)
       return response.data
     } catch (err) {
@@ -86,7 +103,9 @@ export const useProductsStore = defineStore('products', () => {
     error.value = null
 
     try {
-      const response = await axios.put(`${API_URL}/products/${id}`, data)
+      const response = await axios.put(`${API_URL}/products/${id}`, data, {
+        headers: getAuthHeaders()
+      })
       const index = products.value.findIndex(p => p.id === id)
       if (index !== -1) {
         products.value[index] = response.data.product
@@ -105,7 +124,9 @@ export const useProductsStore = defineStore('products', () => {
     error.value = null
 
     try {
-      await axios.delete(`${API_URL}/products/${id}`)
+      await axios.delete(`${API_URL}/products/${id}`, {
+        headers: getAuthHeaders()
+      })
       products.value = products.value.filter(p => p.id !== id)
     } catch (err) {
       error.value = err.response?.data?.message || 'Error al eliminar producto'
