@@ -22,6 +22,7 @@ class Tenant extends Model
         'plan',
         'status',
         'subscription_ends_at',
+        'trial_ends_at',
         'timezone',
         'currency',
         'language',
@@ -34,6 +35,7 @@ class Tenant extends Model
     protected $casts = [
         'settings' => 'array',
         'subscription_ends_at' => 'datetime',
+        'trial_ends_at' => 'datetime',
         'max_users' => 'integer',
         'max_products' => 'integer',
         'max_warehouses' => 'integer',
