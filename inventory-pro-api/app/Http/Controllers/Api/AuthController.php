@@ -8,6 +8,7 @@ use App\Models\User;
 use Database\Seeders\TenantSeeder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -16,7 +17,7 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         try {
-            \Log::info('Register attempt started', ['email' => $request->email]);
+            Log::info('Register attempt started', ['email' => $request->email]);
             
             $validated = $request->validate([
                 'company_name' => 'required|string|max:255',
@@ -25,7 +26,7 @@ class AuthController extends Controller
                 'password' => 'required|string|min:8|confirmed',
             ]);
 
-            \Log::info('Validation passed');
+            Log::info('Validation passed');
 
             $nameParts = explode(' ', $validated['name'], 2);
             $firstName = $nameParts[0];
@@ -41,7 +42,7 @@ class AuthController extends Controller
                 'trial_ends_at' => now()->addDays(14),
             ]);
             
-            \Log::info('Tenant created', ['tenant_id' => $tenant->id]);
+            Log::info('Tenant created', ['tenant_id' => $tenant->id]);
 
             // Create admin user
             $user = User::create([
@@ -55,17 +56,17 @@ class AuthController extends Controller
                 'is_active' => true,
             ]);
             
-            \Log::info('User created', ['user_id' => $user->id]);
+            Log::info('User created', ['user_id' => $user->id]);
 
             // Run tenant seeders (creates default warehouse and categories)
             $seeder = new TenantSeeder();
             $seeder->run($tenant->id);
             
-            \Log::info('Tenant seeded');
+            Log::info('Tenant seeded');
 
             $token = $user->createToken('auth-token')->plainTextToken;
             
-            \Log::info('Token created');
+            Log::info('Token created');
 
             return response()->json([
                 'message' => 'Tenant created successfully',
@@ -75,7 +76,7 @@ class AuthController extends Controller
             ], 201);
             
         } catch (ValidationException $e) {
-            \Log::error('Validation failed', ['errors' => $e->errors()]);
+            Log::error('Validation failed', ['errors' => $e->errors()]);
             return response()->json([
                 'message' => 'Validation failed',
                 'errors' => $e->errors(),
@@ -84,9 +85,9 @@ class AuthController extends Controller
             $errorId = uniqid('ERR_');
             
             // Log detallado
-            \Log::error("Registration failed [$errorId]: " . $e->getMessage());
-            \Log::error("File: " . $e->getFile() . " Line: " . $e->getLine());
-            \Log::error("Trace: " . $e->getTraceAsString());
+            Log::error("Registration failed [$errorId]: " . $e->getMessage());
+            Log::error("File: " . $e->getFile() . " Line: " . $e->getLine());
+            Log::error("Trace: " . $e->getTraceAsString());
             
             // TEMPORAL: Siempre mostrar detalles para diagnóstico
             return response()->json([
