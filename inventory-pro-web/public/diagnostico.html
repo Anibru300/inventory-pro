@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Diagnóstico - Inventory Pro</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #0f172a;
+      color: #f1f5f9;
+    }
+    h1 { color: #3b82f6; }
+    .info-box {
+      background: #1e293b;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      border: 1px solid #334155;
+    }
+    .error { color: #ef4444; }
+    .success { color: #10b981; }
+    .warning { color: #f59e0b; }
+    code {
+      background: #334155;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #2563eb;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 Diagnóstico de Inventory Pro</h1>
+  
+  <div class="info-box">
+    <h2>Información de URL</h2>
+    <p><strong>URL completa:</strong> <code id="full-url"></code></p>
+    <p><strong>Path:</strong> <code id="path"></code></p>
+    <p><strong>Hash:</strong> <code id="hash"></code></p>
+    <p><strong>Origen:</strong> <code id="origin"></code></p>
+  </div>
+
+  <div class="info-box">
+    <h2>Estado</h2>
+    <p id="status"></p>
+    <p id="recommendation"></p>
+  </div>
+
+  <div class="info-box">
+    <h2>Acciones</h2>
+    <button onclick="fixUrl()">🔧 Corregir URL</button>
+    <button onclick="goToRoot()">🏠 Ir a página principal</button>
+    <button onclick="clearCache()">🗑️ Limpiar caché</button>
+  </div>
+
+  <div class="info-box">
+    <h2>URL Correcta</h2>
+    <p>La URL correcta debería ser:</p>
+    <code id="correct-url"></code>
+    <p style="margin-top: 10px;">
+      <a id="correct-link" href="#">🔗 Clic aquí para ir a URL correcta</a>
+    </p>
+  </div>
+
+  <script>
+    // Mostrar información actual
+    document.getElementById('full-url').textContent = window.location.href;
+    document.getElementById('path').textContent = window.location.pathname;
+    document.getElementById('hash').textContent = window.location.hash;
+    document.getElementById('origin').textContent = window.location.origin;
+
+    // Analizar estado
+    const path = window.location.pathname;
+    const statusEl = document.getElementById('status');
+    const recEl = document.getElementById('recommendation');
+    
+    if (path.includes('/home')) {
+      statusEl.innerHTML = '<span class="error">❌ PROBLEMA DETECTADO: La URL contiene "/home"</span>';
+      recEl.innerHTML = '<span class="warning">⚠️ Render está sirviendo la app desde /home en lugar de /</span>';
+    } else {
+      statusEl.innerHTML = '<span class="success">✅ La URL es correcta</span>';
+    }
+
+    // Calcular URL correcta
+    const correctPath = path.replace('/home', '');
+    const correctUrl = window.location.origin + '/#' + correctPath + window.location.hash;
+    document.getElementById('correct-url').textContent = correctUrl;
+    document.getElementById('correct-link').href = correctUrl;
+
+    function fixUrl() {
+      const newUrl = window.location.origin + '/#' + correctPath + window.location.hash;
+      window.location.replace(newUrl);
+    }
+
+    function goToRoot() {
+      window.location.href = window.location.origin + '/#/login';
+    }
+
+    function clearCache() {
+      if ('caches' in window) {
+        caches.keys().then(names => {
+          names.forEach(name => caches.delete(name));
+        });
+      }
+      localStorage.clear();
+      sessionStorage.clear();
+      alert('Caché limpiado. Por favor recarga la página.');
+    }
+  </script>
+</body>
+</html>
