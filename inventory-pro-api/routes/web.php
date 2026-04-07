@@ -2,12 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
+// Simple text response for root
 Route::get('/', function () {
-    return response()->json([
-        'status' => 'ok',
-        'service' => 'Inventory Pro API',
-        'version' => '1.0.0',
-    ]);
+    return 'Inventory Pro API - OK';
 });
 
 // Health check endpoint (web)
