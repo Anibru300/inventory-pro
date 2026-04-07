@@ -28,46 +28,7 @@ Route::get('/health', function () {
     ]);
 });
 
-// TEMPORAL: Endpoint para ejecutar migraciones (solo desarrollo)
-// BORRAR DESPUÉS DE USAR EN PRODUCCIÓN
-Route::get('/run-migrations', function () {
-    try {
-        // Verificar que sea una petición segura (opcional: agregar token)
-        // if (request()->header('X-Migration-Token') !== env('MIGRATION_TOKEN')) {
-        //     return response()->json(['error' => 'Unauthorized'], 403);
-        // }
-        
-        Artisan::call('migrate', ['--force' => true]);
-        $output = Artisan::output();
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Migraciones ejecutadas',
-            'output' => $output,
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'error' => $e->getMessage(),
-        ], 500);
-    }
-});
-
-// TEMPORAL: Ver estado de migraciones
-Route::get('/migration-status', function () {
-    try {
-        Artisan::call('migrate:status');
-        $output = Artisan::output();
-        
-        return response()->json([
-            'output' => nl2br($output),
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'error' => $e->getMessage(),
-        ], 500);
-    }
-});
+// Endpoints temporales eliminados por seguridad después del deploy inicial
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
