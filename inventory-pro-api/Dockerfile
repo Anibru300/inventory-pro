@@ -20,7 +20,7 @@ WORKDIR /var/www/html
 # Copy application
 COPY . .
 
-# Create directories and set permissions PRIMERO
+# Create directories and set permissions
 RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache database \
     && chmod -R 777 storage bootstrap/cache database
 
@@ -33,16 +33,10 @@ ENV APP_KEY=base64:aca0d9abb108edcbe32e819ec2192e33
 ENV DB_CONNECTION=sqlite
 ENV DB_DATABASE=/var/www/html/database/database.sqlite
 
-# Configure Apache DocumentRoot to point to /var/www/html/public
-RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
-    && sed -i 's|<Directory /var/www/html>|<Directory /var/www/html/public>|g' /etc/apache2/sites-available/000-default.conf
-
-# Add .htaccess support
-RUN echo '<Directory /var/www/html/public>\n\
-    Options Indexes FollowSymLinks\n\
-    AllowOverride All\n\
-    Require all granted\n\
-</Directory>' >> /etc/apache2/apache2.conf
+# Configure Apache DocumentRoot to point to public folder
+RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/*.conf \
+    && sed -ri -e 's!<Directory /var/www/>!<Directory /var/www/html/public>!g' /etc/apache2/apache2.conf \
+    && sed -ri -e 's!AllowOverride None!AllowOverride All!g' /etc/apache2/apache2.conf
 
 # Install dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
