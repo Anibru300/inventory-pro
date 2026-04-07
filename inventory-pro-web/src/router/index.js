@@ -2,6 +2,11 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
 const routes = [
+  // Redirección de /home a /
+  {
+    path: '/home',
+    redirect: '/',
+  },
   {
     path: '/login',
     name: 'Login',
