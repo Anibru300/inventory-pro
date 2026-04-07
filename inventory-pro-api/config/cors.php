@@ -9,6 +9,8 @@ return [
         'http://127.0.0.1:5173',
         'https://inventory-pro-api-v2.onrender.com',
         'https://inventory-pro-web.onrender.com',
+        'https://inventory-pro-9ef8.onrender.com',
+        'https://*.onrender.com',
     ],
     'allowed_origins_patterns' => [],
     'allowed_headers' => ['*'],
