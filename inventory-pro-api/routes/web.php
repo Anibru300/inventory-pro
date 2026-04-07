@@ -7,7 +7,6 @@ Route::get('/', function () {
         'status' => 'ok',
         'service' => 'Inventory Pro API',
         'version' => '1.0.0',
-        'timestamp' => now()->toIso8601String(),
     ]);
 });
 
@@ -17,7 +16,6 @@ Route::get('/health', function () {
         'status' => 'ok',
         'service' => 'Inventory Pro API',
         'version' => '1.0.0',
-        'timestamp' => now()->toIso8601String(),
     ]);
 });
 
