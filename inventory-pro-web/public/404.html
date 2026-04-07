@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script>
+    // Redirigir cualquier ruta desconocida a la app principal
+    var path = window.location.pathname;
+    var hash = window.location.hash;
+    var search = window.location.search;
+    
+    // Remover /home si existe
+    if (path.indexOf('/home') === 0) {
+      path = path.replace('/home', '');
+    }
+    
+    // Redirigir a la raíz con el hash
+    window.location.href = '/' + search + '#' + path + hash;
+  </script>
+</head>
+<body>
+  <p>Redirigiendo...</p>
+</body>
+</html>

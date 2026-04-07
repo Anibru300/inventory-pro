@@ -12,6 +12,20 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- REDIRECCIÓN INMEDIATA: Si la URL contiene /home, redirigir a raíz -->
+    <script>
+      (function() {
+        var path = window.location.pathname;
+        var hash = window.location.hash;
+        
+        // Si estamos en /home o /home/, redirigir a /
+        if (path === '/home' || path.indexOf('/home/') === 0) {
+          var newPath = path.replace('/home', '');
+          window.location.replace(window.location.origin + newPath + hash);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="app"></div>
