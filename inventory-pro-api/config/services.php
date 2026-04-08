@@ -35,19 +35,19 @@ return [
         ],
     ],
 
-    // Stripe Configuration
+    // Stripe Configuration (para pagos con tarjeta)
     'stripe' => [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
     ],
 
-    // Bank Transfer Configuration
+    // Bank Transfer Configuration (datos bancarios reales de CJ Consultoría)
     'bank' => [
-        'account' => env('BANK_ACCOUNT', '0000000000'),
-        'name' => env('BANK_NAME', 'BBVA'),
-        'holder' => env('BANK_HOLDER', 'CJ Consultoría'),
-        'clabe' => env('BANK_CLABE', '000000000000000000'),
+        'institution' => env('BANK_INSTITUTION', 'Mercado Pago W'),
+        'holder' => env('BANK_HOLDER', 'Maria Jimena Mena Prado'),
+        'clabe' => env('BANK_CLABE', '722969020205392763'),
+        'concept' => env('BANK_CONCEPT', 'INVPRO'),
     ],
 
 ];

@@ -207,20 +207,20 @@
               <h3 class="font-semibold mb-4" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'">Datos Bancarios</h3>
               <div class="space-y-3 text-sm">
                 <div class="flex justify-between">
-                  <span :class="isDark ? 'text-gray-400' : 'text-gray-600'">Banco:</span>
-                  <span class="font-medium" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'">BBVA</span>
-                </div>
-                <div class="flex justify-between">
-                  <span :class="isDark ? 'text-gray-400' : 'text-gray-600'">Cuenta:</span>
-                  <span class="font-medium" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'">0111449027</span>
+                  <span :class="isDark ? 'text-gray-400' : 'text-gray-600'">Institución:</span>
+                  <span class="font-medium" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'">Mercado Pago W</span>
                 </div>
                 <div class="flex justify-between">
                   <span :class="isDark ? 'text-gray-400' : 'text-gray-600'">CLABE:</span>
-                  <span class="font-medium" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'">012320001114490279</span>
+                  <span class="font-mono font-medium" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'">722969020205392763</span>
                 </div>
                 <div class="flex justify-between">
-                  <span :class="isDark ? 'text-gray-400' : 'text-gray-600'">Titular:</span>
-                  <span class="font-medium" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'">Carlos Jesús Urbina Morales</span>
+                  <span :class="isDark ? 'text-gray-400' : 'text-gray-600'">Beneficiario:</span>
+                  <span class="font-medium" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'">Maria Jimena Mena Prado</span>
+                </div>
+                <div class="flex justify-between">
+                  <span :class="isDark ? 'text-gray-400' : 'text-gray-600'">Concepto:</span>
+                  <span class="font-mono font-medium text-[#2E7DE8]">INVPRO</span>
                 </div>
               </div>
             </div>

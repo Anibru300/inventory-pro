@@ -285,8 +285,8 @@ class StripeController extends Controller
             'method' => Payment::METHOD_TRANSFER,
             'metadata' => [
                 'reference' => $request->reference,
-                'bank_account' => config('services.bank.account'),
-                'bank_name' => config('services.bank.name'),
+                'bank_clabe' => config('services.bank.clabe'),
+                'bank_institution' => config('services.bank.institution'),
             ],
             'notes' => 'Pago por transferencia bancaria - Referencia: ' . $request->reference,
         ]);
@@ -295,10 +295,10 @@ class StripeController extends Controller
             'success' => true,
             'payment_id' => $payment->id,
             'bank_info' => [
-                'account' => config('services.bank.account'),
-                'name' => config('services.bank.name'),
+                'institution' => config('services.bank.institution'),
                 'holder' => config('services.bank.holder'),
                 'clabe' => config('services.bank.clabe'),
+                'concept' => config('services.bank.concept'),
             ],
             'message' => 'Por favor realiza la transferencia y envía el comprobante. Tu cuenta será actualizada en 24-48 horas hábiles.',
         ]);
