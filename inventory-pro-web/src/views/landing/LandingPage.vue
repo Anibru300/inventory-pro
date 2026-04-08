@@ -74,7 +74,7 @@
           <!-- Desktop Menu -->
           <div class="hidden md:flex items-center gap-8">
             <button @click="scrollToSection('features')" class="text-sm font-medium transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-300' : 'text-gray-600'">Características</button>
-            <button @click="scrollToSection('how-it-works')" class="text-sm font-medium transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-300' : 'text-gray-600'">Cómo Funciona</button>
+            <button @click="scrollToSection('demo-interactive')" class="text-sm font-medium transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-300' : 'text-gray-600'">Cómo Funciona</button>
             <button @click="scrollToSection('pricing')" class="text-sm font-medium transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-300' : 'text-gray-600'">Precios</button>
             <button @click="scrollToSection('blog')" class="text-sm font-medium transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-300' : 'text-gray-600'">Blog</button>
             <button @click="scrollToSection('consulting')" class="text-sm font-medium transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-300' : 'text-gray-600'">Consultoría</button>
@@ -114,7 +114,7 @@
         <div v-show="mobileMenuOpen" class="md:hidden py-4 border-t" :class="isDark ? 'border-gray-700' : 'border-gray-200'">
           <div class="flex flex-col gap-3">
             <button @click="scrollToSection('features'); mobileMenuOpen = false" class="text-left px-4 py-2 rounded-lg transition-colors" :class="isDark ? 'text-gray-300 hover:bg-[#1a2d47]' : 'text-gray-600 hover:bg-gray-100'">Características</button>
-            <button @click="scrollToSection('how-it-works'); mobileMenuOpen = false" class="text-left px-4 py-2 rounded-lg transition-colors" :class="isDark ? 'text-gray-300 hover:bg-[#1a2d47]' : 'text-gray-600 hover:bg-gray-100'">Cómo Funciona</button>
+            <button @click="scrollToSection('demo-interactive'); mobileMenuOpen = false" class="text-left px-4 py-2 rounded-lg transition-colors" :class="isDark ? 'text-gray-300 hover:bg-[#1a2d47]' : 'text-gray-600 hover:bg-gray-100'">Cómo Funciona</button>
             <button @click="scrollToSection('pricing'); mobileMenuOpen = false" class="text-left px-4 py-2 rounded-lg transition-colors" :class="isDark ? 'text-gray-300 hover:bg-[#1a2d47]' : 'text-gray-600 hover:bg-gray-100'">Precios</button>
             <button @click="scrollToSection('blog'); mobileMenuOpen = false" class="text-left px-4 py-2 rounded-lg transition-colors" :class="isDark ? 'text-gray-300 hover:bg-[#1a2d47]' : 'text-gray-600 hover:bg-gray-100'">Blog</button>
             <button @click="scrollToSection('consulting'); mobileMenuOpen = false" class="text-left px-4 py-2 rounded-lg transition-colors" :class="isDark ? 'text-gray-300 hover:bg-[#1a2d47]' : 'text-gray-600 hover:bg-gray-100'">Consultoría</button>
@@ -192,7 +192,7 @@
           <div class="relative flex justify-center items-center">
             <div class="absolute -inset-4 bg-gradient-to-r from-[#2E7DE8] to-[#C0C0C0] rounded-full opacity-20 blur-3xl"></div>
             <div class="relative w-[400px] h-[400px] lg:w-[500px] lg:h-[500px] flex items-center justify-center">
-              <img src="/logo-cj-main.png" alt="CJ Consultoría" class="w-full h-full object-contain drop-shadow-2xl" />
+              <img src="/logo-cj-sin-fondo.png" alt="CJ Consultoría" class="w-full h-full object-contain drop-shadow-2xl" />
             </div>
           </div>
         </div>
