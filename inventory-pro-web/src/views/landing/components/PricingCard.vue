@@ -56,26 +56,35 @@
 
       <!-- CTA Button -->
       <router-link 
-        v-if="!popular"
+        v-if="!popular && name !== 'Enterprise'"
         to="/register"
-        class="block w-full py-3 px-4 text-center rounded-xl font-semibold transition-all border-2"
+        class="block w-full py-3 px-4 text-center rounded-xl font-semibold transition-all border-2 active:scale-95"
         :class="isDark 
           ? 'border-[#2E7DE8] text-[#2E7DE8] hover:bg-[#2E7DE8] hover:text-white'
           : 'border-[#2E7DE8] text-[#2E7DE8] hover:bg-[#2E7DE8] hover:text-white'">
         {{ cta }}
       </router-link>
       <router-link 
-        v-else
+        v-else-if="popular"
         to="/register"
-        class="block w-full py-3 px-4 text-center rounded-xl font-semibold bg-white text-[#2E7DE8] hover:bg-gray-100 transition-all shadow-lg">
+        class="block w-full py-3 px-4 text-center rounded-xl font-semibold bg-white text-[#2E7DE8] hover:bg-gray-100 transition-all shadow-lg active:scale-95">
         {{ cta }}
       </router-link>
+      <button 
+        v-else
+        @click="contactEnterprise"
+        class="block w-full py-3 px-4 text-center rounded-xl font-semibold transition-all border-2 active:scale-95"
+        :class="isDark 
+          ? 'border-[#2E7DE8] text-[#2E7DE8] hover:bg-[#2E7DE8] hover:text-white'
+          : 'border-[#2E7DE8] text-[#2E7DE8] hover:bg-[#2E7DE8] hover:text-white'">
+        {{ cta }}
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
-defineProps({
+const props = defineProps({
   name: String,
   price: String,
   period: String,
@@ -85,4 +94,10 @@ defineProps({
   popular: Boolean,
   isDark: Boolean
 })
+
+const contactEnterprise = () => {
+  const phone = '524776940272'
+  const message = encodeURIComponent(`Hola Carlos, estoy interesado en el Plan Enterprise de Inventory Pro. ¿Podemos agendar una llamada para conocer más detalles?`)
+  window.open(`https://wa.me/${phone}?text=${message}`, '_blank', 'noopener,noreferrer')
+}
 </script>

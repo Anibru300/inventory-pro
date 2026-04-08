@@ -56,7 +56,31 @@
             <router-link to="/login" class="hidden sm:block text-sm font-medium transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-300' : 'text-gray-600'">
               Iniciar Sesión
             </router-link>
-            <router-link to="/register" class="px-5 py-2.5 bg-gradient-to-r from-[#2E7DE8] to-[#1e6ad1] hover:from-[#1e6ad1] hover:to-[#2E7DE8] text-white rounded-xl font-medium transition-all shadow-lg shadow-[#2E7DE8]/30 hover:shadow-[#2E7DE8]/50">
+            <router-link to="/register" class="hidden sm:block px-5 py-2.5 bg-gradient-to-r from-[#2E7DE8] to-[#1e6ad1] hover:from-[#1e6ad1] hover:to-[#2E7DE8] text-white rounded-xl font-medium transition-all shadow-lg shadow-[#2E7DE8]/30 hover:shadow-[#2E7DE8]/50">
+              Prueba Gratis
+            </router-link>
+            
+            <!-- Mobile Menu Button -->
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 rounded-lg" :class="isDark ? 'text-white hover:bg-[#1a3050]' : 'text-gray-700 hover:bg-gray-100'">
+              <svg v-if="!mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div v-show="mobileMenuOpen" class="md:hidden py-4 border-t" :class="isDark ? 'border-gray-700' : 'border-gray-200'">
+          <div class="flex flex-col gap-3">
+            <button @click="scrollToSection('features'); mobileMenuOpen = false" class="text-left px-4 py-2 rounded-lg transition-colors" :class="isDark ? 'text-gray-300 hover:bg-[#1a3050]' : 'text-gray-600 hover:bg-gray-100'">Características</button>
+            <button @click="scrollToSection('how-it-works'); mobileMenuOpen = false" class="text-left px-4 py-2 rounded-lg transition-colors" :class="isDark ? 'text-gray-300 hover:bg-[#1a3050]' : 'text-gray-600 hover:bg-gray-100'">Cómo Funciona</button>
+            <button @click="scrollToSection('pricing'); mobileMenuOpen = false" class="text-left px-4 py-2 rounded-lg transition-colors" :class="isDark ? 'text-gray-300 hover:bg-[#1a3050]' : 'text-gray-600 hover:bg-gray-100'">Precios</button>
+            <button @click="scrollToSection('consulting'); mobileMenuOpen = false" class="text-left px-4 py-2 rounded-lg transition-colors" :class="isDark ? 'text-gray-300 hover:bg-[#1a3050]' : 'text-gray-600 hover:bg-gray-100'">Consultoría</button>
+            <router-link to="/login" @click="mobileMenuOpen = false" class="text-left px-4 py-2 rounded-lg transition-colors" :class="isDark ? 'text-gray-300 hover:bg-[#1a3050]' : 'text-gray-600 hover:bg-gray-100'">Iniciar Sesión</router-link>
+            <router-link to="/register" @click="mobileMenuOpen = false" class="mx-4 px-5 py-2.5 bg-gradient-to-r from-[#2E7DE8] to-[#1e6ad1] text-white rounded-xl font-medium text-center">
               Prueba Gratis
             </router-link>
           </div>
@@ -181,6 +205,7 @@
             v-for="feature in features" 
             :key="feature.title"
             v-bind="feature"
+            :is-dark="isDark"
           />
         </div>
       </div>
@@ -207,6 +232,7 @@
             :key="step.title"
             :step="index + 1"
             v-bind="step"
+            :is-dark="isDark"
           />
         </div>
       </div>
@@ -242,12 +268,12 @@
           <p class="text-lg mb-4" :class="isDark ? 'text-gray-300' : 'text-gray-700'">
             ¿Necesitas un plan personalizado para tu empresa?
           </p>
-          <a href="https://wa.me/524776940272" target="_blank" class="inline-flex items-center gap-2 px-8 py-4 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl">
+          <button @click="openWhatsApp" class="inline-flex items-center gap-2 px-8 py-4 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl active:scale-95">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
               <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
             </svg>
             Contactar por WhatsApp
-          </a>
+          </button>
         </div>
       </div>
     </section>
@@ -329,18 +355,18 @@
             </div>
 
             <div class="flex flex-col sm:flex-row gap-4">
-              <a href="https://wa.me/524776940272" target="_blank" class="px-8 py-4 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-xl font-semibold transition-all shadow-lg flex items-center justify-center gap-2">
+              <button @click="openWhatsApp" class="px-8 py-4 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-xl font-semibold transition-all shadow-lg flex items-center justify-center gap-2 active:scale-95">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                 </svg>
                 WhatsApp
-              </a>
-              <a href="mailto:ing.carlosurbina@gmail.com" class="px-8 py-4 bg-[#2E7DE8] hover:bg-[#1e6ad1] text-white rounded-xl font-semibold transition-all shadow-lg flex items-center justify-center gap-2">
+              </button>
+              <button @click="sendEmail" class="px-8 py-4 bg-[#2E7DE8] hover:bg-[#1e6ad1] text-white rounded-xl font-semibold transition-all shadow-lg flex items-center justify-center gap-2 active:scale-95">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 Email
-              </a>
+              </button>
             </div>
           </div>
 
@@ -364,29 +390,29 @@
               </p>
 
               <div class="space-y-4">
-                <a href="https://wa.me/524776940272" target="_blank" class="flex items-center gap-3 p-4 rounded-xl transition-colors border" :class="isDark ? 'bg-[#0B1F3A] border-[#2E7DE8]/20 hover:border-[#2E7DE8]/50' : 'bg-gray-50 border-gray-200 hover:border-[#2E7DE8]'">
+                <button @click="openWhatsApp" class="w-full flex items-center gap-3 p-4 rounded-xl transition-all border hover:shadow-md active:scale-95" :class="isDark ? 'bg-[#0B1F3A] border-[#2E7DE8]/20 hover:border-[#25D366]' : 'bg-gray-50 border-gray-200 hover:border-[#25D366]'">
                   <div class="w-10 h-10 rounded-full bg-[#25D366] flex items-center justify-center">
                     <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                     </svg>
                   </div>
-                  <div>
+                  <div class="text-left">
                     <p class="text-xs" :class="isDark ? 'text-gray-400' : 'text-gray-500'">WhatsApp</p>
                     <p class="font-medium" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'">+52 477 694 0272</p>
                   </div>
-                </a>
+                </button>
 
-                <a href="mailto:ing.carlosurbina@gmail.com" class="flex items-center gap-3 p-4 rounded-xl transition-colors border" :class="isDark ? 'bg-[#0B1F3A] border-[#2E7DE8]/20 hover:border-[#2E7DE8]/50' : 'bg-gray-50 border-gray-200 hover:border-[#2E7DE8]'">
+                <button @click="sendEmail" class="w-full flex items-center gap-3 p-4 rounded-xl transition-all border hover:shadow-md active:scale-95" :class="isDark ? 'bg-[#0B1F3A] border-[#2E7DE8]/20 hover:border-[#2E7DE8]' : 'bg-gray-50 border-gray-200 hover:border-[#2E7DE8]'">
                   <div class="w-10 h-10 rounded-full bg-[#2E7DE8] flex items-center justify-center">
                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <div>
+                  <div class="text-left">
                     <p class="text-xs" :class="isDark ? 'text-gray-400' : 'text-gray-500'">Email</p>
-                    <p class="font-medium" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'">ing.carlosurbina@gmail.com</p>
+                    <p class="font-medium break-all" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'">ing.carlosurbina@gmail.com</p>
                   </div>
-                </a>
+                </button>
 
                 <div class="flex items-center gap-3 p-4 rounded-xl border" :class="isDark ? 'bg-[#0B1F3A] border-[#2E7DE8]/20' : 'bg-gray-50 border-gray-200'">
                   <div class="w-10 h-10 rounded-full bg-[#C0C0C0] flex items-center justify-center">
@@ -395,7 +421,7 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                   </div>
-                  <div>
+                  <div class="text-left">
                     <p class="text-xs" :class="isDark ? 'text-gray-400' : 'text-gray-500'">Ubicación</p>
                     <p class="font-medium" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'">León, Guanajuato, México</p>
                   </div>
@@ -449,15 +475,15 @@
               Únete a las PYMEs que ya confían en Inventory Pro y CJ Consultoría.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-              <router-link to="/register" class="px-8 py-4 bg-white text-[#2E7DE8] rounded-xl font-semibold hover:bg-blue-50 transition-all shadow-lg">
+              <router-link to="/register" class="px-8 py-4 bg-white text-[#2E7DE8] rounded-xl font-semibold hover:bg-blue-50 transition-all shadow-lg active:scale-95">
                 Comenzar Prueba Gratis
               </router-link>
-              <a href="https://wa.me/524776940272" target="_blank" class="px-8 py-4 border-2 border-white text-white rounded-xl font-semibold hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+              <button @click="openWhatsApp" class="px-8 py-4 border-2 border-white text-white rounded-xl font-semibold hover:bg-white/10 transition-all flex items-center justify-center gap-2 active:scale-95">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                 </svg>
                 WhatsApp
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -481,12 +507,12 @@
               <strong class="text-[#2E7DE8]">CJ Consultoría</strong> - Transformamos procesos en resultados sostenibles.
             </p>
             <div class="flex gap-4">
-              <a href="https://wa.me/524776940272" target="_blank" class="w-10 h-10 rounded-full flex items-center justify-center transition-colors bg-[#25D366] text-white hover:bg-[#128C7E]">
+              <button @click="openWhatsApp" class="w-10 h-10 rounded-full flex items-center justify-center transition-colors bg-[#25D366] text-white hover:bg-[#128C7E] active:scale-95">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-              </a>
-              <a href="mailto:ing.carlosurbina@gmail.com" class="w-10 h-10 rounded-full flex items-center justify-center transition-colors" :class="isDark ? 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white' : 'bg-white text-gray-600 hover:bg-gray-100'">
+              </button>
+              <button @click="sendEmail" class="w-10 h-10 rounded-full flex items-center justify-center transition-colors" :class="isDark ? 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white active:scale-95' : 'bg-white text-gray-600 hover:bg-gray-100 active:scale-95'">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-              </a>
+              </button>
             </div>
           </div>
 
@@ -497,6 +523,7 @@
               <li><button @click="scrollToSection('features')" class="transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Características</button></li>
               <li><button @click="scrollToSection('pricing')" class="transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Precios</button></li>
               <li><router-link to="/login" class="transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Iniciar Sesión</router-link></li>
+              <li><router-link to="/register" class="transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Registrarse</router-link></li>
             </ul>
           </div>
 
@@ -504,7 +531,8 @@
             <h4 class="font-semibold mb-4" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'">CJ Consultoría</h4>
             <ul class="space-y-2 text-sm">
               <li><button @click="scrollToSection('consulting')" class="transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Nosotros</button></li>
-              <li><a href="https://wa.me/524776940272" target="_blank" class="transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Contacto</a></li>
+              <li><button @click="openWhatsApp" class="transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Contacto WhatsApp</button></li>
+              <li><button @click="sendEmail" class="transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Contacto Email</button></li>
               <li><span class="text-xs" :class="isDark ? 'text-gray-500' : 'text-gray-400'">León, Gto. México</span></li>
             </ul>
           </div>
@@ -515,9 +543,9 @@
             © 2026 Inventory Pro & CJ Consultoría. Todos los derechos reservados.
           </p>
           <div class="flex gap-6 text-sm">
-            <span class="text-xs" :class="isDark ? 'text-gray-500' : 'text-gray-500'">
+            <button @click="openWhatsApp" class="text-xs transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-500' : 'text-gray-500'">
               <strong class="text-[#2E7DE8]">Tel:</strong> 477 694 0272
-            </span>
+            </button>
           </div>
         </div>
       </div>
@@ -534,20 +562,41 @@ import PricingCard from './components/PricingCard.vue'
 
 const { isDark, toggleDarkMode } = useDarkMode()
 const scrolled = ref(false)
+const mobileMenuOpen = ref(false)
 
 const handleScroll = () => {
   scrolled.value = window.scrollY > 50
 }
 
 const scrollToSection = (sectionId) => {
+  mobileMenuOpen.value = false
   if (sectionId === 'top') {
     window.scrollTo({ top: 0, behavior: 'smooth' })
     return
   }
   const element = document.getElementById(sectionId)
   if (element) {
-    element.scrollIntoView({ behavior: 'smooth' })
+    const offset = 80 // Height of navbar
+    const elementPosition = element.getBoundingClientRect().top
+    const offsetPosition = elementPosition + window.pageYOffset - offset
+    window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
   }
+}
+
+// WhatsApp helper function
+const openWhatsApp = () => {
+  const phone = '524776940272'
+  const message = encodeURIComponent('Hola Carlos, estoy interesado en Inventory Pro. ¿Podemos agendar una llamada para conocer más detalles?')
+  const url = `https://wa.me/${phone}?text=${message}`
+  window.open(url, '_blank', 'noopener,noreferrer')
+}
+
+// Email helper function
+const sendEmail = () => {
+  const email = 'ing.carlosurbina@gmail.com'
+  const subject = encodeURIComponent('Consulta sobre Inventory Pro')
+  const body = encodeURIComponent('Hola Carlos,\n\nEstoy interesado en Inventory Pro para mi empresa. Me gustaría recibir más información.\n\nSaludos,')
+  window.location.href = `mailto:${email}?subject=${subject}&body=${body}`
 }
 
 onMounted(() => {
