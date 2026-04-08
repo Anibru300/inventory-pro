@@ -198,35 +198,41 @@
           </div>
 
           <!-- Hero Image -->
-          <div class="relative flex justify-center">
-            <div class="absolute -inset-4 bg-gradient-to-r from-[#2E7DE8] to-[#C0C0C0] rounded-full opacity-20 blur-3xl animate-pulse"></div>
-            <div class="relative w-80 h-80 lg:w-96 lg:h-96">
-              <img src="/logo-cj-sin-fondo.png" alt="CJ Consultoría" class="w-full h-full object-contain drop-shadow-2xl animate-float" />
+          <div class="relative flex justify-center items-center">
+            <div class="absolute -inset-4 bg-gradient-to-r from-[#2E7DE8] to-[#C0C0C0] rounded-full opacity-20 blur-3xl"></div>
+            <div class="relative w-[400px] h-[400px] lg:w-[500px] lg:h-[500px] flex items-center justify-center">
+              <img src="/logo-cj-sin-fondo.png" alt="CJ Consultoría" class="w-full h-full object-contain drop-shadow-2xl" style="transform: none;" />
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Stats Section -->
+    <!-- Stats Section con Contadores Animados -->
     <section class="py-12 border-y relative" :class="isDark ? 'border-[#2E7DE8]/20 bg-[#0B1F3A]/30' : 'border-gray-200 bg-gray-50/50'">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div class="p-4 rounded-2xl backdrop-blur-sm" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-white/50'">
-            <p class="text-3xl md:text-4xl font-bold text-[#2E7DE8]">65%</p>
-            <p class="text-sm mt-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">PYMEs sin procesos</p>
+          <div class="p-4 rounded-2xl backdrop-blur-sm group hover:scale-105 transition-transform" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-white/50'">
+            <p class="text-3xl md:text-4xl font-bold text-[#2E7DE8]">
+              <AnimatedCounter :end="500" suffix="+" />
+            </p>
+            <p class="text-sm mt-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">PYMEs confían</p>
           </div>
-          <div class="p-4 rounded-2xl backdrop-blur-sm" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-white/50'">
-            <p class="text-3xl md:text-4xl font-bold text-[#2E7DE8]">+25%</p>
-            <p class="text-sm mt-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Ventas con ISO</p>
+          <div class="p-4 rounded-2xl backdrop-blur-sm group hover:scale-105 transition-transform" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-white/50'">
+            <p class="text-3xl md:text-4xl font-bold text-[#2E7DE8]">
+              <AnimatedCounter :end="25" suffix="%" prefix="+" />
+            </p>
+            <p class="text-sm mt-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Eficiencia promedio</p>
           </div>
-          <div class="p-4 rounded-2xl backdrop-blur-sm" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-white/50'">
-            <p class="text-3xl md:text-4xl font-bold text-[#2E7DE8]">80%</p>
+          <div class="p-4 rounded-2xl backdrop-blur-sm group hover:scale-105 transition-transform" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-white/50'">
+            <p class="text-3xl md:text-4xl font-bold text-[#2E7DE8]">
+              <AnimatedCounter :end="80" suffix="%" />
+            </p>
             <p class="text-sm mt-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Tiempo ahorrado</p>
           </div>
-          <div class="p-4 rounded-2xl backdrop-blur-sm" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-white/50'">
+          <div class="p-4 rounded-2xl backdrop-blur-sm group hover:scale-105 transition-transform" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-white/50'">
             <p class="text-3xl md:text-4xl font-bold text-[#2E7DE8]">99.9%</p>
-            <p class="text-sm mt-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Uptime</p>
+            <p class="text-sm mt-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Uptime garantizado</p>
           </div>
         </div>
       </div>
@@ -254,6 +260,719 @@
             v-bind="feature"
             :is-dark="isDark"
           />
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust Badges / Clientes -->
+    <section class="py-12 relative" :class="isDark ? 'bg-[#0B1F3A]/20' : 'bg-gray-100/50'">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <p class="text-center text-sm mb-8" :class="isDark ? 'text-gray-500' : 'text-gray-500'">
+          EMPRESAS QUE CONFIAN EN NOSOTROS
+        </p>
+        <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60">
+          <div v-for="(client, idx) in trustedClients" :key="idx" 
+            class="flex items-center gap-2 px-4 py-2 rounded-lg"
+            :class="isDark ? 'bg-[#1a3050]/50' : 'bg-white'">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#2E7DE8] to-[#1e6ad1] flex items-center justify-center text-white font-bold text-xs">
+              {{ client.initials }}
+            </div>
+            <span class="font-medium" :class="isDark ? 'text-gray-300' : 'text-gray-700'">{{ client.name }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Video Demo Section -->
+    <section id="video-demo" class="py-20 relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-12">
+          <span class="inline-block px-4 py-1 rounded-full text-sm font-medium mb-4 border" :class="isDark ? 'bg-rose-500/10 border-rose-500/30 text-rose-400' : 'bg-rose-50 border-rose-200 text-rose-600'">
+            🎬 Demo en Video
+          </span>
+          <h2 class="text-3xl md:text-4xl font-bold mb-4" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">
+            Mira Inventory Pro en acción
+          </h2>
+          <p class="text-lg" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
+            Descubre cómo transformar tu gestión de inventario en menos de 3 minutos
+          </p>
+        </div>
+
+        <!-- Video Container -->
+        <div class="max-w-4xl mx-auto">
+          <div class="relative rounded-2xl overflow-hidden shadow-2xl border-4"
+            :class="isDark ? 'border-[#2E7DE8]/30' : 'border-gray-200'">
+            
+            <!-- Placeholder para video (reemplazar con video real) -->
+            <div class="aspect-video bg-gradient-to-br from-[#0B1F3A] to-[#1a3a5c] flex items-center justify-center relative group cursor-pointer"
+              @click="playVideo">
+              
+              <!-- Thumbnail/Preview -->
+              <div class="absolute inset-0 opacity-20">
+                <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, rgba(46,125,232,0.3) 1px, transparent 0); background-size: 30px 30px;"></div>
+              </div>
+              
+              <!-- Play Button -->
+              <div class="relative z-10 w-24 h-24 rounded-full bg-[#2E7DE8] flex items-center justify-center shadow-lg shadow-[#2E7DE8]/50 group-hover:scale-110 transition-transform">
+                <svg class="w-10 h-10 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+              
+              <!-- Text overlay -->
+              <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent">
+                <p class="text-white font-semibold text-lg">Tour completo de Inventory Pro</p>
+                <p class="text-gray-300 text-sm">Duración: 2:45 minutos</p>
+              </div>
+              
+              <!-- Duration badge -->
+              <div class="absolute top-4 right-4 px-3 py-1 rounded-lg bg-black/60 text-white text-sm font-medium">
+                2:45
+              </div>
+            </div>
+            
+            <!-- YouTube iframe (hidden until play) -->
+            <div v-if="videoPlaying" class="absolute inset-0 bg-black">
+              <iframe 
+                class="w-full h-full"
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" 
+                title="Inventory Pro Demo"
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+              </iframe>
+            </div>
+          </div>
+          
+          <!-- Video chapters -->
+          <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div v-for="(chapter, idx) in videoChapters" :key="idx" 
+              class="p-4 rounded-xl border cursor-pointer transition-all hover:border-[#2E7DE8]"
+              :class="isDark ? 'bg-[#0B1F3A]/50 border-gray-700 hover:bg-[#1a3050]' : 'bg-white border-gray-200 hover:bg-gray-50'"
+              @click="playVideo">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-[#2E7DE8]/20 flex items-center justify-center text-[#2E7DE8] font-bold text-sm">
+                  {{ chapter.time }}
+                </div>
+                <div>
+                  <p class="font-medium text-sm" :class="isDark ? 'text-white' : 'text-gray-900'">{{ chapter.title }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screenshots Carrusel -->
+    <section id="screenshots" class="py-20 relative" :class="isDark ? 'bg-[#0B1F3A]/30' : 'bg-gray-50/50'">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-12">
+          <span class="inline-block px-4 py-1 rounded-full text-sm font-medium mb-4 border" :class="isDark ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' : 'bg-blue-50 border-blue-200 text-blue-600'">
+            📸 Screenshots
+          </span>
+          <h2 class="text-3xl md:text-4xl font-bold mb-4" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">
+            Explora la interfaz
+          </h2>
+          <p class="text-lg" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
+            Diseño moderno, intuitivo y profesional
+          </p>
+        </div>
+
+        <!-- Carrusel -->
+        <div class="relative">
+          <!-- Main Display -->
+          <div class="rounded-2xl overflow-hidden shadow-2xl border mb-6"
+            :class="isDark ? 'border-[#2E7DE8]/30' : 'border-gray-200'">
+            <div class="aspect-[16/10] bg-gradient-to-br from-[#0B1F3A] to-[#1a3a5c] p-4">
+              <!-- Browser Chrome -->
+              <div class="w-full h-full rounded-lg overflow-hidden bg-[#0B1F3A] border"
+                :class="isDark ? 'border-gray-700' : 'border-gray-300'">
+                <!-- Browser Header -->
+                <div class="h-8 bg-[#1a3050] flex items-center px-3 gap-2">
+                  <div class="flex gap-1.5">
+                    <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                  </div>
+                  <div class="flex-1 mx-4">
+                    <div class="h-5 bg-[#0B1F3A] rounded text-xs flex items-center px-2 text-gray-400">
+                      app.inventorypro.com/{{ screenshots[activeScreenshot].id }}
+                    </div>
+                  </div>
+                </div>
+                <!-- Screenshot Content -->
+                <div class="p-6 h-[calc(100%-2rem)] overflow-hidden">
+                  <div class="h-full rounded-lg flex flex-col"
+                    :class="isDark ? 'bg-[#0B1F3A]' : 'bg-white'">
+                    <!-- Mock UI Header -->
+                    <div class="h-12 border-b flex items-center px-4" :class="isDark ? 'border-gray-700' : 'border-gray-200'">
+                      <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded bg-gradient-to-br from-[#2E7DE8] to-[#1e6ad1]"></div>
+                        <span class="font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">Inventory Pro</span>
+                      </div>
+                      <div class="ml-auto flex gap-2">
+                        <div class="w-8 h-8 rounded-full" :class="isDark ? 'bg-gray-700' : 'bg-gray-200'"></div>
+                      </div>
+                    </div>
+                    <!-- Mock Content -->
+                    <div class="flex-1 p-4">
+                      <component :is="screenshots[activeScreenshot].component" :is-dark="isDark" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Thumbnails -->
+          <div class="flex justify-center gap-4 flex-wrap">
+            <button v-for="(screenshot, idx) in screenshots" :key="idx"
+              @click="activeScreenshot = idx"
+              class="w-24 h-16 rounded-lg overflow-hidden border-2 transition-all"
+              :class="activeScreenshot === idx ? 'border-[#2E7DE8] ring-2 ring-[#2E7DE8]/30' : (isDark ? 'border-gray-700 opacity-60' : 'border-gray-200 opacity-60')">
+              <div class="w-full h-full bg-gradient-to-br from-[#0B1F3A] to-[#1a3a5c] flex items-center justify-center">
+                <component :is="screenshot.miniComponent" class="scale-50" :is-dark="isDark" />
+              </div>
+            </button>
+          </div>
+
+          <!-- Navigation Arrows -->
+          <button @click="prevScreenshot" 
+            class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-12 h-12 rounded-full bg-[#2E7DE8] text-white shadow-lg flex items-center justify-center hover:scale-110 transition-transform hidden md:flex">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button @click="nextScreenshot"
+            class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-12 h-12 rounded-full bg-[#2E7DE8] text-white shadow-lg flex items-center justify-center hover:scale-110 transition-transform hidden md:flex">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Demo Interactiva / Sandbox -->
+    <section id="demo-interactive" class="py-20 relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-12">
+          <span class="inline-block px-4 py-1 rounded-full text-sm font-medium mb-4 border" :class="isDark ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-emerald-50 border-emerald-200 text-emerald-600'">
+            🎮 Demo Interactiva
+          </span>
+          <h2 class="text-3xl md:text-4xl font-bold mb-4" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">
+            Pruébalo sin registrarte
+          </h2>
+          <p class="text-lg" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
+            Explora el sistema con datos de prueba. Nada de información real requerida.
+          </p>
+        </div>
+
+        <!-- Interactive Demo Container -->
+        <div class="rounded-2xl overflow-hidden shadow-2xl border"
+          :class="isDark ? 'border-[#2E7DE8]/30' : 'border-gray-200'">
+          
+          <!-- Demo Header -->
+          <div class="p-4 border-b flex items-center justify-between" 
+            :class="isDark ? 'bg-[#1a3050] border-gray-700' : 'bg-gray-50 border-gray-200'">
+            <div class="flex items-center gap-3">
+              <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+              <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+              <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+              <span class="ml-4 text-sm font-medium" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
+                Modo Demo - Datos de prueba
+              </span>
+            </div>
+            <router-link to="/register" 
+              class="px-4 py-2 bg-gradient-to-r from-[#2E7DE8] to-[#1e6ad1] text-white rounded-lg text-sm font-medium hover:shadow-lg transition-all">
+              Crear cuenta real →
+            </router-link>
+          </div>
+
+          <!-- Demo Interface -->
+          <div class="grid lg:grid-cols-[250px,1fr] min-h-[500px]" :class="isDark ? 'bg-[#0B1F3A]' : 'bg-white'">
+            <!-- Sidebar -->
+            <div class="p-4 border-r" :class="isDark ? 'border-gray-700' : 'border-gray-200'">
+              <div class="space-y-2">
+                <div v-for="item in demoMenu" :key="item"
+                  class="px-4 py-3 rounded-lg cursor-pointer transition-colors"
+                  :class="demoActiveTab === item 
+                    ? 'bg-[#2E7DE8] text-white' 
+                    : (isDark ? 'hover:bg-[#1a3050] text-gray-400' : 'hover:bg-gray-100 text-gray-600')"
+                  @click="demoActiveTab = item">
+                  {{ item }}
+                </div>
+              </div>
+              
+              <!-- Demo Alert -->
+              <div class="mt-6 p-4 rounded-xl border" :class="isDark ? 'bg-amber-500/10 border-amber-500/30' : 'bg-amber-50 border-amber-200'">
+                <p class="text-sm" :class="isDark ? 'text-amber-400' : 'text-amber-700'">
+                  <strong>ℹ️ Modo Demo</strong><br>
+                  Los cambios no se guardan. Para usar el sistema real, crea una cuenta gratuita.
+                </p>
+              </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="p-6">
+              <!-- Dashboard Demo -->
+              <div v-if="demoActiveTab === 'Dashboard'" class="space-y-6">
+                <h3 class="text-xl font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">Dashboard</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div v-for="stat in demoStats" :key="stat.label" 
+                    class="p-4 rounded-xl border"
+                    :class="isDark ? 'bg-[#1a3050]/50 border-gray-700' : 'bg-gray-50 border-gray-200'">
+                    <p class="text-sm" :class="isDark ? 'text-gray-400' : 'text-gray-500'">{{ stat.label }}</p>
+                    <p class="text-2xl font-bold" :class="isDark ? 'text-white' : 'text-gray-900'">{{ stat.value }}</p>
+                  </div>
+                </div>
+                
+                <!-- Demo Chart -->
+                <div class="p-6 rounded-xl border" :class="isDark ? 'border-gray-700' : 'border-gray-200'">
+                  <h4 class="font-medium mb-4" :class="isDark ? 'text-white' : 'text-gray-900'">Movimientos del mes</h4>
+                  <div class="flex items-end gap-2 h-32">
+                    <div v-for="(bar, idx) in demoBars" :key="idx" 
+                      class="flex-1 rounded-t transition-all hover:opacity-80 cursor-pointer"
+                      :style="{ height: bar + '%', backgroundColor: idx % 2 === 0 ? '#2E7DE8' : '#10b981' }"
+                      :title="'Semana ' + (idx + 1)">
+                    </div>
+                  </div>
+                  <div class="flex justify-between mt-2 text-xs" :class="isDark ? 'text-gray-500' : 'text-gray-400'">
+                    <span>Sem 1</span>
+                    <span>Sem 2</span>
+                    <span>Sem 3</span>
+                    <span>Sem 4</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Productos Demo -->
+              <div v-else-if="demoActiveTab === 'Productos'" class="space-y-6">
+                <div class="flex justify-between items-center">
+                  <h3 class="text-xl font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">Productos</h3>
+                  <button class="px-4 py-2 bg-[#2E7DE8] text-white rounded-lg text-sm">
+                    + Nuevo Producto
+                  </button>
+                </div>
+                <div class="overflow-x-auto">
+                  <table class="w-full">
+                    <thead>
+                      <tr :class="isDark ? 'text-gray-400 border-b border-gray-700' : 'text-gray-600 border-b border-gray-200'">
+                        <th class="text-left py-3">Producto</th>
+                        <th class="text-left py-3">SKU</th>
+                        <th class="text-right py-3">Stock</th>
+                        <th class="text-right py-3">Precio</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="product in demoProducts" :key="product.sku" 
+                        class="border-b cursor-pointer hover:bg-[#2E7DE8]/5 transition-colors"
+                        :class="isDark ? 'border-gray-700 text-gray-300' : 'border-gray-200 text-gray-700'">
+                        <td class="py-3">{{ product.name }}</td>
+                        <td class="py-3 font-mono text-sm text-[#2E7DE8]">{{ product.sku }}</td>
+                        <td class="py-3 text-right">
+                          <span :class="product.stock < 10 ? 'text-rose-400' : 'text-emerald-400'">{{ product.stock }}</span>
+                        </td>
+                        <td class="py-3 text-right">${{ product.price }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Other tabs placeholder -->
+              <div v-else class="flex items-center justify-center h-64">
+                <div class="text-center">
+                  <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-[#2E7DE8]/20 flex items-center justify-center">
+                    <svg class="w-8 h-8 text-[#2E7DE8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <p class="mb-4" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
+                    Explora esta sección en la versión completa
+                  </p>
+                  <router-link to="/register" class="px-6 py-3 bg-[#2E7DE8] text-white rounded-xl inline-block">
+                    Crear cuenta gratis
+                  </router-link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonios -->
+    <section id="testimonials" class="py-20 relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="inline-block px-4 py-1 rounded-full text-sm font-medium mb-4 border" :class="isDark ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-emerald-50 border-emerald-200 text-emerald-600'">
+            Testimonios
+          </span>
+          <h2 class="text-3xl md:text-4xl font-bold mb-4" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">
+            Lo que dicen nuestros clientes
+          </h2>
+          <p class="text-lg" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
+            Historias reales de empresas que transformaron su gestión de inventario
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <div v-for="(testimonial, idx) in testimonials" :key="idx" 
+            class="p-8 rounded-2xl border transition-all hover:shadow-xl hover:-translate-y-1"
+            :class="isDark ? 'bg-[#0B1F3A]/60 border-[#2E7DE8]/20' : 'bg-white border-gray-200'">
+            <!-- Estrellas -->
+            <div class="flex gap-1 mb-4">
+              <svg v-for="n in 5" :key="n" class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            </div>
+            
+            <!-- Quote -->
+            <p class="mb-6 italic" :class="isDark ? 'text-gray-300' : 'text-gray-600'">
+              "{{ testimonial.quote }}"
+            </p>
+            
+            <!-- Author -->
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#2E7DE8] to-[#1e6ad1] flex items-center justify-center text-white font-bold">
+                {{ testimonial.name.charAt(0) }}
+              </div>
+              <div>
+                <p class="font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">{{ testimonial.name }}</p>
+                <p class="text-sm" :class="isDark ? 'text-gray-400' : 'text-gray-500'">{{ testimonial.role }}</p>
+                <p class="text-xs text-[#2E7DE8]">{{ testimonial.company }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Agendar Demo con Calendly -->
+    <section id="schedule-demo" class="py-20 relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <span class="inline-block px-4 py-1 rounded-full text-sm font-medium mb-4 border" :class="isDark ? 'bg-purple-500/10 border-purple-500/30 text-purple-400' : 'bg-purple-50 border-purple-200 text-purple-600'">
+              📅 Agenda una Demo
+            </span>
+            <h2 class="text-3xl md:text-4xl font-bold mb-4" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">
+              ¿Prefieres una demostración personalizada?
+            </h2>
+            <p class="text-lg mb-6" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
+              Agenda una llamada de 30 minutos con nuestros consultores. Te mostraremos cómo Inventory Pro se adapta a tu negocio específico.
+            </p>
+            
+            <div class="space-y-4">
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-xl bg-[#2E7DE8]/20 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5 text-[#2E7DE8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">30 minutos</h4>
+                  <p class="text-sm" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Suficiente para conocer tus necesidades y mostrarte la solución</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-xl bg-[#2E7DE8]/20 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5 text-[#2E7DE8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">Videollamada</h4>
+                  <p class="text-sm" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Por Zoom, Google Meet o WhatsApp, como prefieras</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-xl bg-[#2E7DE8]/20 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5 text-[#2E7DE8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">Sin compromiso</h4>
+                  <p class="text-sm" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Conoceremos tu caso y te daremos recomendaciones, sin presión</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-8 p-4 rounded-xl border" :class="isDark ? 'border-gray-700 bg-[#1a3050]/30' : 'border-gray-200 bg-gray-50'">
+              <p class="text-sm" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
+                <strong class="text-[#2E7DE8]">Disponibilidad:</strong> Lunes a Viernes, 9:00 AM - 6:00 PM (GMT-6)
+              </p>
+            </div>
+          </div>
+          
+          <!-- Calendly Widget Placeholder -->
+          <div class="rounded-2xl overflow-hidden border shadow-xl"
+            :class="isDark ? 'border-[#2E7DE8]/30 bg-[#0B1F3A]' : 'border-gray-200 bg-white'">
+            <div class="p-6 border-b" :class="isDark ? 'border-gray-700' : 'border-gray-200'">
+              <h3 class="font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">Selecciona fecha y hora</h3>
+            </div>
+            <div class="p-6">
+              <!-- Calendly Inline Widget -->
+              <div class="calendly-inline-widget" 
+                data-url="https://calendly.com/carlos-urbina-cj/30min" 
+                style="min-width:320px;height:600px;">
+              </div>
+              
+              <!-- Fallback buttons si Calendly no carga -->
+              <div class="mt-4 grid grid-cols-2 gap-3">
+                <button @click="openWhatsApp" 
+                  class="p-3 rounded-xl border flex items-center justify-center gap-2 transition-colors"
+                  :class="isDark ? 'border-[#25D366] text-[#25D366] hover:bg-[#25D366]/10' : 'border-[#25D366] text-[#25D366] hover:bg-[#25D366]/5'">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                  </svg>
+                  WhatsApp
+                </button>
+                <button @click="sendEmail"
+                  class="p-3 rounded-xl border flex items-center justify-center gap-2 transition-colors"
+                  :class="isDark ? 'border-[#2E7DE8] text-[#2E7DE8] hover:bg-[#2E7DE8]/10' : 'border-[#2E7DE8] text-[#2E7DE8] hover:bg-[#2E7DE8]/5'">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  Email
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blog Preview Section -->
+    <section id="blog" class="py-20 relative" :class="isDark ? 'bg-[#0B1F3A]/30' : 'bg-gray-50/50'">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+          <div>
+            <span class="inline-block px-4 py-1 rounded-full text-sm font-medium mb-4 border" :class="isDark ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' : 'bg-cyan-50 border-cyan-200 text-cyan-600'">
+              📝 Blog
+            </span>
+            <h2 class="text-3xl md:text-4xl font-bold" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">
+              Recursos y conocimiento
+            </h2>
+            <p class="mt-2 text-lg" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
+              Aprende a optimizar tu negocio
+            </p>
+          </div>
+          <button class="mt-4 md:mt-0 text-[#2E7DE8] font-medium hover:underline flex items-center gap-2">
+            Ver todos los artículos
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <article v-for="(post, idx) in blogPosts" :key="idx" 
+            class="rounded-2xl overflow-hidden border transition-all hover:shadow-xl hover:-translate-y-1 group cursor-pointer"
+            :class="isDark ? 'bg-[#0B1F3A] border-[#2E7DE8]/20' : 'bg-white border-gray-200'">
+            <!-- Image placeholder -->
+            <div class="h-48 bg-gradient-to-br from-[#2E7DE8]/20 to-[#1a3a5c] flex items-center justify-center relative overflow-hidden">
+              <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 2px 2px, rgba(46,125,232,0.5) 1px, transparent 0); background-size: 20px 20px;"></div>
+              <div class="text-6xl">{{ post.icon }}</div>
+              <div class="absolute top-4 left-4">
+                <span class="px-3 py-1 rounded-full text-xs font-medium" :class="isDark ? 'bg-[#2E7DE8]/30 text-[#2E7DE8]' : 'bg-blue-100 text-blue-700'">
+                  {{ post.category }}
+                </span>
+              </div>
+            </div>
+            
+            <div class="p-6">
+              <div class="flex items-center gap-2 text-sm mb-3" :class="isDark ? 'text-gray-500' : 'text-gray-500'">
+                <span>{{ post.date }}</span>
+                <span>•</span>
+                <span>{{ post.readTime }}</span>
+              </div>
+              
+              <h3 class="font-semibold text-lg mb-2 group-hover:text-[#2E7DE8] transition-colors" :class="isDark ? 'text-white' : 'text-gray-900'">
+                {{ post.title }}
+              </h3>
+              
+              <p class="text-sm mb-4" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
+                {{ post.excerpt }}
+              </p>
+              
+              <div class="flex items-center text-[#2E7DE8] font-medium text-sm">
+                Leer más
+                <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calculadora ROI -->
+    <section id="roi-calculator" class="py-20 relative" :class="isDark ? 'bg-[#0B1F3A]/30' : 'bg-gray-50/50'">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <span class="inline-block px-4 py-1 rounded-full text-sm font-medium mb-4 border" :class="isDark ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' : 'bg-amber-50 border-amber-200 text-amber-600'">
+              Calculadora de ROI
+            </span>
+            <h2 class="text-3xl md:text-4xl font-bold mb-4" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">
+              Calcula tu ahorro mensual
+            </h2>
+            <p class="text-lg mb-8" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
+              Descubre cuánto puedes ahorrar al automatizar tu gestión de inventario con Inventory Pro.
+            </p>
+            
+            <!-- Inputs -->
+            <div class="space-y-6">
+              <div>
+                <label class="block text-sm font-medium mb-2" :class="isDark ? 'text-gray-300' : 'text-gray-700'">
+                  ¿Cuántas horas pierdes semanalmente en inventario?
+                </label>
+                <input 
+                  v-model.number="roiCalculator.hoursPerWeek" 
+                  type="range" 
+                  min="5" 
+                  max="40" 
+                  class="w-full accent-[#2E7DE8]"
+                />
+                <div class="flex justify-between mt-1">
+                  <span class="text-xs" :class="isDark ? 'text-gray-500' : 'text-gray-400'">5h</span>
+                  <span class="font-semibold text-[#2E7DE8]">{{ roiCalculator.hoursPerWeek }} horas</span>
+                  <span class="text-xs" :class="isDark ? 'text-gray-500' : 'text-gray-400'">40h</span>
+                </div>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium mb-2" :class="isDark ? 'text-gray-300' : 'text-gray-700'">
+                  Valor por hora de tu tiempo ($MXN)
+                </label>
+                <input 
+                  v-model.number="roiCalculator.hourlyRate" 
+                  type="number" 
+                  class="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-[#2E7DE8]"
+                  :class="isDark ? 'bg-[#1a3050] border-gray-700 text-white' : 'bg-white border-gray-300'"
+                />
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium mb-2" :class="isDark ? 'text-gray-300' : 'text-gray-700'">
+                  Pérdidas mensuales por inventario desorganizado ($MXN)
+                </label>
+                <input 
+                  v-model.number="roiCalculator.monthlyLosses" 
+                  type="range" 
+                  min="0" 
+                  max="50000" 
+                  step="1000"
+                  class="w-full accent-[#2E7DE8]"
+                />
+                <div class="flex justify-between mt-1">
+                  <span class="text-xs" :class="isDark ? 'text-gray-500' : 'text-gray-400'">$0</span>
+                  <span class="font-semibold text-[#2E7DE8]">${{ roiCalculator.monthlyLosses.toLocaleString() }}</span>
+                  <span class="text-xs" :class="isDark ? 'text-gray-500' : 'text-gray-400'">$50k</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Resultados -->
+          <div class="p-8 rounded-2xl border"
+            :class="isDark ? 'bg-gradient-to-br from-[#1a3050] to-[#0B1F3A] border-[#2E7DE8]/30' : 'bg-gradient-to-br from-white to-gray-50 border-gray-200'">
+            <h3 class="text-xl font-semibold mb-6" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'">Tu ahorro estimado</h3>
+            
+            <div class="space-y-6">
+              <div class="p-4 rounded-xl" :class="isDark ? 'bg-[#2E7DE8]/10' : 'bg-blue-50'">
+                <p class="text-sm mb-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Ahorro mensual en tiempo</p>
+                <p class="text-3xl font-bold text-[#2E7DE8]">${{ monthlyTimeSavings.toLocaleString() }}</p>
+                <p class="text-xs mt-1" :class="isDark ? 'text-gray-500' : 'text-gray-500'">
+                  {{ Math.round(roiCalculator.hoursPerWeek * 4 * 0.8) }} horas liberadas
+                </p>
+              </div>
+              
+              <div class="p-4 rounded-xl" :class="isDark ? 'bg-emerald-500/10' : 'bg-emerald-50'">
+                <p class="text-sm mb-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Evitas pérdidas por</p>
+                <p class="text-3xl font-bold text-emerald-400">${{ roiCalculator.monthlyLosses.toLocaleString() }}</p>
+                <p class="text-xs mt-1" :class="isDark ? 'text-gray-500' : 'text-gray-500'">Reducción del 90% en mermas</p>
+              </div>
+              
+              <div class="p-6 rounded-xl border-2 border-[#2E7DE8]/30" :class="isDark ? 'bg-[#0B1F3A]' : 'bg-white'">
+                <p class="text-sm mb-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">ROI Mensual Total</p>
+                <p class="text-4xl font-bold text-[#2E7DE8]">${{ totalMonthlyROI.toLocaleString() }}</p>
+                <p class="text-sm mt-2" :class="isDark ? 'text-emerald-400' : 'text-emerald-600'">
+                  Inversión en plan Profesional: $299/mes
+                </p>
+                <p class="text-lg font-semibold mt-2" :class="isDark ? 'text-white' : 'text-gray-900'">
+                  Retorno: <span class="text-emerald-400">{{ roiMultiplier }}x</span> tu inversión
+                </p>
+              </div>
+            </div>
+            
+            <router-link to="/register" 
+              class="w-full mt-6 px-6 py-4 bg-gradient-to-r from-[#2E7DE8] to-[#1e6ad1] hover:from-[#1e6ad1] hover:to-[#2E7DE8] text-white rounded-xl font-semibold transition-all shadow-lg text-center block">
+              Comenzar Prueba Gratis
+            </router-link>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparativa vs Competencia -->
+    <section class="py-20 relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="inline-block px-4 py-1 rounded-full text-sm font-medium mb-4 border" :class="isDark ? 'bg-purple-500/10 border-purple-500/30 text-purple-400' : 'bg-purple-50 border-purple-200 text-purple-600'">
+            Comparativa
+          </span>
+          <h2 class="text-3xl md:text-4xl font-bold mb-4" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">
+            ¿Por qué elegir Inventory Pro?
+          </h2>
+          <p class="text-lg" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
+            Comparación honesta con otras soluciones del mercado
+          </p>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full rounded-2xl overflow-hidden">
+            <thead>
+              <tr :class="isDark ? 'bg-[#1a3050]' : 'bg-gray-100'">
+                <th class="text-left py-4 px-6 font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">Característica</th>
+                <th class="text-center py-4 px-6 font-bold bg-[#2E7DE8]/20 text-[#2E7DE8]">Inventory Pro</th>
+                <th class="text-center py-4 px-6" :class="isDark ? 'text-gray-400' : 'text-gray-500'">Excel</th>
+                <th class="text-center py-4 px-6" :class="isDark ? 'text-gray-400' : 'text-gray-500'">SAP/Odoo</th>
+              </tr>
+            </thead>
+            <tbody :class="isDark ? 'divide-y divide-gray-700' : 'divide-y divide-gray-200'">
+              <tr v-for="(row, idx) in comparisonTable" :key="idx" :class="isDark ? 'bg-[#0B1F3A]/40' : 'bg-white'">
+                <td class="py-4 px-6 font-medium" :class="isDark ? 'text-gray-300' : 'text-gray-700'">{{ row.feature }}</td>
+                <td class="py-4 px-6 text-center">
+                  <span v-if="row.inventoryPro === true" class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400">✓</span>
+                  <span v-else class="text-[#2E7DE8] font-semibold">{{ row.inventoryPro }}</span>
+                </td>
+                <td class="py-4 px-6 text-center">
+                  <span v-if="row.excel === true" class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400">✓</span>
+                  <span v-else-if="row.excel === false" class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-rose-500/20 text-rose-400">✗</span>
+                  <span v-else class="text-gray-500">{{ row.excel }}</span>
+                </td>
+                <td class="py-4 px-6 text-center">
+                  <span v-if="row.competitor === true" class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400">✓</span>
+                  <span v-else-if="row.competitor === false" class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-rose-500/20 text-rose-400">✗</span>
+                  <span v-else class="text-gray-500">{{ row.competitor }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="mt-8 text-center">
+          <p class="text-sm mb-4" :class="isDark ? 'text-gray-400' : 'text-gray-500'">
+            *SAP y Odoo son excelentes opciones para empresas grandes con presupuestos de $50,000+ mensuales
+          </p>
         </div>
       </div>
     </section>
@@ -597,19 +1316,152 @@
         </div>
       </div>
     </footer>
+
+    <!-- ChatBot Flotante -->
+    <div class="fixed bottom-6 right-6 z-50">
+      <!-- Chat Window -->
+      <div v-if="chatOpen" 
+        class="mb-4 w-80 rounded-2xl shadow-2xl overflow-hidden border animate-fade-in-up"
+        :class="isDark ? 'bg-[#0B1F3A] border-[#2E7DE8]/30' : 'bg-white border-gray-200'">
+        <!-- Header -->
+        <div class="p-4 bg-gradient-to-r from-[#2E7DE8] to-[#1e6ad1]">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+              <span class="text-white font-bold">CJ</span>
+            </div>
+            <div>
+              <p class="font-semibold text-white">Asistente CJ</p>
+              <p class="text-xs text-blue-100">Respondo en minutos</p>
+            </div>
+            <button @click="chatOpen = false" class="ml-auto text-white/80 hover:text-white">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Messages -->
+        <div class="h-64 overflow-y-auto p-4 space-y-4" :class="isDark ? 'bg-[#0B1F3A]' : 'bg-gray-50'">
+          <div v-for="(msg, idx) in chatMessages" :key="idx" 
+            :class="['flex', msg.from === 'user' ? 'justify-end' : 'justify-start']">
+            <div :class="['max-w-[80%] p-3 rounded-2xl text-sm',
+              msg.from === 'user' 
+                ? 'bg-[#2E7DE8] text-white rounded-br-md' 
+                : isDark ? 'bg-[#1a3050] text-gray-300 rounded-bl-md' : 'bg-white text-gray-700 border rounded-bl-md']">
+              {{ msg.text }}
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quick Options -->
+        <div class="p-3 border-t" :class="isDark ? 'border-gray-700 bg-[#0B1F3A]' : 'border-gray-200 bg-white'">
+          <div class="flex flex-wrap gap-2">
+            <button v-for="option in chatOptions" :key="option"
+              @click="sendChatMessage(option)"
+              class="px-3 py-1.5 text-xs rounded-full border transition-colors"
+              :class="isDark ? 'border-[#2E7DE8]/30 text-[#2E7DE8] hover:bg-[#2E7DE8]/10' : 'border-blue-200 text-blue-600 hover:bg-blue-50'">
+              {{ option }}
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Toggle Button -->
+      <button v-if="!chatOpen" @click="chatOpen = true"
+        class="w-14 h-14 rounded-full bg-gradient-to-r from-[#2E7DE8] to-[#1e6ad1] text-white shadow-lg shadow-[#2E7DE8]/40 flex items-center justify-center hover:scale-110 transition-transform">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button v-show="scrolled" @click="scrollToSection('top')"
+      class="fixed bottom-6 left-6 z-50 w-12 h-12 rounded-full bg-[#2E7DE8] text-white shadow-lg shadow-[#2E7DE8]/30 flex items-center justify-center hover:scale-110 transition-all animate-fade-in">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+      </svg>
+    </button>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useDarkMode } from '../../composables/useDarkMode'
 import FeatureCard from './components/FeatureCard.vue'
 import StepCard from './components/StepCard.vue'
 import PricingCard from './components/PricingCard.vue'
+import AnimatedCounter from '../../components/AnimatedCounter.vue'
 
 const { isDark, toggleDarkMode } = useDarkMode()
 const scrolled = ref(false)
 const mobileMenuOpen = ref(false)
+
+// ROI Calculator
+const roiCalculator = ref({
+  hoursPerWeek: 15,
+  hourlyRate: 200,
+  monthlyLosses: 5000
+})
+
+const monthlyTimeSavings = computed(() => {
+  const hoursSaved = roiCalculator.value.hoursPerWeek * 4 * 0.8 // 80% de eficiencia
+  return Math.round(hoursSaved * roiCalculator.value.hourlyRate)
+})
+
+const totalMonthlyROI = computed(() => {
+  return monthlyTimeSavings.value + (roiCalculator.value.monthlyLosses * 0.9)
+})
+
+const roiMultiplier = computed(() => {
+  return Math.round(totalMonthlyROI.value / 299)
+})
+
+// Testimonials Data
+const testimonials = [
+  {
+    quote: "Antes perdíamos 10 horas semanales en inventario. Ahora todo es automático y tenemos visibilidad en tiempo real de todos nuestros almacenes.",
+    name: "María González",
+    role: "Directora de Operaciones",
+    company: "ADIS Diseño"
+  },
+  {
+    quote: "Redujimos nuestras mermas en un 85% el primer mes. El sistema nos alerta antes de que se acabe el stock crítico.",
+    name: "Carlos Ramírez",
+    role: "Gerente General",
+    company: "Caoba Muebles"
+  },
+  {
+    quote: "La mejor inversión que hemos hecho. El soporte de CJ Consultoría es excepcional y el sistema es muy intuitivo.",
+    name: "Laura Martínez",
+    role: "Dueña",
+    company: "Decoraciones del Norte"
+  }
+]
+
+// Trusted Clients
+const trustedClients = [
+  { name: 'ADIS Diseño', initials: 'AD' },
+  { name: 'Caoba Muebles', initials: 'CM' },
+  { name: 'DecoSonora', initials: 'DS' },
+  { name: 'Muebles Río Rico', initials: 'RR' },
+  { name: 'CJ Consultoría', initials: 'CJ' }
+]
+
+// Comparison Table
+const comparisonTable = [
+  { feature: 'Multi-almacén', inventoryPro: true, excel: false, competitor: true },
+  { feature: 'Reportes avanzados', inventoryPro: true, excel: false, competitor: true },
+  { feature: 'Alertas automáticas', inventoryPro: true, excel: false, competitor: true },
+  { feature: 'App móvil', inventoryPro: true, excel: false, competitor: true },
+  { feature: 'Fácil de usar', inventoryPro: true, excel: true, competitor: false },
+  { feature: 'Soporte en español', inventoryPro: true, excel: false, competitor: false },
+  { feature: 'Setup en < 1 día', inventoryPro: true, excel: true, competitor: false },
+  { feature: 'Precio mensual', inventoryPro: '$299-$799', excel: '$0', competitor: '$2,000+' },
+  { feature: 'Sin contratos forzosos', inventoryPro: true, excel: true, competitor: false },
+  { feature: 'Consultoría incluida', inventoryPro: true, excel: false, competitor: false }
+]
 
 const handleScroll = () => {
   scrolled.value = window.scrollY > 50
@@ -630,6 +1482,130 @@ const scrollToSection = (sectionId) => {
   }
 }
 
+// Video Demo
+const videoPlaying = ref(false)
+const playVideo = () => {
+  videoPlaying.value = true
+}
+const videoChapters = [
+  { time: '0:00', title: 'Introducción' },
+  { time: '0:45', title: 'Dashboard en vivo' },
+  { time: '1:30', title: 'Gestión de productos' },
+  { time: '2:15', title: 'Reportes y análisis' }
+]
+
+// Screenshots Carrusel
+const activeScreenshot = ref(0)
+const screenshots = [
+  { 
+    id: 'dashboard', 
+    component: { props: ['isDark'], template: '<div class="h-full flex flex-col gap-3 p-4"><div class="grid grid-cols-4 gap-3"><div v-for="i in 4" :key="i" class="h-16 rounded-lg" :class="isDark ? \"bg-[#1a3050]\" : \"bg-gray-100\"></div></div><div class="flex-1 rounded-lg" :class="isDark ? \"bg-[#1a3050]\" : \"bg-gray-100\"></div></div>' },
+    miniComponent: { template: '<div class="w-full h-full flex gap-1 p-1"><div class="flex-1 bg-[#2E7DE8]/30 rounded"></div><div class="flex-1 bg-[#2E7DE8]/30 rounded"></div></div>' }
+  },
+  { 
+    id: 'products', 
+    component: { props: ['isDark'], template: '<div class="h-full p-4"><div class="space-y-2"><div v-for="i in 5" :key="i" class="h-10 rounded-lg flex items-center px-3 gap-3" :class="isDark ? \"bg-[#1a3050]\" : \"bg-gray-100\""><div class="w-8 h-8 rounded bg-[#2E7DE8]/30"></div><div class="flex-1 h-3 rounded" :class="isDark ? \"bg-gray-700\" : \"bg-gray-300\"></div></div></div></div>' },
+    miniComponent: { template: '<div class="w-full h-full flex flex-col gap-1 p-1"><div class="h-2 bg-[#2E7DE8]/30 rounded w-full"></div><div class="h-2 bg-[#2E7DE8]/30 rounded w-3/4"></div><div class="h-2 bg-[#2E7DE8]/30 rounded w-5/6"></div></div>' }
+  },
+  { 
+    id: 'reports', 
+    component: { props: ['isDark'], template: '<div class="h-full p-4"><div class="grid grid-cols-2 gap-3 h-full"><div v-for="i in 4" :key="i" class="rounded-lg flex items-center justify-center" :class="isDark ? \"bg-[#1a3050]\" : \"bg-gray-100\""><div class="w-16 h-16 rounded-full border-4" :class="i === 1 ? \"border-emerald-500\" : i === 2 ? \"border-blue-500\" : \"border-amber-500\""></div></div></div></div>' },
+    miniComponent: { template: '<div class="w-full h-full flex items-center justify-center"><div class="w-8 h-8 rounded-full border-2 border-[#2E7DE8]"></div></div>' }
+  },
+  { 
+    id: 'movements', 
+    component: { props: ['isDark'], template: '<div class="h-full p-4"><div class="space-y-2"><div class="h-8 rounded flex items-center px-3 gap-2" :class="isDark ? \"bg-emerald-500/20\" : \"bg-emerald-100\""><div class="w-2 h-2 rounded-full bg-emerald-500"></div><div class="flex-1 h-2 rounded" :class="isDark ? \"bg-emerald-500/30\" : \"bg-emerald-300\"></div></div><div class="h-8 rounded flex items-center px-3 gap-2" :class="isDark ? \"bg-rose-500/20\" : \"bg-rose-100\""><div class="w-2 h-2 rounded-full bg-rose-500"></div><div class="flex-1 h-2 rounded" :class="isDark ? \"bg-rose-500/30\" : \"bg-rose-300\"></div></div><div v-for="i in 3" :key="i" class="h-8 rounded" :class="isDark ? \"bg-[#1a3050]\" : \"bg-gray-100\"></div></div></div>' },
+    miniComponent: { template: '<div class="w-full h-full flex flex-col gap-1 p-1"><div class="h-3 bg-emerald-500/30 rounded"></div><div class="h-3 bg-rose-500/30 rounded"></div></div>' }
+  }
+]
+
+const nextScreenshot = () => {
+  activeScreenshot.value = (activeScreenshot.value + 1) % screenshots.length
+}
+const prevScreenshot = () => {
+  activeScreenshot.value = (activeScreenshot.value - 1 + screenshots.length) % screenshots.length
+}
+
+// Interactive Demo
+const demoActiveTab = ref('Dashboard')
+const demoMenu = ['Dashboard', 'Productos', 'Movimientos', 'Reportes', 'Configuración']
+const demoStats = [
+  { label: 'Productos', value: '156' },
+  { label: 'Valor Total', value: '$45.2k' },
+  { label: 'Stock Bajo', value: '8' },
+  { label: 'Mov. Hoy', value: '+24' }
+]
+const demoBars = [45, 72, 58, 85]
+const demoProducts = [
+  { name: 'Laptop HP Pavilion', sku: 'LAP-HP-001', stock: 25, price: '12,499' },
+  { name: 'Monitor Dell 27"', sku: 'MON-DL-027', stock: 8, price: '5,299' },
+  { name: 'Teclado Mecánico', sku: 'TEC-MK-001', stock: 42, price: '1,299' },
+  { name: 'Mouse Inalámbrico', sku: 'MOU-WL-001', stock: 5, price: '399' },
+  { name: 'Webcam HD', sku: 'CAM-HD-001', stock: 15, price: '899' }
+]
+
+// Blog Posts
+const blogPosts = [
+  {
+    icon: '📊',
+    category: 'Gestión',
+    title: 'Cómo implementar análisis ABC en tu inventario',
+    excerpt: 'Descubre cómo clasificar tus productos por valoración para optimizar tu capital de trabajo.',
+    date: '5 Abr 2026',
+    readTime: '5 min'
+  },
+  {
+    icon: '🏆',
+    category: 'ISO 9001',
+    title: 'Preparación para auditoría de calidad: checklist 2026',
+    excerpt: 'Todo lo que necesitas saber para pasar tu auditoría ISO sin contratiempos.',
+    date: '2 Abr 2026',
+    readTime: '8 min'
+  },
+  {
+    icon: '📱',
+    category: 'Tecnología',
+    title: '5 señales de que necesitas un sistema de inventario',
+    excerpt: 'Si experimentas alguna de estas señales, es hora de modernizar tu gestión.',
+    date: '28 Mar 2026',
+    readTime: '4 min'
+  }
+]
+
+// ChatBot
+const chatOpen = ref(false)
+const chatMessages = ref([
+  { from: 'bot', text: '¡Hola! Soy el asistente de CJ Consultoría. ¿En qué puedo ayudarte hoy?' }
+])
+const chatOptions = ['Ver planes', 'Agendar demo', 'Soporte', 'Hablar con humano']
+
+const sendChatMessage = (option) => {
+  chatMessages.value.push({ from: 'user', text: option })
+  
+  setTimeout(() => {
+    let response = ''
+    switch(option) {
+      case 'Ver planes':
+        response = 'Tenemos 3 planes: Gratis ($0), Profesional ($299/mes) e Ilimitado ($799/mes). ¿Cuál te interesa?'
+        break
+      case 'Agendar demo':
+        response = 'Perfecto, te redirigiré a WhatsApp para agendar una demostración personalizada.'
+        setTimeout(() => openWhatsApp(), 1500)
+        break
+      case 'Soporte':
+        response = 'Nuestro equipo de soporte está disponible de lunes a viernes de 9am a 6pm. ¿Cuál es tu consulta?'
+        break
+      case 'Hablar con humano':
+        response = 'Te conectaré con uno de nuestros consultores. Abriendo WhatsApp...'
+        setTimeout(() => openWhatsApp(), 1500)
+        break
+      default:
+        response = 'Entiendo. ¿Te gustaría que te contacte un asesor?'
+    }
+    chatMessages.value.push({ from: 'bot', text: response })
+  }, 500)
+}
+
 const openWhatsApp = () => {
   const phone = '524776940272'
   const message = encodeURIComponent('Hola Carlos, estoy interesado en Inventory Pro. ¿Podemos agendar una llamada para conocer más detalles?')
@@ -645,6 +1621,12 @@ const sendEmail = () => {
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
+  
+  // Load Calendly widget script
+  const calendlyScript = document.createElement('script')
+  calendlyScript.src = 'https://assets.calendly.com/assets/external/widget.js'
+  calendlyScript.async = true
+  document.body.appendChild(calendlyScript)
 })
 
 onUnmounted(() => {
@@ -818,5 +1800,78 @@ const values = [
 
 .animate-rain {
   animation: rain 20s linear infinite;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.3s ease-out;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+
+/* Screenshot transition */
+.screenshot-enter-active,
+.screenshot-leave-active {
+  transition: all 0.3s ease;
+}
+
+.screenshot-enter-from {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.screenshot-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for dark mode */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(46, 125, 232, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(46, 125, 232, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(46, 125, 232, 0.5);
 }
 </style>

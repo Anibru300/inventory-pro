@@ -263,8 +263,8 @@ const form = ref({
   sku: '',
   category_id: '',
   description: '',
-  cost: '',
-  price: '',
+  cost: null,
+  price: null,
   initial_stock: 0,
   min_stock: 10,
   warehouse_id: '',
@@ -341,14 +341,38 @@ function setPrimaryImage(index) {
 async function handleSubmit() {
   saving.value = true
   try {
+    // Validar campos requeridos
+    if (!form.value.name || !form.value.sku) {
+      alert('Nombre y SKU son requeridos')
+      saving.value = false
+      return
+    }
+    
+    if (!form.value.cost || form.value.cost <= 0) {
+      alert('El costo debe ser mayor a 0')
+      saving.value = false
+      return
+    }
+    
+    if (!form.value.price || form.value.price <= 0) {
+      alert('El precio debe ser mayor a 0')
+      saving.value = false
+      return
+    }
+    
     const formData = new FormData()
     
-    // Append all form fields
-    Object.keys(form.value).forEach(key => {
-      if (form.value[key] !== null && form.value[key] !== undefined) {
-        formData.append(key, form.value[key])
-      }
-    })
+    // Append all form fields con conversión de tipos
+    formData.append('name', form.value.name)
+    formData.append('sku', form.value.sku)
+    formData.append('description', form.value.description || '')
+    formData.append('category_id', form.value.category_id || '')
+    formData.append('cost', parseFloat(form.value.cost) || 0)
+    formData.append('price', parseFloat(form.value.price) || 0)
+    formData.append('min_stock', parseInt(form.value.min_stock) || 0)
+    formData.append('initial_stock', parseInt(form.value.initial_stock) || 0)
+    formData.append('warehouse_id', form.value.warehouse_id || '')
+    formData.append('valuation_method', form.value.valuation_method || 'FIFO')
     
     // Append new images
     const newImages = galleryImages.value.filter(img => img.isNew && img.file)
