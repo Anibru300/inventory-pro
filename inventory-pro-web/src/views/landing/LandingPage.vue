@@ -1,22 +1,69 @@
 <template>
   <div class="min-h-screen overflow-x-hidden" :class="isDark ? 'bg-[#0B1F3A]' : 'bg-white'">
-    <!-- Animated Background -->
-    <div class="fixed inset-0 pointer-events-none z-0">
-      <!-- Gradient Orbs -->
-      <div class="absolute top-0 left-1/4 w-[800px] h-[800px] bg-[#2E7DE8]/20 rounded-full blur-[120px] animate-pulse"></div>
-      <div class="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-[#0B1F3A]/40 rounded-full blur-[100px]"></div>
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-gradient-to-r from-[#2E7DE8]/10 to-transparent rounded-full blur-[150px]"></div>
+    <!-- Animated Professional Background -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+      <!-- Base Gradient -->
+      <div class="absolute inset-0 bg-gradient-to-br from-[#0B1F3A] via-[#0f2642] to-[#1a3a5c]"></div>
       
-      <!-- Grid Pattern -->
+      <!-- Animated Orbs -->
+      <div class="absolute top-0 left-1/4 w-[600px] h-[600px] bg-[#2E7DE8]/20 rounded-full blur-[100px] animate-pulse"></div>
+      <div class="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-[#2E7DE8]/15 rounded-full blur-[80px]" style="animation: pulse 4s ease-in-out infinite; animation-delay: 1s;"></div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-[#2E7DE8]/10 to-transparent rounded-full blur-[120px]" style="animation: pulse 6s ease-in-out infinite; animation-delay: 2s;"></div>
+      
+      <!-- Silver Accent Lines -->
+      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#C0C0C0]/30 to-transparent"></div>
+      <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#C0C0C0]/30 to-transparent"></div>
+      
+      <!-- Animated Grid Pattern -->
       <div class="absolute inset-0 opacity-[0.03]" 
-        style="background-image: linear-gradient(rgba(46,125,232,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(46,125,232,0.5) 1px, transparent 1px); background-size: 60px 60px;">
+        style="background-image: 
+          linear-gradient(rgba(46,125,232,0.5) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(46,125,232,0.5) 1px, transparent 1px);
+        background-size: 50px 50px;
+        animation: gridMove 20s linear infinite;">
       </div>
       
+      <!-- Floating Geometric Shapes -->
+      <div class="absolute top-20 left-[10%] w-20 h-20 border-2 border-[#2E7DE8]/20 rotate-45 animate-float" style="animation-delay: 0s;"></div>
+      <div class="absolute top-40 right-[15%] w-16 h-16 border-2 border-[#C0C0C0]/20 rounded-full animate-float" style="animation-delay: 1s;"></div>
+      <div class="absolute bottom-32 left-[20%] w-24 h-24 border-2 border-[#2E7DE8]/10 rotate-12 animate-float" style="animation-delay: 2s;"></div>
+      <div class="absolute top-1/3 right-[10%] w-12 h-12 bg-[#2E7DE8]/5 rotate-45 animate-float" style="animation-delay: 1.5s;"></div>
+      <div class="absolute bottom-1/4 right-[25%] w-32 h-1 bg-gradient-to-r from-transparent via-[#C0C0C0]/20 to-transparent animate-float" style="animation-delay: 0.5s;"></div>
+      
+      <!-- Connection Lines (Consulting Network Effect) -->
+      <svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#2E7DE8;stop-opacity:0" />
+            <stop offset="50%" style="stop-color:#2E7DE8;stop-opacity:0.3" />
+            <stop offset="100%" style="stop-color:#2E7DE8;stop-opacity:0" />
+          </linearGradient>
+        </defs>
+        <!-- Animated connection lines -->
+        <line x1="10%" y1="20%" x2="30%" y2="40%" stroke="url(#lineGrad)" stroke-width="1" class="animate-draw-line" style="animation-delay: 0s;"/>
+        <line x1="70%" y1="15%" x2="85%" y2="35%" stroke="url(#lineGrad)" stroke-width="1" class="animate-draw-line" style="animation-delay: 0.5s;"/>
+        <line x1="20%" y1="70%" x2="40%" y2="85%" stroke="url(#lineGrad)" stroke-width="1" class="animate-draw-line" style="animation-delay: 1s;"/>
+        <line x1="60%" y1="60%" x2="80%" y2="75%" stroke="url(#lineGrad)" stroke-width="1" class="animate-draw-line" style="animation-delay: 1.5s;"/>
+        <line x1="5%" y1="50%" x2="25%" y2="30%" stroke="url(#lineGrad)" stroke-width="1" class="animate-draw-line" style="animation-delay: 2s;"/>
+      </svg>
+      
       <!-- Floating Particles -->
-      <div class="absolute top-20 left-10 w-2 h-2 bg-[#C0C0C0] rounded-full animate-bounce" style="animation-duration: 3s;"></div>
-      <div class="absolute top-40 right-20 w-3 h-3 bg-[#2E7DE8]/50 rounded-full animate-bounce" style="animation-duration: 4s; animation-delay: 1s;"></div>
-      <div class="absolute bottom-40 left-1/4 w-2 h-2 bg-[#C0C0C0]/70 rounded-full animate-bounce" style="animation-duration: 3.5s; animation-delay: 0.5s;"></div>
-      <div class="absolute top-1/3 right-1/3 w-4 h-4 bg-[#2E7DE8]/30 rounded-full animate-pulse" style="animation-duration: 5s;"></div>
+      <div class="absolute top-[15%] left-[8%] w-2 h-2 bg-[#C0C0C0] rounded-full animate-particle" style="animation-delay: 0s;"></div>
+      <div class="absolute top-[25%] right-[12%] w-3 h-3 bg-[#2E7DE8]/50 rounded-full animate-particle" style="animation-delay: 1s;"></div>
+      <div class="absolute top-[60%] left-[15%] w-2 h-2 bg-[#C0C0C0]/70 rounded-full animate-particle" style="animation-delay: 0.5s;"></div>
+      <div class="absolute top-[45%] right-[8%] w-4 h-4 bg-[#2E7DE8]/30 rounded-full animate-particle" style="animation-delay: 1.5s;"></div>
+      <div class="absolute top-[80%] left-[25%] w-2 h-2 bg-[#C0C0C0]/50 rounded-full animate-particle" style="animation-delay: 2s;"></div>
+      <div class="absolute top-[35%] left-[35%] w-3 h-3 bg-[#2E7DE8]/20 rounded-full animate-particle" style="animation-delay: 0.8s;"></div>
+      
+      <!-- Binary/Code Rain Effect (subtle) -->
+      <div class="absolute top-0 right-0 w-32 h-full opacity-[0.02] overflow-hidden font-mono text-[#2E7DE8] text-xs leading-none">
+        <div class="animate-rain">
+          10110<br>01001<br>11010<br>00101<br>11100<br>01011<br>10101<br>01110<br>10011<br>00111
+        </div>
+      </div>
+      
+      <!-- Glow Effect behind content areas -->
+      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[90%] h-[400px] bg-gradient-to-b from-[#2E7DE8]/5 to-transparent rounded-full blur-3xl"></div>
     </div>
 
     <!-- Navigation -->
@@ -26,7 +73,7 @@
         <div class="flex items-center justify-between h-20">
           <!-- Logo -->
           <div class="flex items-center gap-3 cursor-pointer" @click="scrollToSection('top')">
-            <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg overflow-hidden border-2 border-[#C0C0C0]">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg overflow-hidden border-2 border-[#C0C0C0] bg-white">
               <img src="/logo-cj.png" alt="CJ Consultoría" class="w-full h-full object-cover" />
             </div>
             <div>
@@ -150,11 +197,11 @@
             </div>
           </div>
 
-          <!-- Hero Image / Wolf -->
+          <!-- Hero Image -->
           <div class="relative flex justify-center">
-            <div class="absolute -inset-4 bg-gradient-to-r from-[#2E7DE8] to-[#C0C0C0] rounded-full opacity-30 blur-3xl animate-pulse"></div>
+            <div class="absolute -inset-4 bg-gradient-to-r from-[#2E7DE8] to-[#C0C0C0] rounded-full opacity-20 blur-3xl animate-pulse"></div>
             <div class="relative w-80 h-80 lg:w-96 lg:h-96">
-              <img src="/lobo-cj.png" alt="CJ Consultoría - Lobo" class="w-full h-full object-contain drop-shadow-2xl" />
+              <img src="/logo-cj-sin-fondo.png" alt="CJ Consultoría" class="w-full h-full object-contain drop-shadow-2xl animate-float" />
             </div>
           </div>
         </div>
@@ -162,22 +209,22 @@
     </section>
 
     <!-- Stats Section -->
-    <section class="py-12 border-y relative" :class="isDark ? 'border-[#2E7DE8]/20 bg-[#0B1F3A]/50' : 'border-gray-200 bg-gray-50/50'">
+    <section class="py-12 border-y relative" :class="isDark ? 'border-[#2E7DE8]/20 bg-[#0B1F3A]/30' : 'border-gray-200 bg-gray-50/50'">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div class="p-4 rounded-2xl" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-white/50'">
+          <div class="p-4 rounded-2xl backdrop-blur-sm" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-white/50'">
             <p class="text-3xl md:text-4xl font-bold text-[#2E7DE8]">65%</p>
             <p class="text-sm mt-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">PYMEs sin procesos</p>
           </div>
-          <div class="p-4 rounded-2xl" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-white/50'">
+          <div class="p-4 rounded-2xl backdrop-blur-sm" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-white/50'">
             <p class="text-3xl md:text-4xl font-bold text-[#2E7DE8]">+25%</p>
             <p class="text-sm mt-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Ventas con ISO</p>
           </div>
-          <div class="p-4 rounded-2xl" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-white/50'">
+          <div class="p-4 rounded-2xl backdrop-blur-sm" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-white/50'">
             <p class="text-3xl md:text-4xl font-bold text-[#2E7DE8]">80%</p>
             <p class="text-sm mt-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Tiempo ahorrado</p>
           </div>
-          <div class="p-4 rounded-2xl" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-white/50'">
+          <div class="p-4 rounded-2xl backdrop-blur-sm" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-white/50'">
             <p class="text-3xl md:text-4xl font-bold text-[#2E7DE8]">99.9%</p>
             <p class="text-sm mt-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Uptime</p>
           </div>
@@ -576,22 +623,19 @@ const scrollToSection = (sectionId) => {
   }
   const element = document.getElementById(sectionId)
   if (element) {
-    const offset = 80 // Height of navbar
+    const offset = 80
     const elementPosition = element.getBoundingClientRect().top
     const offsetPosition = elementPosition + window.pageYOffset - offset
     window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
   }
 }
 
-// WhatsApp helper function
 const openWhatsApp = () => {
   const phone = '524776940272'
   const message = encodeURIComponent('Hola Carlos, estoy interesado en Inventory Pro. ¿Podemos agendar una llamada para conocer más detalles?')
-  const url = `https://wa.me/${phone}?text=${message}`
-  window.open(url, '_blank', 'noopener,noreferrer')
+  window.open(`https://wa.me/${phone}?text=${message}`, '_blank', 'noopener,noreferrer')
 }
 
-// Email helper function
 const sendEmail = () => {
   const email = 'ing.carlosurbina@gmail.com'
   const subject = encodeURIComponent('Consulta sobre Inventory Pro')
@@ -725,3 +769,54 @@ const values = [
   { icon: '🌱', name: 'Evolución', description: 'Mejorar es una decisión diaria' }
 ]
 </script>
+
+<style scoped>
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(45deg); }
+  50% { transform: translateY(-20px) rotate(45deg); }
+}
+
+@keyframes gridMove {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(50px); }
+}
+
+@keyframes particle {
+  0%, 100% { 
+    transform: translateY(0) scale(1);
+    opacity: 0.5;
+  }
+  50% { 
+    transform: translateY(-100px) scale(1.2);
+    opacity: 1;
+  }
+}
+
+@keyframes drawLine {
+  0% { stroke-dashoffset: 1000; }
+  100% { stroke-dashoffset: 0; }
+}
+
+@keyframes rain {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-particle {
+  animation: particle 8s ease-in-out infinite;
+}
+
+.animate-draw-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawLine 5s ease-out forwards;
+}
+
+.animate-rain {
+  animation: rain 20s linear infinite;
+}
+</style>
