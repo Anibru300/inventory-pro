@@ -17,7 +17,9 @@ class SetTenantContext
 
             // Solo establecer contexto de RLS si usamos PostgreSQL
             if (DB::getDriverName() === 'pgsql') {
-                DB::statement("SET app.current_tenant_id = ?", [$tenantId]);
+                // PostgreSQL no acepta parametros preparados en SET, usar interpolacion
+                // El tenant_id es UUID validado, por lo que es seguro
+                DB::statement("SET LOCAL app.current_tenant_id = '{$tenantId}'");
             }
             
             // Almacenar en el request para uso posterior
