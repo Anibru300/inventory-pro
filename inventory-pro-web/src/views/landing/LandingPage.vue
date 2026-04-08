@@ -716,10 +716,6 @@ const pricingPlans = [
     unlimited: true
   }
 ]
-    cta: 'Contactar',
-    popular: false
-  }
-]
 
 const values = [
   { icon: '⚡', name: 'Excelencia Práctica', description: '"Lo perfecto es enemigo de lo hecho"' },
