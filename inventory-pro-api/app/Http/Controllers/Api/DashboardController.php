@@ -141,4 +141,68 @@ class DashboardController extends Controller
         
         return response()->json($stats);
     }
+
+    /**
+     * Vista consolidada del Almacén General
+     */
+    public function generalWarehouse(Request $request)
+    {
+        $tenantId = $request->user()->tenant_id;
+        
+        // Obtener todos los productos con sus niveles de stock
+        $products = Product::where('tenant_id', $tenantId)
+            ->with(['category', 'stockLevels.warehouse'])
+            ->get();
+        
+        // Obtener todos los almacenes
+        $warehouses = \App\Models\Warehouse::where('tenant_id', $tenantId)
+            ->orderBy('name')
+            ->get();
+        
+        // Construir el inventario general
+        $inventory = [];
+        $totalValue = 0;
+        $lowStockCount = 0;
+        
+        foreach ($products as $product) {
+            $warehouseStock = [];
+            $totalStock = 0;
+            
+            foreach ($warehouses as $warehouse) {
+                $stock = $product->stockLevels->where('warehouse_id', $warehouse->id)->first();
+                $qty = $stock ? $stock->quantity : 0;
+                $warehouseStock[$warehouse->id] = $qty;
+                $totalStock += $qty;
+            }
+            
+            $productValue = $totalStock * $product->unit_cost;
+            $totalValue += $productValue;
+            
+            if ($totalStock <= $product->stock_min) {
+                $lowStockCount++;
+            }
+            
+            $inventory[] = [
+                'product_id' => $product->id,
+                'product_name' => $product->name,
+                'sku' => $product->sku,
+                'category_id' => $product->category_id,
+                'category' => $product->category ? $product->category->name : 'Sin categoría',
+                'min_stock' => $product->stock_min,
+                'total_stock' => $totalStock,
+                'warehouse_stock' => $warehouseStock,
+                'unit_cost' => $product->unit_cost,
+                'total_value' => $productValue,
+                'image' => $product->image_url,
+            ];
+        }
+        
+        return response()->json([
+            'warehouses' => $warehouses,
+            'inventory' => $inventory,
+            'total_products' => count($products),
+            'total_value' => $totalValue,
+            'low_stock_count' => $lowStockCount,
+        ]);
+    }
 }

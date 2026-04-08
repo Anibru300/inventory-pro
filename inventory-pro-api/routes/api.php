@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\GlobalSearchController;
 use App\Http\Controllers\Api\InventoryEventController;
 use App\Http\Controllers\Api\KardexController;
+use App\Http\Controllers\Api\LabelController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductLotController;
 use App\Http\Controllers\Api\StockMovementController;
@@ -44,10 +45,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
     Route::get('/dashboard/advanced-stats', [DashboardController::class, 'advancedStats']);
+    Route::get('/inventory/general', [DashboardController::class, 'generalWarehouse']);
     
     // Products
     Route::apiResource('products', ProductController::class);
     Route::get('/products/low-stock', [ProductController::class, 'lowStock']);
+    
+    // Label Printing
+    Route::get('/products/{product}/labels', [LabelController::class, 'generateProductLabel']);
+    Route::post('/labels/batch', [LabelController::class, 'generateBatchLabels']);
+    Route::get('/labels/templates', [LabelController::class, 'getLabelTemplates']);
+    Route::get('/labels/preview', [LabelController::class, 'previewLabel']);
     
     // Categories
     Route::apiResource('categories', CategoryController::class);

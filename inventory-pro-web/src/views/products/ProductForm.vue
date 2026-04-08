@@ -128,7 +128,7 @@
             <div>
               <label class="block text-sm font-medium mb-2 text-slate-700">Costo de compra *</label>
               <div class="relative">
-                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 z-10">$</span>
                 <input
                   v-model="form.cost"
                   type="number"
@@ -143,7 +143,7 @@
             <div>
               <label class="block text-sm font-medium mb-2 text-slate-700">Precio de venta *</label>
               <div class="relative">
-                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 z-10">$</span>
                 <input
                   v-model="form.price"
                   type="number"

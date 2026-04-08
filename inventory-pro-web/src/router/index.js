@@ -4,7 +4,12 @@ import { useAuthStore } from '../stores/auth'
 const routes = [
   {
     path: '/',
-    redirect: '/login',
+    redirect: '/menu',
+  },
+  {
+    path: '/menu',
+    name: 'MainMenu',
+    component: () => import('../views/mainmenu/MainMenu.vue'),
   },
   {
     path: '/login',
@@ -55,6 +60,11 @@ const routes = [
     path: '/warehouses',
     name: 'Warehouses',
     component: () => import('../views/warehouses/WarehouseList.vue'),
+  },
+  {
+    path: '/warehouse/general',
+    name: 'GeneralWarehouse',
+    component: () => import('../views/warehouse/GeneralWarehouse.vue'),
   },
   // Transfers
   {
@@ -169,7 +179,7 @@ router.beforeEach(async (to, from, next) => {
   if (!to.meta.public && !authStore.isAuthenticated) {
     next('/login')
   } else if (to.meta.public && authStore.isAuthenticated && to.path !== '/') {
-    next('/dashboard')
+    next('/menu')
   } else {
     next()
   }

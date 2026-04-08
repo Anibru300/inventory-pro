@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\WarehouseTransfer;
 use App\Services\InventoryCostingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -83,6 +84,56 @@ class KardexController extends Controller
             $initialBalance = $initialMovement?->running_balance ?? 0;
         }
 
+        // Obtener transferencias relacionadas
+        $transfers = [];
+        $transferQuery = WarehouseTransfer::where('tenant_id', $request->user()->tenant_id)
+            ->where(function($q) use ($validated) {
+                $q->whereHas('items', function($qi) use ($validated) {
+                    $qi->where('product_id', $validated['product_id']);
+                });
+            });
+            
+        if (!empty($validated['warehouse_id'])) {
+            $transferQuery->where(function($q) use ($validated) {
+                $q->where('source_warehouse_id', $validated['warehouse_id'])
+                  ->orWhere('destination_warehouse_id', $validated['warehouse_id']);
+            });
+        }
+        
+        if (!empty($validated['start_date'])) {
+            $transferQuery->whereDate('created_at', '>=', $validated['start_date']);
+        }
+        
+        if (!empty($validated['end_date'])) {
+            $transferQuery->whereDate('created_at', '<=', $validated['end_date']);
+        }
+        
+        $transfersRaw = $transferQuery->with(['sourceWarehouse', 'destinationWarehouse', 'items' => function($q) use ($validated) {
+            $q->where('product_id', $validated['product_id']);
+        }])->get();
+        
+        foreach ($transfersRaw as $transfer) {
+            foreach ($transfer->items as $item) {
+                $transfers[] = [
+                    'id' => 'TR-' . $transfer->id,
+                    'created_at' => $transfer->created_at,
+                    'movement_type' => 'transferencia',
+                    'quantity' => $item->quantity,
+                    'unit_cost' => $item->unit_cost,
+                    'balance_before' => null,
+                    'running_balance' => null,
+                    'reference_number' => $transfer->transfer_number,
+                    'notes' => 'Transferencia ' . ($transfer->sourceWarehouse?->name ?? 'N/A') . ' → ' . ($transfer->destinationWarehouse?->name ?? 'N/A'),
+                    'warehouse_name' => null,
+                    'lot_number' => null,
+                    'created_by_name' => null,
+                    'source_warehouse' => $transfer->sourceWarehouse?->name,
+                    'destination_warehouse' => $transfer->destinationWarehouse?->name,
+                    'status' => $transfer->status,
+                ];
+            }
+        }
+
         return response()->json([
             'product' => [
                 'id' => $product->id,
@@ -98,6 +149,7 @@ class KardexController extends Controller
             'initial_balance' => $initialBalance,
             'final_balance' => $movements->last()?->running_balance ?? $initialBalance,
             'movements' => $movements,
+            'transfers' => $transfers,
         ]);
     }
 
