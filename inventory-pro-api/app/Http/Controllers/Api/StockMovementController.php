@@ -171,24 +171,26 @@ class StockMovementController extends Controller
      */
     public function summary(Request $request)
     {
-        $tenantId = $request->header('X-Tenant-ID', 'default');
+        // Usar el tenant_id del usuario autenticado
+        $tenantId = Auth::user()->tenant_id;
         
         $today = now()->startOfDay();
-        $thisWeek = now()->startOfWeek();
         $thisMonth = now()->startOfMonth();
         
-        // Get entry and exit totals
+        // Get entry and exit totals for current month
         $entries = StockMovement::where('tenant_id', $tenantId)
             ->whereIn('movement_type', StockMovement::getEntryTypes())
             ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
             ->sum('quantity');
             
         $exits = StockMovement::where('tenant_id', $tenantId)
             ->whereIn('movement_type', StockMovement::getExitTypes())
             ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
             ->sum('quantity');
         
-        // Get today's movements
+        // Get today's movements count
         $todayCount = StockMovement::where('tenant_id', $tenantId)
             ->whereDate('created_at', $today)
             ->count();
@@ -196,14 +198,21 @@ class StockMovementController extends Controller
         // Get this month's count
         $monthCount = StockMovement::where('tenant_id', $tenantId)
             ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
             ->count();
         
+        // Calculate totals (entry units are positive, exit units are negative in DB)
+        $entryUnits = abs((int) $entries);
+        $exitUnits = abs((int) $exits);
+        
         return response()->json([
-            'entries' => (int) $entries,
-            'exits' => (int) $exits,
+            'entries' => $monthCount,
+            'exits' => $monthCount,
+            'entryUnits' => $entryUnits,
+            'exitUnits' => $exitUnits,
             'today_count' => $todayCount,
             'month_count' => $monthCount,
-            'balance' => (int) ($entries - $exits),
+            'balance' => $entryUnits - $exitUnits,
         ]);
     }
 
