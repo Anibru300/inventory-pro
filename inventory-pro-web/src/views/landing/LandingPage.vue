@@ -716,27 +716,6 @@ const pricingPlans = [
     unlimited: true
   }
 ]
-      '10 Usuarios',
-      'Reportes avanzados',
-      'Etiquetas DYMO',
-      'Soporte prioritario'
-    ],
-    cta: 'Prueba Gratis',
-    popular: true
-  },
-  {
-    name: 'Enterprise',
-    price: '2,499',
-    period: 'mes',
-    description: 'Para grandes organizaciones',
-    features: [
-      'Almacenes ilimitados',
-      'Productos ilimitados',
-      'Usuarios ilimitados',
-      'API completa',
-      'Consultoría dedicada',
-      'Personalización completa'
-    ],
     cta: 'Contactar',
     popular: false
   }
