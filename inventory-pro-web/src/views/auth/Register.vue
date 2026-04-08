@@ -131,7 +131,7 @@
             />
             <span class="text-sm text-silver-600 group-hover:text-silver-700 transition-colors">
               Acepto los <a href="/terminos-condiciones.html" target="_blank" class="text-electric-dark hover:text-electric font-medium underline">Términos y Condiciones</a> y el 
-              <a href="/aviso-privacidad.html" target="_blank" class="text-electric-dark hover:text-electric font-medium underline">Aviso de Privacidad</a>
+              <a href="/aviso-privacidad.html" target="_blank" class="text-electric-dark hover:text-electric font-medium underline">Aviso de Privacidad</a> de StockWolf
             </span>
           </label>
 
@@ -205,7 +205,7 @@
 
       <!-- Footer -->
       <div class="mt-6 text-center">
-        <p class="text-xs text-silver-500">© 2026 StockMaster Pro. Todos los derechos reservados.</p>
+        <p class="text-xs text-silver-500">© 2026 StockWolf by CJ Consultoría. Todos los derechos reservados.</p>
       </div>
     </div>
   </div>
