@@ -1,10 +1,10 @@
 <template>
   <div class="group p-6 rounded-2xl border transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
-    :class="isDark ? 'bg-slate-800/50 border-slate-700 hover:border-slate-600' : 'bg-white border-slate-200 hover:border-blue-300'">
+    :class="isDark ? 'bg-[#0B1F3A]/50 border-gray-700 hover:border-[#2E7DE8]/50' : 'bg-white border-gray-200 hover:border-[#2E7DE8]'">
     
     <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-transform group-hover:scale-110"
-      :class="isDark ? 'bg-blue-500/20' : 'bg-blue-100'">
-      <svg class="w-7 h-7" :class="isDark ? 'text-blue-400' : 'text-blue-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      :class="isDark ? 'bg-[#2E7DE8]/20' : 'bg-blue-50'">
+      <svg class="w-7 h-7" :class="isDark ? 'text-[#2E7DE8]' : 'text-[#2E7DE8]'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path v-if="icon === 'inventory'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
           d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
         <path v-else-if="icon === 'barcode'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -20,10 +20,10 @@
       </svg>
     </div>
 
-    <h3 class="text-lg font-semibold mb-2 transition-colors" :class="isDark ? 'text-white' : 'text-slate-900'">
+    <h3 class="text-lg font-semibold mb-2 transition-colors" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">
       {{ title }}
     </h3>
-    <p class="text-sm leading-relaxed" :class="isDark ? 'text-slate-400' : 'text-slate-600'">
+    <p class="text-sm leading-relaxed" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
       {{ description }}
     </p>
   </div>

@@ -2,17 +2,17 @@
   <div class="relative text-center">
     <!-- Step Number -->
     <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 text-2xl font-bold"
-      :class="isDark ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white'">
+      :class="isDark ? 'bg-[#2E7DE8] text-white' : 'bg-[#2E7DE8] text-white'">
       {{ step }}
     </div>
 
     <!-- Connector Line (hidden on last item) -->
     <div v-if="step < 4" class="hidden md:block absolute top-8 left-[60%] w-[80%] h-0.5"
-      :class="isDark ? 'bg-slate-700' : 'bg-slate-200'"></div>
+      :class="isDark ? 'bg-gray-700' : 'bg-gray-200'"></div>
 
-    <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
-      :class="isDark ? 'bg-slate-800 border border-slate-700' : 'bg-white border border-slate-200'">
-      <svg class="w-7 h-7" :class="isDark ? 'text-blue-400' : 'text-blue-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 border-2"
+      :class="isDark ? 'bg-[#0B1F3A] border-gray-700' : 'bg-white border-gray-200'">
+      <svg class="w-7 h-7 text-[#2E7DE8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path v-if="icon === 'register'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
           d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
         <path v-else-if="icon === 'configure'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -24,10 +24,10 @@
       </svg>
     </div>
 
-    <h3 class="text-lg font-semibold mb-2" :class="isDark ? 'text-white' : 'text-slate-900'">
+    <h3 class="text-lg font-semibold mb-2" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">
       {{ title }}
     </h3>
-    <p class="text-sm" :class="isDark ? 'text-slate-400' : 'text-slate-600'">
+    <p class="text-sm" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
       {{ description }}
     </p>
   </div>
