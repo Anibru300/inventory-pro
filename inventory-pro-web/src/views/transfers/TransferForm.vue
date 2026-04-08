@@ -1,179 +1,218 @@
 <template>
-  <div class="p-6">
+  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
     <!-- Header -->
-    <div class="mb-6">
-      <h1 class="text-2xl font-bold text-white">Nueva Transferencia</h1>
-      <p class="text-cj-silver mt-1">Crear transferencia entre almacenes</p>
+    <div class="flex items-center gap-4 mb-8">
+      <button
+        @click="$router.back()"
+        class="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-white hover:shadow-sm transition-all"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+      </button>
+      <div>
+        <h1 class="text-3xl font-bold text-slate-800">Nueva Transferencia</h1>
+        <p class="text-slate-500">Crear transferencia entre almacenes</p>
+      </div>
     </div>
 
-    <form @submit.prevent="submitForm" class="max-w-4xl">
-      <!-- General Info -->
-      <div class="bg-cj-navy/30 border border-cj-gold/20 rounded-lg p-6 mb-6">
-        <h2 class="text-lg font-semibold text-cj-gold mb-4">Información General</h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-cj-silver mb-2">Almacén Origen *</label>
-            <select
-              v-model="form.source_warehouse_id"
-              required
-              class="w-full px-4 py-2 bg-cj-navy/50 border border-cj-gold/30 rounded-lg text-white focus:border-cj-gold focus:outline-none"
-            >
-              <option value="">Seleccionar almacén</option>
-              <option v-for="w in warehouses" :key="w.id" :value="w.id">{{ w.name }}</option>
-            </select>
-          </div>
+    <form @submit.prevent="submitForm" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Main Form -->
+      <div class="lg:col-span-2 space-y-6">
+        <!-- General Info -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+          <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <span class="w-1 h-5 bg-blue-600 rounded-full"></span>
+            Información General
+          </h2>
           
-          <div>
-            <label class="block text-sm font-medium text-cj-silver mb-2">Almacén Destino *</label>
-            <select
-              v-model="form.destination_warehouse_id"
-              required
-              class="w-full px-4 py-2 bg-cj-navy/50 border border-cj-gold/30 rounded-lg text-white focus:border-cj-gold focus:outline-none"
-            >
-              <option value="">Seleccionar almacén</option>
-              <option v-for="w in warehouses" :key="w.id" :value="w.id" :disabled="w.id === form.source_warehouse_id">
-                {{ w.name }}
-              </option>
-            </select>
-          </div>
-          
-          <div>
-            <label class="block text-sm font-medium text-cj-silver mb-2">Fecha de Transferencia *</label>
-            <input
-              v-model="form.transfer_date"
-              type="date"
-              required
-              class="w-full px-4 py-2 bg-cj-navy/50 border border-cj-gold/30 rounded-lg text-white focus:border-cj-gold focus:outline-none"
-            />
-          </div>
-          
-          <div>
-            <label class="block text-sm font-medium text-cj-silver mb-2">Fecha Estimada de Llegada</label>
-            <input
-              v-model="form.expected_arrival_date"
-              type="date"
-              class="w-full px-4 py-2 bg-cj-navy/50 border border-cj-gold/30 rounded-lg text-white focus:border-cj-gold focus:outline-none"
-            />
-          </div>
-        </div>
-        
-        <div class="mt-4">
-          <label class="block text-sm font-medium text-cj-silver mb-2">Notas</label>
-          <textarea
-            v-model="form.notes"
-            rows="2"
-            class="w-full px-4 py-2 bg-cj-navy/50 border border-cj-gold/30 rounded-lg text-white focus:border-cj-gold focus:outline-none"
-          ></textarea>
-        </div>
-      </div>
-
-      <!-- Items -->
-      <div class="bg-cj-navy/30 border border-cj-gold/20 rounded-lg p-6 mb-6">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-lg font-semibold text-cj-gold">Productos</h2>
-          <button
-            type="button"
-            @click="addItem"
-            class="text-cj-gold hover:text-cj-gold/80 text-sm font-medium"
-          >
-            + Agregar Producto
-          </button>
-        </div>
-
-        <div v-for="(item, index) in form.items" :key="index" class="mb-4 p-4 bg-cj-navy/50 rounded-lg">
-          <div class="flex justify-between items-start mb-3">
-            <span class="text-sm font-medium text-cj-silver">Producto {{ index + 1 }}</span>
-            <button
-              v-if="form.items.length > 1"
-              type="button"
-              @click="removeItem(index)"
-              class="text-red-400 hover:text-red-300 text-sm"
-            >
-              Eliminar
-            </button>
-          </div>
-          
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="md:col-span-2">
-              <label class="block text-sm text-cj-silver mb-1">Producto *</label>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium mb-2 text-slate-700">Almacén Origen *</label>
               <select
-                v-model="item.product_id"
+                v-model="form.source_warehouse_id"
                 required
-                class="w-full px-4 py-2 bg-cj-navy border border-cj-gold/30 rounded-lg text-white focus:border-cj-gold focus:outline-none"
+                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
               >
-                <option value="">Seleccionar producto</option>
-                <option v-for="p in availableProducts" :key="p.id" :value="p.id">
-                  {{ p.name }} (Stock: {{ getProductStock(p.id) }})
+                <option value="">Seleccionar almacén</option>
+                <option v-for="w in warehouses" :key="w.id" :value="w.id">{{ w.name }}</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium mb-2 text-slate-700">Almacén Destino *</label>
+              <select
+                v-model="form.destination_warehouse_id"
+                required
+                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+              >
+                <option value="">Seleccionar almacén</option>
+                <option v-for="w in warehouses" :key="w.id" :value="w.id" :disabled="w.id === form.source_warehouse_id">
+                  {{ w.name }}
                 </option>
               </select>
             </div>
             
             <div>
-              <label class="block text-sm text-cj-silver mb-1">Cantidad *</label>
+              <label class="block text-sm font-medium mb-2 text-slate-700">Fecha de Transferencia *</label>
               <input
-                v-model.number="item.quantity"
-                type="number"
-                step="0.0001"
-                min="0.0001"
+                v-model="form.transfer_date"
+                type="date"
                 required
-                class="w-full px-4 py-2 bg-cj-navy border border-cj-gold/30 rounded-lg text-white focus:border-cj-gold focus:outline-none"
+                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+              />
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium mb-2 text-slate-700">Fecha Estimada de Llegada</label>
+              <input
+                v-model="form.expected_arrival_date"
+                type="date"
+                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
               />
             </div>
           </div>
           
-          <div v-if="item.product_id && productLots[item.product_id]?.length > 0" class="mt-3">
-            <label class="block text-sm text-cj-silver mb-1">Lote (opcional)</label>
-            <select
-              v-model="item.lot_id"
-              class="w-full px-4 py-2 bg-cj-navy border border-cj-gold/30 rounded-lg text-white focus:border-cj-gold focus:outline-none"
+          <div class="mt-4">
+            <label class="block text-sm font-medium mb-2 text-slate-700">Notas</label>
+            <textarea
+              v-model="form.notes"
+              rows="2"
+              class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+              placeholder="Observaciones adicionales..."
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Items -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+              <span class="w-1 h-5 bg-emerald-500 rounded-full"></span>
+              Productos
+            </h2>
+            <button
+              type="button"
+              @click="addItem"
+              class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 font-medium rounded-lg hover:bg-blue-100 transition-colors"
             >
-              <option value="">Sin lote específico</option>
-              <option v-for="lot in productLots[item.product_id]" :key="lot.id" :value="lot.id">
-                {{ lot.lot_number }} (Disp: {{ lot.remaining_quantity }})
-              </option>
-            </select>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+              Agregar Producto
+            </button>
           </div>
-          
-          <div class="mt-3">
-            <label class="block text-sm text-cj-silver mb-1">Notas</label>
-            <input
-              v-model="item.notes"
-              type="text"
-              class="w-full px-4 py-2 bg-cj-navy border border-cj-gold/30 rounded-lg text-white focus:border-cj-gold focus:outline-none"
-            />
+
+          <div v-for="(item, index) in form.items" :key="index" class="mb-4 p-4 bg-slate-50 border border-slate-200 rounded-xl">
+            <div class="flex justify-between items-start mb-3">
+              <span class="text-sm font-medium text-slate-700">Producto {{ index + 1 }}</span>
+              <button
+                v-if="form.items.length > 1"
+                type="button"
+                @click="removeItem(index)"
+                class="text-rose-500 hover:text-rose-700 text-sm font-medium"
+              >
+                Eliminar
+              </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="md:col-span-2">
+                <label class="block text-sm text-slate-600 mb-1">Producto *</label>
+                <select
+                  v-model="item.product_id"
+                  required
+                  class="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                >
+                  <option value="">Seleccionar producto</option>
+                  <option v-for="p in availableProducts" :key="p.id" :value="p.id">
+                    {{ p.name }} (Stock: {{ getProductStock(p.id) }})
+                  </option>
+                </select>
+              </div>
+              
+              <div>
+                <label class="block text-sm text-slate-600 mb-1">Cantidad *</label>
+                <input
+                  v-model.number="item.quantity"
+                  type="number"
+                  step="0.0001"
+                  min="0.0001"
+                  required
+                  class="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                />
+              </div>
+            </div>
+            
+            <div v-if="item.product_id && productLots[item.product_id]?.length > 0" class="mt-3">
+              <label class="block text-sm text-slate-600 mb-1">Lote (opcional)</label>
+              <select
+                v-model="item.lot_id"
+                class="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+              >
+                <option value="">Sin lote específico</option>
+                <option v-for="lot in productLots[item.product_id]" :key="lot.id" :value="lot.id">
+                  {{ lot.lot_number }} (Disp: {{ lot.remaining_quantity }})
+                </option>
+              </select>
+            </div>
+            
+            <div class="mt-3">
+              <label class="block text-sm text-slate-600 mb-1">Notas del item</label>
+              <input
+                v-model="item.notes"
+                type="text"
+                class="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                placeholder="Observaciones..."
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Summary -->
-      <div class="bg-cj-navy/30 border border-cj-gold/20 rounded-lg p-6 mb-6">
-        <div class="flex justify-between items-center">
-          <span class="text-cj-silver">Total de Productos:</span>
-          <span class="text-white font-semibold">{{ totalItems }}</span>
+      <!-- Sidebar -->
+      <div class="space-y-6">
+        <!-- Summary -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+          <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <span class="w-1 h-5 bg-indigo-500 rounded-full"></span>
+            Resumen
+          </h2>
+          <div class="flex justify-between items-center py-3 border-b border-slate-100">
+            <span class="text-slate-600">Total de Productos:</span>
+            <span class="text-xl font-bold text-slate-800">{{ totalItems }}</span>
+          </div>
+          <div class="flex justify-between items-center py-3">
+            <span class="text-slate-600">Items:</span>
+            <span class="font-medium text-slate-800">{{ form.items.length }}</span>
+          </div>
         </div>
-      </div>
 
-      <!-- Error -->
-      <div v-if="error" class="bg-red-500/20 border border-red-500/50 text-red-400 p-4 rounded-lg mb-6">
-        {{ error }}
-      </div>
+        <!-- Error -->
+        <div v-if="error" class="bg-rose-50 border border-rose-200 text-rose-700 p-4 rounded-xl">
+          {{ error }}
+        </div>
 
-      <!-- Actions -->
-      <div class="flex gap-4">
-        <button
-          type="submit"
-          :disabled="isSubmitting || !isFormValid"
-          class="bg-cj-gold text-cj-navy px-6 py-2 rounded-lg font-medium hover:bg-cj-gold/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {{ isSubmitting ? 'Creando...' : 'Crear Transferencia' }}
-        </button>
-        <router-link
-          to="/transfers"
-          class="px-6 py-2 border border-cj-gold/50 text-cj-gold rounded-lg hover:bg-cj-gold/10 transition-colors"
-        >
-          Cancelar
-        </router-link>
+        <!-- Actions -->
+        <div class="flex flex-col gap-3">
+          <button
+            type="submit"
+            :disabled="isSubmitting || !isFormValid"
+            class="w-full px-4 py-3 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            <svg v-if="isSubmitting" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>{{ isSubmitting ? 'Creando...' : 'Crear Transferencia' }}</span>
+          </button>
+          <router-link
+            to="/transfers"
+            class="w-full px-4 py-3 bg-slate-100 text-slate-700 font-medium rounded-xl hover:bg-slate-200 transition-colors text-center"
+          >
+            Cancelar
+          </router-link>
+        </div>
       </div>
     </form>
   </div>

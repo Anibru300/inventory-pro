@@ -113,6 +113,18 @@ const routes = [
     name: 'Settings',
     component: () => import('../views/settings/Settings.vue'),
   },
+  // Suppliers
+  {
+    path: '/suppliers',
+    name: 'Suppliers',
+    component: () => import('../views/suppliers/SuppliersList.vue'),
+  },
+  // Users
+  {
+    path: '/users',
+    name: 'Users',
+    component: () => import('../views/users/UsersList.vue'),
+  },
   // 404
   {
     path: '/:pathMatch(.*)*',
