@@ -83,6 +83,18 @@ const routes = [
     name: 'LotNew',
     component: () => import('../views/lots/LotForm.vue'),
   },
+  // Product Search
+  {
+    path: '/products/search',
+    name: 'ProductSearch',
+    component: () => import('../views/products/ProductSearch.vue'),
+  },
+  // Kardex
+  {
+    path: '/kardex',
+    name: 'Kardex',
+    component: () => import('../views/inventory/Kardex.vue'),
+  },
   // Categories
   {
     path: '/categories',

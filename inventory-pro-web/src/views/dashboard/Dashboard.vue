@@ -236,6 +236,9 @@
       </div>
     </div>
 
+    <!-- Charts Section -->
+    <DashboardCharts />
+
     <!-- Movimientos Recientes -->
     <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
       <div class="flex items-center justify-between mb-6">
@@ -294,6 +297,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useProductsStore } from '../../stores/products'
 import apiClient from '../../services/api'
+import DashboardCharts from '../../components/DashboardCharts.vue'
 
 const productsStore = useProductsStore()
 
