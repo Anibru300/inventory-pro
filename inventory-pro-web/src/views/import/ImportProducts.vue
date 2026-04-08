@@ -1,249 +1,184 @@
 <template>
-  <div>
+  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
-      <div>
-        <h1 class="text-3xl font-bold gradient-text font-heading mb-2">Importar Productos</h1>
-        <p class="text-cj-silver-dark font-tagline italic">Sube productos masivamente desde Excel o CSV</p>
-      </div>
-      <button @click="downloadTemplate" class="btn-secondary">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-        </svg>
-        Descargar Plantilla
-      </button>
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-slate-800 mb-2">Importación Masiva</h1>
+      <p class="text-slate-500">Importa productos desde archivo Excel o CSV</p>
     </div>
 
-    <!-- Upload Area -->
-    <div class="card-premium p-8 mb-6">
-      <div
-        @dragover.prevent
-        @drop.prevent="handleDrop"
-        :class="[
-          'border-2 border-dashed rounded-xl p-12 text-center transition-all',
-          dragOver ? 'border-cj-gold bg-cj-gold/5' : 'border-cj-silver-dim/30',
-          file ? 'bg-success/5 border-success' : ''
-        ]"
-        @dragenter="dragOver = true"
-        @dragleave="dragOver = false"
-      >
-        <input
-          ref="fileInput"
-          type="file"
-          accept=".csv,.xlsx,.xls"
-          class="hidden"
-          @change="handleFileSelect"
-        />
-        
-        <div v-if="!file" class="space-y-4">
-          <div class="w-20 h-20 bg-cj-gold/10 rounded-full flex items-center justify-center mx-auto">
-            <svg class="w-10 h-10 text-cj-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-            </svg>
-          </div>
-          <div>
-            <p class="text-lg font-medium text-cj-silver">Arrastra tu archivo aquí o</p>
-            <button @click="$refs.fileInput.click()" class="text-cj-gold hover:underline mt-1">
-              selecciona un archivo
-            </button>
-          </div>
-          <p class="text-sm text-cj-silver-dark">Formatos soportados: CSV, Excel (.xlsx, .xls)</p>
-        </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Upload Section -->
+      <div class="lg:col-span-2 space-y-6">
+        <!-- Upload Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+          <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <span class="w-1 h-5 bg-blue-600 rounded-full"></span>
+            Subir Archivo
+          </h2>
 
-        <div v-else class="space-y-4">
-          <div class="w-20 h-20 bg-success/10 rounded-full flex items-center justify-center mx-auto">
-            <svg class="w-10 h-10 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+          <!-- Drop Zone -->
+          <div
+            @dragover.prevent
+            @drop.prevent="handleDrop"
+            :class="['border-2 border-dashed rounded-xl p-8 text-center transition-all',
+              isDragging ? 'border-blue-500 bg-blue-50' : 'border-slate-300 hover:border-slate-400']"
+            @dragenter="isDragging = true"
+            @dragleave="isDragging = false"
+          >
+            <div v-if="!selectedFile" class="space-y-4">
+              <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto">
+                <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-slate-700 font-medium">Arrastra tu archivo aquí</p>
+                <p class="text-slate-400 text-sm">o</p>
+              </div>
+              <label class="inline-block">
+                <input type="file" accept=".csv,.xlsx,.xls" class="hidden" @change="handleFileSelect" />
+                <span class="px-6 py-3 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-all cursor-pointer inline-block">
+                  Seleccionar archivo
+                </span>
+              </label>
+              <p class="text-xs text-slate-400">Formatos: CSV, XLSX, XLS (Máx. 10MB)</p>
+            </div>
+
+            <div v-else class="space-y-4">
+              <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
+                <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-slate-700 font-medium">{{ selectedFile.name }}</p>
+                <p class="text-slate-400 text-sm">{{ formatFileSize(selectedFile.size) }}</p>
+              </div>
+              <div class="flex justify-center gap-3">
+                <button @click="selectedFile = null" class="px-4 py-2 text-slate-600 hover:text-slate-800">
+                  Cambiar
+                </button>
+                <button 
+                  @click="uploadFile" 
+                  :disabled="uploading"
+                  class="px-6 py-2 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-all disabled:opacity-50 flex items-center gap-2"
+                >
+                  <svg v-if="uploading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  {{ uploading ? 'Importando...' : 'Importar' }}
+                </button>
+              </div>
+            </div>
           </div>
-          <p class="text-lg font-medium text-cj-silver">{{ file.name }}</p>
-          <p class="text-sm text-cj-silver-dark">{{ formatFileSize(file.size) }}</p>
-          <button @click="file = null; preview = []" class="text-danger hover:underline text-sm">
-            Eliminar archivo
+
+          <!-- Results -->
+          <div v-if="results" class="mt-6 p-4 bg-slate-50 rounded-xl">
+            <h3 class="font-semibold text-slate-800 mb-3">Resultados</h3>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="text-center p-3 bg-white rounded-lg">
+                <p class="text-2xl font-bold text-emerald-600">{{ results.created }}</p>
+                <p class="text-sm text-slate-500">Creados</p>
+              </div>
+              <div class="text-center p-3 bg-white rounded-lg">
+                <p class="text-2xl font-bold text-blue-600">{{ results.updated }}</p>
+                <p class="text-sm text-slate-500">Actualizados</p>
+              </div>
+              <div class="text-center p-3 bg-white rounded-lg">
+                <p class="text-2xl font-bold" :class="results.errors.length ? 'text-rose-600' : 'text-slate-400'">
+                  {{ results.errors.length }}
+                </p>
+                <p class="text-sm text-slate-500">Errores</p>
+              </div>
+            </div>
+            <div v-if="results.errors.length" class="mt-4">
+              <p class="text-sm font-medium text-rose-600 mb-2">Errores encontrados:</p>
+              <ul class="text-sm text-slate-600 space-y-1 max-h-32 overflow-auto">
+                <li v-for="(error, index) in results.errors" :key="index" class="flex gap-2">
+                  <span class="text-rose-500">•</span>
+                  {{ error }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="space-y-6">
+        <!-- Template Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+          <h3 class="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Plantilla
+          </h3>
+          <p class="text-sm text-slate-500 mb-4">
+            Descarga la plantilla con el formato correcto para importar productos.
+          </p>
+          <button 
+            @click="downloadTemplate"
+            class="w-full px-4 py-3 bg-slate-100 text-slate-700 font-medium rounded-xl hover:bg-slate-200 transition-colors flex items-center justify-center gap-2"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Descargar CSV
           </button>
         </div>
-      </div>
-    </div>
 
-    <!-- Preview -->
-    <div v-if="preview.length > 0" class="card-premium p-6 mb-6">
-      <h3 class="text-lg font-semibold mb-4 font-heading">Vista previa ({{ preview.length }} productos)</h3>
-      <div class="overflow-x-auto">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>SKU</th>
-              <th>Categoría</th>
-              <th>Almacén</th>
-              <th>Cantidad</th>
-              <th>Costo</th>
-              <th>Precio</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(row, index) in preview.slice(0, 10)" :key="index">
-              <td>{{ row.nombre }}</td>
-              <td class="font-mono text-cj-gold">{{ row.sku }}</td>
-              <td>{{ row.categoria || '-' }}</td>
-              <td>{{ row.almacen || '-' }}</td>
-              <td class="text-center">{{ row.cantidad || 0 }}</td>
-              <td class="text-right">${{ row.costo || 0 }}</td>
-              <td class="text-right">${{ row.precio_venta || 0 }}</td>
-            </tr>
-          </tbody>
-        </table>
-        <p v-if="preview.length > 10" class="text-center text-cj-silver-dark mt-4">
-          ... y {{ preview.length - 10 }} productos más
-        </p>
-      </div>
-
-      <div class="flex gap-4 mt-6">
-        <button @click="file = null; preview = []" class="btn-secondary flex-1">
-          Cancelar
-        </button>
-        <button 
-          @click="importProducts" 
-          :disabled="importing"
-          class="btn-primary flex-1"
-        >
-          <svg v-if="importing" class="w-5 h-5 animate-spin mr-2" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          {{ importing ? 'Importando...' : 'Importar ' + preview.length + ' Productos' }}
-        </button>
-      </div>
-    </div>
-
-    <!-- Results -->
-    <div v-if="results" class="card-premium p-6" :class="results.success ? 'border-success' : 'border-danger'">
-      <div class="flex items-center gap-4 mb-4">
-        <div 
-          class="w-12 h-12 rounded-full flex items-center justify-center"
-          :class="results.success ? 'bg-success/10' : 'bg-danger/10'"
-        >
-          <svg 
-            class="w-6 h-6" 
-            :class="results.success ? 'text-success' : 'text-danger'"
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path 
-              v-if="results.success"
-              stroke-linecap="round" 
-              stroke-linejoin="round" 
-              stroke-width="2" 
-              d="M5 13l4 4L19 7"
-            />
-            <path 
-              v-else
-              stroke-linecap="round" 
-              stroke-linejoin="round" 
-              stroke-width="2" 
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </div>
-        <div>
-          <h3 class="text-lg font-semibold">{{ results.message }}</h3>
-          <p v-if="results.success" class="text-cj-silver-dark">
-            {{ results.results.created }} creados, {{ results.results.updated }} actualizados
-          </p>
-        </div>
-      </div>
-
-      <!-- Errors -->
-      <div v-if="results.results?.errors?.length > 0" class="mt-4">
-        <p class="text-danger font-medium mb-2">Errores encontrados:</p>
-        <div class="bg-danger/5 border border-danger/20 rounded-lg p-4 max-h-40 overflow-y-auto">
-          <ul class="space-y-1 text-sm">
-            <li v-for="(error, index) in results.results.errors" :key="index" class="text-danger">
-              Fila {{ error.row }} ({{ error.sku }}): {{ error.error }}
+        <!-- Instructions -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+          <h3 class="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Instrucciones
+          </h3>
+          <ul class="space-y-2 text-sm text-slate-600">
+            <li class="flex gap-2">
+              <span class="text-blue-500">1.</span>
+              Descarga la plantilla CSV
+            </li>
+            <li class="flex gap-2">
+              <span class="text-blue-500">2.</span>
+              Llena los datos (no modifiques los encabezados)
+            </li>
+            <li class="flex gap-2">
+              <span class="text-blue-500">3.</span>
+              Guarda como CSV o Excel
+            </li>
+            <li class="flex gap-2">
+              <span class="text-blue-500">4.</span>
+              Sube el archivo aquí
             </li>
           </ul>
         </div>
-      </div>
 
-      <div class="flex gap-4 mt-6">
-        <button @click="reset" class="btn-secondary flex-1">
-          Importar más productos
-        </button>
-        <router-link to="/products" class="btn-primary flex-1 text-center">
-          Ver Productos
-        </router-link>
-      </div>
-    </div>
-
-    <!-- Instructions -->
-    <div v-if="!file && !results" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="card-premium p-6">
-        <h3 class="text-lg font-semibold mb-4 font-heading">Formato del archivo</h3>
-        <p class="text-cj-silver-dark text-sm mb-4">
-          El archivo debe tener las siguientes columnas:
-        </p>
-        <ul class="space-y-2 text-sm">
-          <li class="flex items-center gap-2">
-            <span class="w-2 h-2 bg-cj-gold rounded-full"></span>
-            <code class="text-cj-gold">nombre</code> - Nombre del producto *
-          </li>
-          <li class="flex items-center gap-2">
-            <span class="w-2 h-2 bg-cj-gold rounded-full"></span>
-            <code class="text-cj-gold">sku</code> - Código único *
-          </li>
-          <li class="flex items-center gap-2">
-            <span class="w-2 h-2 bg-cj-silver rounded-full"></span>
-            <code class="text-cj-gold">categoria</code> - Nombre de categoría
-          </li>
-          <li class="flex items-center gap-2">
-            <span class="w-2 h-2 bg-cj-silver rounded-full"></span>
-            <code class="text-cj-gold">almacen</code> - Nombre del almacén
-          </li>
-          <li class="flex items-center gap-2">
-            <span class="w-2 h-2 bg-cj-silver rounded-full"></span>
-            <code class="text-cj-gold">cantidad</code> - Stock inicial
-          </li>
-          <li class="flex items-center gap-2">
-            <span class="w-2 h-2 bg-cj-silver rounded-full"></span>
-            <code class="text-cj-gold">costo</code> - Costo de compra
-          </li>
-          <li class="flex items-center gap-2">
-            <span class="w-2 h-2 bg-cj-silver rounded-full"></span>
-            <code class="text-cj-gold">precio_venta</code> - Precio de venta
-          </li>
-          <li class="flex items-center gap-2">
-            <span class="w-2 h-2 bg-cj-silver rounded-full"></span>
-            <code class="text-cj-gold">stock_minimo</code> - Stock mínimo
-          </li>
-        </ul>
-        <p class="text-xs text-cj-silver-dark mt-4">* Campos obligatorios</p>
-      </div>
-
-      <div class="card-premium p-6">
-        <h3 class="text-lg font-semibold mb-4 font-heading">Notas importantes</h3>
-        <ul class="space-y-3 text-sm text-cj-silver-dark">
-          <li class="flex gap-3">
-            <span class="text-cj-gold">•</span>
-            <span>Si el SKU ya existe, el producto se actualizará con los nuevos datos</span>
-          </li>
-          <li class="flex gap-3">
-            <span class="text-cj-gold">•</span>
-            <span>Las categorías y almacenes se crearán automáticamente si no existen</span>
-          </li>
-          <li class="flex gap-3">
-            <span class="text-cj-gold">•</span>
-            <span>Se puede subir un máximo de 1000 productos por archivo</span>
-          </li>
-          <li class="flex gap-3">
-            <span class="text-cj-gold">•</span>
-            <span>El formato CSV debe usar comas (,) como separador</span>
-          </li>
-          <li class="flex gap-3">
-            <span class="text-cj-gold">•</span>
-            <span>Para Excel, use formato .xlsx para mejor compatibilidad</span>
-          </li>
-        </ul>
+        <!-- Required Fields -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+          <h3 class="font-semibold text-slate-800 mb-3">Campos Requeridos</h3>
+          <div class="space-y-2">
+            <div class="flex items-center gap-2 text-sm">
+              <span class="w-2 h-2 bg-rose-500 rounded-full"></span>
+              <span class="text-slate-600">sku</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm">
+              <span class="w-2 h-2 bg-rose-500 rounded-full"></span>
+              <span class="text-slate-600">name</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm">
+              <span class="w-2 h-2 bg-slate-300 rounded-full"></span>
+              <span class="text-slate-500">cost (opcional)</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm">
+              <span class="w-2 h-2 bg-slate-300 rounded-full"></span>
+              <span class="text-slate-500">price (opcional)</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -253,129 +188,82 @@
 import { ref } from 'vue'
 import apiClient from '../../services/api'
 
-const fileInput = ref(null)
-const file = ref(null)
-const dragOver = ref(false)
-const preview = ref([])
-const importing = ref(false)
+const isDragging = ref(false)
+const selectedFile = ref(null)
+const uploading = ref(false)
 const results = ref(null)
+
+function handleDrop(e) {
+  isDragging.value = false
+  const file = e.dataTransfer.files[0]
+  if (file && isValidFile(file)) {
+    selectedFile.value = file
+    results.value = null
+  } else {
+    alert('Por favor selecciona un archivo CSV, XLSX o XLS válido')
+  }
+}
+
+function handleFileSelect(e) {
+  const file = e.target.files[0]
+  if (file && isValidFile(file)) {
+    selectedFile.value = file
+    results.value = null
+  }
+}
+
+function isValidFile(file) {
+  const validTypes = ['text/csv', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+  return validTypes.includes(file.type) || file.name.endsWith('.csv') || file.name.endsWith('.xlsx') || file.name.endsWith('.xls')
+}
 
 function formatFileSize(bytes) {
   if (bytes === 0) return '0 Bytes'
   const k = 1024
-  const sizes = ['Bytes', 'KB', 'MB', 'GB']
+  const sizes = ['Bytes', 'KB', 'MB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
   return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i]
 }
 
-function handleFileSelect(event) {
-  const selectedFile = event.target.files[0]
-  if (selectedFile) {
-    processFile(selectedFile)
-  }
-}
+async function uploadFile() {
+  if (!selectedFile.value) return
 
-function handleDrop(event) {
-  dragOver.value = false
-  const droppedFile = event.dataTransfer.files[0]
-  if (droppedFile) {
-    processFile(droppedFile)
-  }
-}
+  uploading.value = true
+  results.value = null
 
-function processFile(selectedFile) {
-  // Validar extensión
-  const allowedTypes = ['.csv', '.xlsx', '.xls']
-  const extension = selectedFile.name.substring(selectedFile.name.lastIndexOf('.')).toLowerCase()
-  
-  if (!allowedTypes.includes(extension)) {
-    alert('Formato no soportado. Use CSV o Excel (.xlsx, .xls)')
-    return
-  }
-
-  file.value = selectedFile
-  parseCSV(selectedFile)
-}
-
-function parseCSV(file) {
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    const text = e.target.result
-    const lines = text.split('\n').filter(line => line.trim() !== '')
-    
-    if (lines.length < 2) {
-      alert('El archivo está vacío o no tiene el formato correcto')
-      return
-    }
-
-    // Parse headers
-    const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/\r/g, ''))
-    
-    // Validate required columns
-    if (!headers.includes('nombre') || !headers.includes('sku')) {
-      alert('El archivo debe tener al menos las columnas "nombre" y "sku"')
-      return
-    }
-
-    // Parse rows
-    const rows = []
-    for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].split(',').map(v => v.trim().replace(/\r/g, ''))
-      const row = {}
-      headers.forEach((header, index) => {
-        row[header] = values[index] || ''
-      })
-      
-      // Only add if has name and sku
-      if (row.nombre && row.sku) {
-        rows.push({
-          nombre: row.nombre,
-          sku: row.sku,
-          categoria: row.categoria || row.category || '',
-          almacen: row.almacen || row.warehouse || '',
-          cantidad: parseFloat(row.cantidad || row.quantity || 0) || 0,
-          costo: parseFloat(row.costo || row.cost || 0) || 0,
-          precio_venta: parseFloat(row.precio_venta || row.price || 0) || 0,
-          min_stock: parseFloat(row.stock_minimo || row.min_stock || 0) || 0,
-        })
-      }
-    }
-
-    preview.value = rows
-  }
-  reader.readAsText(file)
-}
-
-async function importProducts() {
-  if (preview.value.length === 0) return
-
-  importing.value = true
   try {
-    const response = await apiClient.post('/import/products', {
-      products: preview.value
+    const formData = new FormData()
+    formData.append('file', selectedFile.value)
+
+    const response = await apiClient.post('/products-import/bulk', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     })
+
     results.value = response.data
   } catch (err) {
-    results.value = {
-      success: false,
-      message: err.response?.data?.message || 'Error al importar',
-      results: { errors: [] }
-    }
+    alert('Error al importar: ' + (err.response?.data?.message || err.message))
   } finally {
-    importing.value = false
+    uploading.value = false
   }
 }
 
-function downloadTemplate() {
-  window.open(`${import.meta.env.VITE_API_URL || 'https://inventory-pro-api-v2.onrender.com/api'}/import/template`, '_blank')
-}
+async function downloadTemplate() {
+  try {
+    const response = await apiClient.get('/products-import/template', {
+      responseType: 'blob',
+    })
 
-function reset() {
-  file.value = null
-  preview.value = []
-  results.value = null
-  if (fileInput.value) {
-    fileInput.value.value = ''
+    const blob = new Blob([response.data], { type: 'text/csv' })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'template_productos.csv'
+    a.click()
+    window.URL.revokeObjectURL(url)
+  } catch (err) {
+    alert('Error al descargar plantilla')
   }
 }
 </script>

@@ -95,6 +95,11 @@ const routes = [
     name: 'Reports',
     component: () => import('../views/reports/Reports.vue'),
   },
+  {
+    path: '/reports/abc',
+    name: 'ABCReport',
+    component: () => import('../views/reports/ABCReport.vue'),
+  },
   // Receipts (Vales)
   {
     path: '/receipts',

@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\AlertController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\GlobalSearchController;
 use App\Http\Controllers\Api\InventoryEventController;
 use App\Http\Controllers\Api\KardexController;
 use App\Http\Controllers\Api\ProductController;
@@ -102,6 +104,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/inventory-events/stats/overview', [InventoryEventController::class, 'getStats']);
     Route::post('/inventory-events/{event}/process', [InventoryEventController::class, 'markAsProcessed']);
     Route::post('/inventory-events/{event}/notify', [InventoryEventController::class, 'markAsNotified']);
+    
+    // Global Search
+    Route::get('/search', [GlobalSearchController::class, 'search']);
+    Route::get('/search/commands', [GlobalSearchController::class, 'commands']);
+    
+    // Alerts
+    Route::get('/alerts', [AlertController::class, 'index']);
+    Route::get('/alerts/summary', [AlertController::class, 'summary']);
+    Route::get('/alerts/reorder-suggestions', [AlertController::class, 'reorderSuggestions']);
+    
+    // Products Extended
+    Route::get('/products-search/global', [ProductController::class, 'searchGlobal']);
+    Route::get('/products-analysis/abc', [ProductController::class, 'abcAnalysis']);
+    Route::post('/products-import/bulk', [ProductController::class, 'import']);
+    Route::get('/products-import/template', [ProductController::class, 'downloadTemplate']);
     
 });
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\StockLevel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
@@ -27,6 +28,23 @@ class ProductController extends Controller
         // Category filter
         if ($request->has('category_id')) {
             $query->where('category_id', $request->category_id);
+        }
+
+        // Stock status filter
+        if ($request->has('stock_status')) {
+            switch ($request->stock_status) {
+                case 'low_stock':
+                    $query->lowStock();
+                    break;
+                case 'out_of_stock':
+                    $query->outOfStock();
+                    break;
+                case 'in_stock':
+                    $query->whereHas('stockLevels', function ($q) {
+                        $q->where('quantity', '>', 0);
+                    });
+                    break;
+            }
         }
 
         $products = $query->latest()->paginate($request->per_page ?? 25);
@@ -51,6 +69,7 @@ class ProductController extends Controller
             'warehouse_id' => 'nullable|exists:warehouses,id',
             'valuation_method' => 'nullable|in:FIFO,AVERAGE,LIFO',
             'is_active' => 'boolean',
+            'image' => 'nullable|image|max:2048', // Max 2MB
         ]);
 
         $initialStock = $validated['initial_stock'] ?? 0;
@@ -72,6 +91,18 @@ class ProductController extends Controller
             'valuation_method' => $validated['valuation_method'] ?? 'FIFO',
             'is_active' => $validated['is_active'] ?? true,
         ];
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('products', 'public');
+            $productData['images'] = [
+                [
+                    'url' => Storage::url($path),
+                    'path' => $path,
+                    'is_primary' => true,
+                ]
+            ];
+        }
 
         $product = Product::create($productData);
 
@@ -118,6 +149,8 @@ class ProductController extends Controller
             'max_stock' => 'nullable|numeric|min:0',
             'valuation_method' => 'sometimes|in:FIFO,AVERAGE,LIFO',
             'is_active' => 'boolean',
+            'image' => 'nullable|image|max:2048',
+            'remove_image' => 'boolean',
         ]);
 
         // Mapear campos del frontend a nombres de BD
@@ -138,6 +171,36 @@ class ProductController extends Controller
         if (isset($validated['valuation_method'])) $productData['valuation_method'] = $validated['valuation_method'];
         if (isset($validated['is_active'])) $productData['is_active'] = $validated['is_active'];
 
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if (!empty($product->images)) {
+                foreach ($product->images as $img) {
+                    if (isset($img['path'])) {
+                        Storage::disk('public')->delete($img['path']);
+                    }
+                }
+            }
+            $path = $request->file('image')->store('products', 'public');
+            $productData['images'] = [
+                [
+                    'url' => Storage::url($path),
+                    'path' => $path,
+                    'is_primary' => true,
+                ]
+            ];
+        } elseif ($request->boolean('remove_image')) {
+            // Remove image
+            if (!empty($product->images)) {
+                foreach ($product->images as $img) {
+                    if (isset($img['path'])) {
+                        Storage::disk('public')->delete($img['path']);
+                    }
+                }
+            }
+            $productData['images'] = null;
+        }
+
         $product->update($productData);
 
         return response()->json($product->load(['category', 'stockLevels.warehouse']));
@@ -145,6 +208,15 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        // Delete images
+        if (!empty($product->images)) {
+            foreach ($product->images as $img) {
+                if (isset($img['path'])) {
+                    Storage::disk('public')->delete($img['path']);
+                }
+            }
+        }
+
         // Check if product has stock movements
         if ($product->stockMovements()->count() > 0) {
             // Soft delete instead of hard delete
@@ -158,10 +230,201 @@ class ProductController extends Controller
 
     public function lowStock()
     {
-        $products = Product::with('category')
-            ->where('stock_status', 'low_stock')
+        $products = Product::with(['category', 'stockLevels.warehouse'])
+            ->lowStock()
             ->get();
 
         return response()->json($products);
+    }
+
+    /**
+     * Búsqueda global de productos
+     */
+    public function searchGlobal(Request $request)
+    {
+        $query = $request->get('q', '');
+        
+        if (strlen($query) < 2) {
+            return response()->json([]);
+        }
+
+        $products = Product::with(['category', 'stockLevels.warehouse'])
+            ->where(function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%")
+                  ->orWhere('sku', 'like', "%{$query}%")
+                  ->orWhere('barcode', 'like', "%{$query}%")
+                  ->orWhere('description', 'like', "%{$query}%");
+            })
+            ->active()
+            ->limit(10)
+            ->get();
+
+        return response()->json($products);
+    }
+
+    /**
+     * Importación masiva desde Excel/CSV
+     */
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:csv,xlsx,xls|max:10240',
+        ]);
+
+        $file = $request->file('file');
+        $extension = $file->getClientOriginalExtension();
+        
+        $results = [
+            'created' => 0,
+            'updated' => 0,
+            'errors' => [],
+        ];
+
+        // Parse CSV
+        if ($extension === 'csv') {
+            $handle = fopen($file->getPathname(), 'r');
+            $header = fgetcsv($handle);
+            
+            $rowNumber = 1;
+            while (($row = fgetcsv($handle)) !== false) {
+                $rowNumber++;
+                $data = array_combine($header, $row);
+                
+                $result = $this->processImportRow($data);
+                if ($result['success']) {
+                    if ($result['action'] === 'created') {
+                        $results['created']++;
+                    } else {
+                        $results['updated']++;
+                    }
+                } else {
+                    $results['errors'][] = "Fila {$rowNumber}: " . $result['error'];
+                }
+            }
+            fclose($handle);
+        }
+
+        return response()->json($results);
+    }
+
+    private function processImportRow(array $data): array
+    {
+        try {
+            $sku = $data['sku'] ?? $data['SKU'] ?? null;
+            $name = $data['name'] ?? $data['nombre'] ?? $data['Nombre'] ?? null;
+            
+            if (!$sku || !$name) {
+                return ['success' => false, 'error' => 'SKU y Nombre son requeridos'];
+            }
+
+            $productData = [
+                'name' => $name,
+                'sku' => $sku,
+                'barcode' => $data['barcode'] ?? $data['codigo_barras'] ?? null,
+                'description' => $data['description'] ?? $data['descripcion'] ?? null,
+                'unit_cost' => floatval($data['cost'] ?? $data['costo'] ?? 0),
+                'selling_price' => floatval($data['price'] ?? $data['precio'] ?? 0),
+                'stock_min' => intval($data['min_stock'] ?? $data['stock_minimo'] ?? 0),
+                'unit_of_measure' => $data['unit'] ?? $data['unidad'] ?? 'piece',
+                'is_active' => true,
+            ];
+
+            // Check if product exists
+            $existing = Product::where('sku', $sku)->first();
+            
+            if ($existing) {
+                $existing->update($productData);
+                return ['success' => true, 'action' => 'updated'];
+            } else {
+                Product::create($productData);
+                return ['success' => true, 'action' => 'created'];
+            }
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Descargar template de importación
+     */
+    public function downloadTemplate()
+    {
+        $headers = ['sku', 'name', 'description', 'barcode', 'cost', 'price', 'min_stock', 'unit'];
+        $csv = implode(',', $headers) . "\n";
+        $csv .= "PROD-001,Producto Ejemplo,Descripción opcional,7501234567890,100.00,150.00,10,piece\n";
+        
+        return response($csv)
+            ->header('Content-Type', 'text/csv')
+            ->header('Content-Disposition', 'attachment; filename="template_productos.csv"');
+    }
+
+    /**
+     * Reporte ABC de productos
+     */
+    public function abcAnalysis(Request $request)
+    {
+        $products = Product::with(['stockLevels', 'stockMovements'])
+            ->whereHas('stockMovements')
+            ->get()
+            ->map(function ($product) {
+                $totalValue = $product->stockLevels->sum(function ($level) {
+                    return $level->quantity * $level->avg_unit_cost;
+                });
+                
+                $movementCount = $product->stockMovements->count();
+                $totalQuantity = $product->stockMovements->sum('quantity');
+                
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'sku' => $product->sku,
+                    'category' => $product->category?->name,
+                    'stock_quantity' => $product->total_stock,
+                    'stock_value' => $totalValue,
+                    'movement_count' => $movementCount,
+                    'total_quantity_moved' => abs($totalQuantity),
+                    'avg_monthly_movement' => round(abs($totalQuantity) / 12, 2),
+                ];
+            })
+            ->sortByDesc('stock_value')
+            ->values();
+
+        // Calcular totales para porcentajes
+        $totalValue = $products->sum('stock_value');
+        $totalMovements = $products->sum('movement_count');
+        
+        $accumulatedValue = 0;
+        $accumulatedPercentage = 0;
+        
+        $classified = $products->map(function ($product) use ($totalValue, &$accumulatedValue, &$accumulatedPercentage) {
+            $accumulatedValue += $product['stock_value'];
+            $accumulatedPercentage = ($accumulatedValue / $totalValue) * 100;
+            
+            // Clasificación ABC
+            if ($accumulatedPercentage <= 80) {
+                $class = 'A';
+            } elseif ($accumulatedPercentage <= 95) {
+                $class = 'B';
+            } else {
+                $class = 'C';
+            }
+            
+            return array_merge($product, [
+                'percentage_value' => round(($product['stock_value'] / $totalValue) * 100, 2),
+                'accumulated_percentage' => round($accumulatedPercentage, 2),
+                'abc_class' => $class,
+            ]);
+        });
+
+        return response()->json([
+            'products' => $classified,
+            'summary' => [
+                'total_products' => $products->count(),
+                'total_value' => $totalValue,
+                'class_a' => $classified->where('abc_class', 'A')->count(),
+                'class_b' => $classified->where('abc_class', 'B')->count(),
+                'class_c' => $classified->where('abc_class', 'C')->count(),
+            ],
+        ]);
     }
 }
