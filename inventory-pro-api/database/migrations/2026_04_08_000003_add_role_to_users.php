@@ -9,15 +9,25 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('role')->default('operator')->after('email');
-            $table->json('permissions')->nullable()->after('role');
+            // Verificar si la columna no existe antes de agregarla
+            if (!Schema::hasColumn('users', 'role')) {
+                $table->string('role')->default('operator')->after('email');
+            }
+            if (!Schema::hasColumn('users', 'permissions')) {
+                $table->json('permissions')->nullable()->after('role');
+            }
         });
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['role', 'permissions']);
+            if (Schema::hasColumn('users', 'role')) {
+                $table->dropColumn('role');
+            }
+            if (Schema::hasColumn('users', 'permissions')) {
+                $table->dropColumn('permissions');
+            }
         });
     }
 };

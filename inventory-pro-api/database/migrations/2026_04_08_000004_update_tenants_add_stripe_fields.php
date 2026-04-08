@@ -30,7 +30,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('tenants', function (Blueprint $table) {
-            $table->dropColumn(['stripe_subscription_id', 'stripe_customer_id']);
+            if (Schema::hasColumn('tenants', 'stripe_subscription_id')) {
+                $table->dropColumn('stripe_subscription_id');
+            }
+            if (Schema::hasColumn('tenants', 'stripe_customer_id')) {
+                $table->dropColumn('stripe_customer_id');
+            }
         });
     }
 };
