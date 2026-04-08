@@ -1,23 +1,17 @@
 <template>
   <div class="p-6">
-    <!-- Header -->
-    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
-      <div>
-        <h1 class="text-3xl font-bold text-slate-800 dark:text-white">Almacén General</h1>
-        <p class="text-slate-500 dark:text-slate-400 mt-1">
-          Vista consolidada de inventario en todos los almacenes
-        </p>
-      </div>
-      <div class="flex gap-3">
+    <!-- Page Header -->
+    <PageHeader title="Almacén General" subtitle="Vista consolidada de inventario en todos los almacenes">
+      <template #actions>
         <button @click="exportToExcel" 
-          class="px-4 py-2 bg-emerald-100 text-emerald-700 rounded-xl font-medium hover:bg-emerald-200 transition-colors flex items-center gap-2">
+          class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-medium transition-colors flex items-center gap-2">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
           Exportar
         </button>
-      </div>
-    </div>
+      </template>
+    </PageHeader>
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -171,7 +165,11 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useDarkMode } from '../../composables/useDarkMode'
+import PageHeader from '../../components/PageHeader.vue'
 import apiClient from '../../services/api'
+
+const { isDark } = useDarkMode()
 
 const inventory = ref([])
 const warehouses = ref([])

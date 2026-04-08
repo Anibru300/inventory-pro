@@ -1,20 +1,24 @@
 <template>
-  <div id="app" class="min-h-screen antialiased selection:bg-blue-500/30 dark:selection:bg-cj-gold/30 relative overflow-hidden"
-    :class="isDark ? 'bg-cj-navy text-white' : 'bg-slate-50 text-slate-900'">
+  <div id="app" class="min-h-screen antialiased relative overflow-hidden transition-colors duration-300"
+    :class="isDark ? 'bg-slate-900 text-slate-100' : 'bg-slate-50 text-slate-900'">
     
-    <!-- Background layers - Dark Mode -->
-    <template v-if="isDark">
-      <div class="fixed inset-0 bg-gradient-radial pointer-events-none z-0"></div>
-      <div class="fixed inset-0 bg-gradient-mesh pointer-events-none z-0"></div>
-      <div class="fixed inset-0 bg-gradient-gold pointer-events-none z-0"></div>
-      
-      <!-- Decorative elements -->
-      <div class="fixed top-0 left-0 w-full h-full pointer-events-none z-0">
-        <div class="absolute top-20 left-10 w-96 h-96 bg-cj-gold/5 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-20 right-10 w-[500px] h-[500px] bg-cj-blue/20 rounded-full blur-3xl"></div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cj-navy-light/50 rounded-full blur-3xl"></div>
+    <!-- Background Pattern - Dark Mode -->
+    <div v-if="isDark" class="fixed inset-0 pointer-events-none z-0">
+      <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+      <div class="absolute top-20 left-10 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-20 right-10 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-3xl"></div>
+      <!-- Grid pattern -->
+      <div class="absolute inset-0 opacity-5" 
+        style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 50px 50px;">
       </div>
-    </template>
+    </div>
+
+    <!-- Background Pattern - Light Mode -->
+    <div v-else class="fixed inset-0 pointer-events-none z-0">
+      <div class="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100"></div>
+      <div class="absolute top-20 right-10 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-20 left-10 w-[400px] h-[400px] bg-indigo-200/20 rounded-full blur-3xl"></div>
+    </div>
     
     <!-- Content -->
     <div class="relative z-10">
@@ -26,43 +30,57 @@
 <script setup>
 import { RouterView } from 'vue-router'
 import { useAuthStore } from './stores/auth'
-import { ref, onMounted } from 'vue'
+import { useDarkMode } from './composables/useDarkMode'
 
 const authStore = useAuthStore()
 authStore.initializeAuth()
 
-const isDark = ref(false)
-
-onMounted(() => {
-  // Check for saved dark mode preference
-  isDark.value = localStorage.getItem('darkMode') === 'true'
-  document.documentElement.classList.toggle('dark', isDark.value)
-  
-  // Listen for dark mode changes from other components
-  window.addEventListener('storage', (e) => {
-    if (e.key === 'darkMode') {
-      isDark.value = e.newValue === 'true'
-      document.documentElement.classList.toggle('dark', isDark.value)
-    }
-  })
-})
+const { isDark } = useDarkMode()
 </script>
 
 <style>
-/* Subtle grid pattern - Dark mode only */
-#app.dark::before,
-#app:has(.dark)::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    linear-gradient(rgba(201, 169, 98, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(201, 169, 98, 0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
-  pointer-events: none;
-  z-index: 1;
+/* Global dark mode transitions */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* Scrollbar styling for dark mode */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Light mode scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 </style>

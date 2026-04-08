@@ -1,105 +1,131 @@
 <template>
-  <div>
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
-      <div>
-        <h1 class="text-3xl font-bold gradient-text font-heading mb-2">Movimientos de Inventario</h1>
-        <p class="text-cj-silver-dark font-tagline italic">Control de entradas y salidas</p>
-      </div>
-      <div class="flex gap-3">
-        <button @click="showFilters = !showFilters" class="btn-secondary">
+  <div class="p-6">
+    <!-- Page Header -->
+    <PageHeader title="Movimientos de Inventario" subtitle="Control de entradas y salidas">
+      <template #actions>
+        <button @click="showFilters = !showFilters" 
+          class="flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors font-medium"
+          :class="isDark 
+            ? 'bg-slate-800 border-slate-600 text-slate-200 hover:bg-slate-700' 
+            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
           </svg>
           Filtros
         </button>
-        <router-link to="/movements/new" class="btn-primary">
+        <router-link to="/movements/new" 
+          class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
           Nuevo Movimiento
         </router-link>
-      </div>
-    </div>
+      </template>
+    </PageHeader>
 
     <!-- Filters -->
-    <div v-if="showFilters" class="card-premium p-6 mb-6">
+    <div v-if="showFilters" 
+      class="rounded-2xl p-6 mb-6 border"
+      :class="isDark ? 'bg-slate-800/50 border-slate-700' : 'bg-white border-slate-200'">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div>
-          <label class="block text-sm font-medium mb-2 text-cj-silver font-heading">Tipo</label>
-          <select v-model="filters.type" class="w-full">
+          <label class="block text-sm font-medium mb-2" :class="isDark ? 'text-slate-300' : 'text-slate-700'">Tipo</label>
+          <select v-model="filters.type" 
+            class="w-full px-4 py-2.5 rounded-lg border transition-colors"
+            :class="isDark 
+              ? 'bg-slate-800 border-slate-600 text-white focus:border-blue-500' 
+              : 'bg-white border-slate-200 text-slate-900 focus:border-blue-500'">
             <option value="">Todos</option>
             <option value="entry">Entrada</option>
             <option value="exit">Salida</option>
           </select>
         </div>
         <div>
-          <label class="block text-sm font-medium mb-2 text-cj-silver font-heading">Desde</label>
-          <input v-model="filters.dateFrom" type="date" class="w-full" />
+          <label class="block text-sm font-medium mb-2" :class="isDark ? 'text-slate-300' : 'text-slate-700'">Desde</label>
+          <input v-model="filters.dateFrom" type="date" 
+            class="w-full px-4 py-2.5 rounded-lg border transition-colors"
+            :class="isDark 
+              ? 'bg-slate-800 border-slate-600 text-white focus:border-blue-500' 
+              : 'bg-white border-slate-200 text-slate-900 focus:border-blue-500'" />
         </div>
         <div>
-          <label class="block text-sm font-medium mb-2 text-cj-silver font-heading">Hasta</label>
-          <input v-model="filters.dateTo" type="date" class="w-full" />
+          <label class="block text-sm font-medium mb-2" :class="isDark ? 'text-slate-300' : 'text-slate-700'">Hasta</label>
+          <input v-model="filters.dateTo" type="date" 
+            class="w-full px-4 py-2.5 rounded-lg border transition-colors"
+            :class="isDark 
+              ? 'bg-slate-800 border-slate-600 text-white focus:border-blue-500' 
+              : 'bg-white border-slate-200 text-slate-900 focus:border-blue-500'" />
         </div>
         <div class="flex items-end">
-          <button @click="applyFilters" class="btn-primary w-full">Aplicar</button>
+          <button @click="applyFilters" 
+            class="w-full px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium">
+            Aplicar
+          </button>
         </div>
       </div>
     </div>
 
     <!-- Summary Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
-      <div class="stat-card border-l-4 border-success">
-        <p class="text-cj-silver-dark text-sm font-heading uppercase">Entradas del Mes</p>
-        <p class="text-2xl font-bold mt-1 text-success">{{ summary.entries }}</p>
-        <p class="text-xs text-cj-silver-dark mt-1">Unidades: +{{ summary.entryUnits }}</p>
+      <div class="rounded-2xl p-6 border-l-4 border-emerald-500 transition-colors"
+        :class="isDark ? 'bg-slate-800/50 border-slate-700' : 'bg-white border-slate-200'">
+        <p class="text-sm uppercase tracking-wider mb-1" :class="isDark ? 'text-slate-400' : 'text-slate-500'">Entradas del Mes</p>
+        <p class="text-2xl font-bold text-emerald-500">{{ summary.entries }}</p>
+        <p class="text-xs mt-1" :class="isDark ? 'text-slate-400' : 'text-slate-500'">Unidades: +{{ summary.entryUnits }}</p>
       </div>
-      <div class="stat-card border-l-4 border-danger">
-        <p class="text-cj-silver-dark text-sm font-heading uppercase">Salidas del Mes</p>
-        <p class="text-2xl font-bold mt-1 text-danger">{{ summary.exits }}</p>
-        <p class="text-xs text-cj-silver-dark mt-1">Unidades: -{{ summary.exitUnits }}</p>
+      <div class="rounded-2xl p-6 border-l-4 border-rose-500 transition-colors"
+        :class="isDark ? 'bg-slate-800/50 border-slate-700' : 'bg-white border-slate-200'">
+        <p class="text-sm uppercase tracking-wider mb-1" :class="isDark ? 'text-slate-400' : 'text-slate-500'">Salidas del Mes</p>
+        <p class="text-2xl font-bold text-rose-500">{{ summary.exits }}</p>
+        <p class="text-xs mt-1" :class="isDark ? 'text-slate-400' : 'text-slate-500'">Unidades: -{{ summary.exitUnits }}</p>
       </div>
-      <div class="stat-card border-l-4 border-cj-gold">
-        <p class="text-cj-silver-dark text-sm font-heading uppercase">Balance</p>
-        <p class="text-2xl font-bold mt-1 gradient-text">{{ summary.balance }}</p>
-        <p class="text-xs text-cj-silver-dark mt-1">Diferencia neto</p>
+      <div class="rounded-2xl p-6 border-l-4 border-amber-500 transition-colors"
+        :class="isDark ? 'bg-slate-800/50 border-slate-700' : 'bg-white border-slate-200'">
+        <p class="text-sm uppercase tracking-wider mb-1" :class="isDark ? 'text-slate-400' : 'text-slate-500'">Balance</p>
+        <p class="text-2xl font-bold" :class="isDark ? 'text-amber-400' : 'text-amber-600'">{{ summary.balance }}</p>
+        <p class="text-xs mt-1" :class="isDark ? 'text-slate-400' : 'text-slate-500'">Diferencia neto</p>
       </div>
     </div>
 
     <!-- Movements Table -->
-    <div class="card-premium p-6">
+    <div class="rounded-2xl border overflow-hidden"
+      :class="isDark ? 'bg-slate-800/50 border-slate-700' : 'bg-white border-slate-200'">
       <div class="overflow-x-auto">
-        <table class="data-table">
-          <thead>
+        <table class="w-full">
+          <thead :class="isDark ? 'bg-slate-700/50' : 'bg-slate-50'">
             <tr>
-              <th>Fecha</th>
-              <th>Producto</th>
-              <th>Tipo</th>
-              <th>Cantidad</th>
-              <th>Almacén</th>
-              <th>Referencia</th>
-              <th>Usuario</th>
+              <th class="text-left py-3 px-4 text-xs font-semibold uppercase tracking-wider" :class="isDark ? 'text-slate-300' : 'text-slate-600'">Fecha</th>
+              <th class="text-left py-3 px-4 text-xs font-semibold uppercase tracking-wider" :class="isDark ? 'text-slate-300' : 'text-slate-600'">Producto</th>
+              <th class="text-left py-3 px-4 text-xs font-semibold uppercase tracking-wider" :class="isDark ? 'text-slate-300' : 'text-slate-600'">Tipo</th>
+              <th class="text-left py-3 px-4 text-xs font-semibold uppercase tracking-wider" :class="isDark ? 'text-slate-300' : 'text-slate-600'">Cantidad</th>
+              <th class="text-left py-3 px-4 text-xs font-semibold uppercase tracking-wider" :class="isDark ? 'text-slate-300' : 'text-slate-600'">Almacén</th>
+              <th class="text-left py-3 px-4 text-xs font-semibold uppercase tracking-wider" :class="isDark ? 'text-slate-300' : 'text-slate-600'">Referencia</th>
+              <th class="text-left py-3 px-4 text-xs font-semibold uppercase tracking-wider" :class="isDark ? 'text-slate-300' : 'text-slate-600'">Usuario</th>
             </tr>
           </thead>
-          <tbody>
-            <tr v-for="movement in movements" :key="movement.id">
-              <td class="text-cj-silver">{{ formatDate(movement.created_at) }}</td>
-              <td class="font-medium">{{ movement.product?.name }}</td>
-              <td>
-                <span :class="['px-3 py-1 rounded-full text-xs font-medium border', 
-                  movement.type === 'entry' ? 'bg-success/10 text-success border-success/20' : 'bg-danger/10 text-danger border-danger/20']">
+          <tbody class="divide-y" :class="isDark ? 'divide-slate-700' : 'divide-slate-200'">
+            <tr v-for="movement in movements" :key="movement.id" 
+              class="transition-colors" :class="isDark ? 'hover:bg-slate-700/50' : 'hover:bg-slate-50'">
+              <td class="py-3 px-4 text-sm" :class="isDark ? 'text-slate-400' : 'text-slate-500'">{{ formatDate(movement.created_at) }}</td>
+              <td class="py-3 px-4 font-medium" :class="isDark ? 'text-white' : 'text-slate-800'">{{ movement.product?.name }}</td>
+              <td class="py-3 px-4">
+                <span class="px-3 py-1 rounded-full text-xs font-medium border"
+                  :class="movement.type === 'entry' 
+                    ? (isDark ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-emerald-100 text-emerald-700 border-emerald-200')
+                    : (isDark ? 'bg-rose-500/20 text-rose-400 border-rose-500/30' : 'bg-rose-100 text-rose-700 border-rose-200')">
                   {{ movement.type === 'entry' ? 'Entrada' : 'Salida' }}
                 </span>
               </td>
-              <td class="font-bold" :class="movement.type === 'entry' ? 'text-success' : 'text-danger'">
+              <td class="py-3 px-4 font-bold"
+                :class="movement.type === 'entry' ? 'text-emerald-500' : 'text-rose-500'">
                 {{ movement.type === 'entry' ? '+' : '-' }}{{ movement.quantity }}
               </td>
-              <td class="text-cj-silver">{{ movement.warehouse?.name }}</td>
-              <td class="text-cj-silver text-sm">{{ movement.reference_number || '-' }}</td>
-              <td class="text-cj-silver text-sm">{{ movement.user?.name }}</td>
+              <td class="py-3 px-4 text-sm" :class="isDark ? 'text-slate-400' : 'text-slate-500'">{{ movement.warehouse?.name }}</td>
+              <td class="py-3 px-4 text-sm" :class="isDark ? 'text-slate-400' : 'text-slate-500'">{{ movement.reference_number || '-' }}</td>
+              <td class="py-3 px-4 text-sm" :class="isDark ? 'text-slate-400' : 'text-slate-500'">{{ movement.user?.name }}</td>
             </tr>
             <tr v-if="movements.length === 0">
-              <td colspan="7" class="text-center py-8 text-cj-silver-dark">
+              <td colspan="7" class="text-center py-12" :class="isDark ? 'text-slate-400' : 'text-slate-500'">
                 No hay movimientos registrados
               </td>
             </tr>
@@ -108,15 +134,21 @@
       </div>
 
       <!-- Pagination -->
-      <div v-if="pagination.lastPage > 1" class="flex items-center justify-between mt-6 pt-6 border-t border-white/10">
-        <p class="text-sm text-cj-silver-dark">
+      <div v-if="pagination.lastPage > 1" 
+        class="flex items-center justify-between px-6 py-4 border-t"
+        :class="isDark ? 'border-slate-700' : 'border-slate-200'">
+        <p class="text-sm" :class="isDark ? 'text-slate-400' : 'text-slate-500'">
           Mostrando {{ movements.length }} de {{ pagination.total }} movimientos
         </p>
         <div class="flex gap-2">
-          <button @click="changePage(pagination.currentPage - 1)" :disabled="pagination.currentPage === 1" class="btn-secondary py-2 px-4 text-sm">
+          <button @click="changePage(pagination.currentPage - 1)" :disabled="pagination.currentPage === 1" 
+            class="px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+            :class="isDark ? 'bg-slate-700 text-slate-300 hover:bg-slate-600' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'">
             Anterior
           </button>
-          <button @click="changePage(pagination.currentPage + 1)" :disabled="pagination.currentPage === pagination.lastPage" class="btn-secondary py-2 px-4 text-sm">
+          <button @click="changePage(pagination.currentPage + 1)" :disabled="pagination.currentPage === pagination.lastPage" 
+            class="px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+            :class="isDark ? 'bg-slate-700 text-slate-300 hover:bg-slate-600' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'">
             Siguiente
           </button>
         </div>
@@ -127,7 +159,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useDarkMode } from '../../composables/useDarkMode'
+import PageHeader from '../../components/PageHeader.vue'
 import apiClient from '../../services/api'
+
+const { isDark } = useDarkMode()
 
 const movements = ref([])
 const showFilters = ref(false)

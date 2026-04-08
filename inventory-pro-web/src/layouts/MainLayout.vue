@@ -1,14 +1,15 @@
 <template>
-  <div class="min-h-screen flex bg-slate-50 dark:bg-slate-900">
+  <div class="min-h-screen flex" :class="isDark ? 'bg-slate-900' : 'bg-slate-50'">
     <!-- Sidebar -->
     <aside 
       :class="[
-        'fixed lg:static inset-y-0 left-0 z-50 w-64 bg-slate-900 dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 transition-transform duration-300',
+        'fixed lg:static inset-y-0 left-0 z-50 w-64 transition-transform duration-300',
+        isDark ? 'bg-slate-950 border-r border-slate-800' : 'bg-slate-900 border-r border-slate-200',
         sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       ]"
     >
       <!-- Logo -->
-      <div class="h-16 flex items-center px-5 border-b border-slate-700">
+      <div class="h-16 flex items-center px-5 border-b" :class="isDark ? 'border-slate-800' : 'border-slate-700'">
         <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
           <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
@@ -26,8 +27,10 @@
         <router-link
           to="/menu"
           :class="[
-            'nav-item',
-            $route.path === '/menu' ? 'active bg-blue-600 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'
+            'flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors',
+            $route.path === '/menu' 
+              ? 'bg-blue-600 text-white' 
+              : 'text-slate-400 hover:text-white hover:bg-slate-800'
           ]"
         >
           <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -36,15 +39,17 @@
           <span class="truncate">Menú Principal</span>
         </router-link>
 
-        <div class="border-t border-slate-700 my-2"></div>
+        <div class="border-t my-2" :class="isDark ? 'border-slate-800' : 'border-slate-700'"></div>
 
         <router-link
           v-for="item in navigation"
           :key="item.name"
           :to="item.to"
           :class="[
-            'nav-item',
-            $route.path === item.to || $route.path.startsWith(item.to + '/') ? 'active bg-blue-600 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'
+            'flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors',
+            $route.path === item.to || $route.path.startsWith(item.to + '/') 
+              ? 'bg-blue-600 text-white' 
+              : 'text-slate-400 hover:text-white hover:bg-slate-800'
           ]"
         >
           <component :is="item.icon" class="w-5 h-5 flex-shrink-0" />
@@ -56,13 +61,15 @@
       <div class="px-3 mt-6">
         <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2 px-3">Acciones Rápidas</p>
         <div class="space-y-2">
-          <button @click="$router.push('/movements/new')" class="btn btn-primary btn-sm w-full justify-start">
+          <button @click="$router.push('/movements/new')" 
+            class="w-full flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
             Nuevo Movimiento
           </button>
-          <button @click="$router.push('/products/new')" class="btn btn-secondary btn-sm w-full justify-start border-slate-600 text-slate-300 hover:bg-slate-800">
+          <button @click="$router.push('/products/new')" 
+            class="w-full flex items-center gap-2 px-3 py-2 border border-slate-600 text-slate-300 hover:bg-slate-800 rounded-lg transition-colors text-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
@@ -72,11 +79,13 @@
       </div>
 
       <!-- User Profile -->
-      <div class="absolute bottom-0 left-0 right-0 p-3 border-t border-slate-700">
+      <div class="absolute bottom-0 left-0 right-0 p-3 border-t" :class="isDark ? 'border-slate-800' : 'border-slate-700'">
         <div class="bg-slate-800/50 rounded-lg p-3">
           <div class="flex items-center gap-3">
-            <div class="w-9 h-9 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-              {{ userInitials }}
+            <div class="w-9 h-9 rounded-full flex items-center justify-center text-white font-semibold text-sm overflow-hidden"
+              :class="authStore.user?.avatar ? 'bg-transparent' : 'bg-blue-600'">
+              <img v-if="authStore.user?.avatar" :src="authStore.user.avatar" class="w-full h-full object-cover" />
+              <span v-else>{{ userInitials }}</span>
             </div>
             <div class="flex-1 min-w-0">
               <p class="text-sm font-medium text-white truncate">{{ authStore.user?.name }}</p>
@@ -98,17 +107,20 @@
     <!-- Main Content -->
     <div class="flex-1 flex flex-col min-w-0">
       <!-- Header -->
-      <header class="h-16 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between px-6 sticky top-0 z-30">
+      <header class="h-16 flex items-center justify-between px-6 sticky top-0 z-30 border-b"
+        :class="isDark ? 'bg-slate-900/95 border-slate-800 backdrop-blur-sm' : 'bg-white/95 border-slate-200 backdrop-blur-sm'">
         <div class="flex items-center gap-4">
-          <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden p-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
+          <button @click="sidebarOpen = !sidebarOpen" 
+            class="lg:hidden p-2 rounded-lg transition-colors"
+            :class="isDark ? 'text-slate-300 hover:text-white hover:bg-slate-800' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
           
           <!-- Breadcrumb -->
-          <nav class="hidden md:flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-            <span class="text-slate-900 dark:text-white font-medium">{{ currentPageTitle }}</span>
+          <nav class="hidden md:flex items-center gap-2 text-sm" :class="isDark ? 'text-slate-400' : 'text-slate-600'">
+            <span class="font-medium" :class="isDark ? 'text-white' : 'text-slate-900'">{{ currentPageTitle }}</span>
           </nav>
         </div>
 
@@ -116,12 +128,13 @@
         <div class="flex items-center gap-3">
           <!-- Dark Mode Toggle -->
           <button @click="toggleDarkMode" 
-            class="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+            class="p-2 rounded-lg transition-colors"
+            :class="isDark ? 'text-slate-300 hover:text-white hover:bg-slate-800' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'"
             :title="isDark ? 'Modo Claro' : 'Modo Oscuro'">
             <svg v-if="isDark" class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
-            <svg v-else class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
             </svg>
           </button>
@@ -132,13 +145,15 @@
           <!-- Alert Notifications -->
           <AlertNotifications />
           
-          <span class="badge" :class="planBadgeClass">
+          <span class="px-2.5 py-1 rounded-full text-xs font-medium border"
+            :class="planBadgeClass">
             {{ authStore.tenant?.plan?.toUpperCase() || 'STARTER' }}
           </span>
 
           <!-- Logout Button -->
           <button @click="handleLogout" 
-            class="p-2 text-slate-600 dark:text-slate-300 hover:bg-rose-100 dark:hover:bg-rose-900/30 hover:text-rose-600 dark:hover:text-rose-400 rounded-lg transition-colors"
+            class="p-2 rounded-lg transition-colors"
+            :class="isDark ? 'text-slate-400 hover:text-rose-400 hover:bg-rose-900/20' : 'text-slate-600 hover:text-rose-600 hover:bg-rose-50'"
             title="Cerrar Sesión">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -148,7 +163,7 @@
       </header>
 
       <!-- Page Content -->
-      <main class="flex-1 overflow-auto">
+      <main class="flex-1 overflow-auto p-6">
         <RouterView />
       </main>
     </div>
@@ -156,30 +171,19 @@
 </template>
 
 <script setup>
-import { ref, computed, h, onMounted } from 'vue'
+import { ref, computed, h } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import { useDarkMode } from '../composables/useDarkMode'
 import GlobalSearch from '../components/GlobalSearch.vue'
 import AlertNotifications from '../components/AlertNotifications.vue'
 
 const router = useRouter()
 const route = useRoute()
 const authStore = useAuthStore()
+const { isDark, toggleDarkMode } = useDarkMode()
+
 const sidebarOpen = ref(false)
-const isDark = ref(false)
-
-// Dark mode toggle
-function toggleDarkMode() {
-  isDark.value = !isDark.value
-  document.documentElement.classList.toggle('dark', isDark.value)
-  localStorage.setItem('darkMode', isDark.value)
-}
-
-onMounted(() => {
-  // Load dark mode preference
-  isDark.value = localStorage.getItem('darkMode') === 'true'
-  document.documentElement.classList.toggle('dark', isDark.value)
-})
 
 // Page title based on current route
 const currentPageTitle = computed(() => {
@@ -211,10 +215,10 @@ const currentPageTitle = computed(() => {
 const planBadgeClass = computed(() => {
   const plan = authStore.tenant?.plan?.toLowerCase()
   switch (plan) {
-    case 'enterprise': return 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-700'
-    case 'professional': return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700'
-    case 'starter': return 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600'
-    default: return 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600'
+    case 'enterprise': return 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-700'
+    case 'professional': return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-700'
+    case 'starter': return 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600'
+    default: return 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600'
   }
 })
 
