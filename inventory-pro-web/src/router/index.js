@@ -26,6 +26,12 @@ const routes = [
     meta: { public: true },
   },
   {
+    path: '/subscribe',
+    name: 'Subscribe',
+    component: () => import('../views/SubscriptionView.vue'),
+    meta: { public: true },
+  },
+  {
     path: '/dashboard',
     name: 'Dashboard',
     component: () => import('../views/dashboard/Dashboard.vue'),

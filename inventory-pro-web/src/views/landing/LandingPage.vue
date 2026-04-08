@@ -665,28 +665,57 @@ const steps = [
 
 const pricingPlans = [
   {
-    name: 'Starter',
-    price: '299',
+    name: 'Gratis',
+    price: '0',
     period: 'mes',
-    description: 'Perfecto para pequeños negocios',
+    description: 'Para empezar sin costo',
     features: [
       '1 Almacén',
-      '500 Productos',
-      '2 Usuarios',
+      '100 Productos',
+      '1 Usuario',
       'Reportes básicos',
       'Soporte por email'
     ],
-    cta: 'Comenzar',
-    popular: false
+    cta: 'Registrarse Gratis',
+    popular: false,
+    free: true
   },
   {
-    name: 'Professional',
+    name: 'Profesional',
+    price: '299',
+    period: 'mes',
+    description: 'Ideal para negocios en crecimiento',
+    features: [
+      '10 Almacenes',
+      '500 Productos',
+      '5 Usuarios',
+      'Reportes avanzados',
+      'Etiquetas DYMO',
+      'Soporte prioritario',
+      '🎁 1 mes GRATIS'
+    ],
+    cta: 'Prueba Gratis 1 Mes',
+    popular: true,
+    trial: true
+  },
+  {
+    name: 'Ilimitado',
     price: '799',
     period: 'mes',
-    description: 'Ideal para empresas en crecimiento',
+    description: 'Todo ilimitado para tu empresa',
     features: [
-      '5 Almacenes',
+      'Almacenes ilimitados',
       'Productos ilimitados',
+      'Usuarios ilimitados',
+      'API completa',
+      'Consultoría dedicada',
+      'Soporte 24/7'
+    ],
+    cta: 'Elegir Plan',
+    popular: false,
+    unlimited: true
+  }
+]
       '10 Usuarios',
       'Reportes avanzados',
       'Etiquetas DYMO',

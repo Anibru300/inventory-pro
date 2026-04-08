@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\LabelController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductLotController;
 use App\Http\Controllers\Api\StockMovementController;
+use App\Http\Controllers\Api\StripeController;
 use App\Http\Controllers\Api\WarehouseController;
 use App\Http\Controllers\Api\WarehouseTransferController;
 use Illuminate\Support\Facades\Route;
@@ -131,4 +132,16 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 // Webhook for Stripe (public but secured by signature)
-Route::post('/stripe/webhook', [AuthController::class, 'webhook'])->name('stripe.webhook');
+Route::post('/stripe/webhook', [StripeController::class, 'webhook'])->name('stripe.webhook');
+
+// Stripe public config
+Route::get('/stripe/config', [StripeController::class, 'getConfig']);
+
+// Stripe protected routes
+Route::middleware('auth:sanctum')->prefix('payments')->group(function () {
+    Route::post('/intent', [StripeController::class, 'createPaymentIntent']);
+    Route::post('/subscribe', [StripeController::class, 'createSubscription']);
+    Route::post('/cancel', [StripeController::class, 'cancelSubscription']);
+    Route::post('/transfer', [StripeController::class, 'createTransferPayment']);
+    Route::get('/history', [StripeController::class, 'getPaymentHistory']);
+});
