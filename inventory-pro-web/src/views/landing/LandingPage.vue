@@ -77,7 +77,7 @@
             <button @click="scrollToSection('demo-interactive')" class="text-sm font-medium transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-300' : 'text-gray-600'">Cómo Funciona</button>
             <button @click="scrollToSection('pricing')" class="text-sm font-medium transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-300' : 'text-gray-600'">Precios</button>
             <button @click="scrollToSection('blog')" class="text-sm font-medium transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-300' : 'text-gray-600'">Blog</button>
-            <button @click="scrollToSection('consulting')" class="text-sm font-medium transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-300' : 'text-gray-600'">Consultoría</button>
+            <a href="https://anibru300.github.io/cj-consultoria-web/" target="_blank" class="text-sm font-medium transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-300' : 'text-gray-600'">Consultoría</a>
           </div>
 
           <!-- CTA Buttons -->
@@ -117,7 +117,7 @@
             <button @click="scrollToSection('demo-interactive'); mobileMenuOpen = false" class="text-left px-4 py-2 rounded-lg transition-colors" :class="isDark ? 'text-gray-300 hover:bg-[#1a2d47]' : 'text-gray-600 hover:bg-gray-100'">Cómo Funciona</button>
             <button @click="scrollToSection('pricing'); mobileMenuOpen = false" class="text-left px-4 py-2 rounded-lg transition-colors" :class="isDark ? 'text-gray-300 hover:bg-[#1a2d47]' : 'text-gray-600 hover:bg-gray-100'">Precios</button>
             <button @click="scrollToSection('blog'); mobileMenuOpen = false" class="text-left px-4 py-2 rounded-lg transition-colors" :class="isDark ? 'text-gray-300 hover:bg-[#1a2d47]' : 'text-gray-600 hover:bg-gray-100'">Blog</button>
-            <button @click="scrollToSection('consulting'); mobileMenuOpen = false" class="text-left px-4 py-2 rounded-lg transition-colors" :class="isDark ? 'text-gray-300 hover:bg-[#1a2d47]' : 'text-gray-600 hover:bg-gray-100'">Consultoría</button>
+            <a href="https://anibru300.github.io/cj-consultoria-web/" target="_blank" @click="mobileMenuOpen = false" class="text-left px-4 py-2 rounded-lg transition-colors" :class="isDark ? 'text-gray-300 hover:bg-[#1a2d47]' : 'text-gray-600 hover:bg-gray-100'">Consultoría</a>
             <router-link to="/login" @click="mobileMenuOpen = false" class="text-left px-4 py-2 rounded-lg transition-colors" :class="isDark ? 'text-gray-300 hover:bg-[#1a2d47]' : 'text-gray-600 hover:bg-gray-100'">Iniciar Sesión</router-link>
             <router-link to="/register" @click="mobileMenuOpen = false" class="mx-4 px-5 py-2.5 bg-gradient-to-r from-[#2E7DE8] to-[#1e6ad1] text-white rounded-xl font-medium text-center">
               Prueba Gratis
