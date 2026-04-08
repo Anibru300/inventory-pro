@@ -77,8 +77,8 @@
               <img src="/logo-cj.png" alt="CJ Consultoría" class="w-full h-full object-cover" />
             </div>
             <div>
-              <span class="text-xl font-bold" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'">CJ</span>
-              <span class="text-xl font-bold text-[#2E7DE8]">Consultoría</span>
+              <span class="text-xl font-bold" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'">StockMaster</span>
+              <span class="text-xl font-bold text-[#2E7DE8]">Pro</span>
             </div>
           </div>
 
@@ -147,7 +147,7 @@
             </div>
             
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">
-              Inventory Pro
+              StockMaster Pro
               <span class="block text-2xl md:text-3xl lg:text-4xl mt-2 text-[#2E7DE8]" style="font-family: 'Playfair Display', serif; font-style: italic;">
                 Transformamos procesos en resultados sostenibles
               </span>
@@ -166,11 +166,11 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </router-link>
-              <button @click="scrollToSection('consulting')" class="px-8 py-4 border-2 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 border-[#C0C0C0] text-[#0B1F3A] hover:border-[#2E7DE8] hover:text-[#2E7DE8]" :class="isDark ? 'text-white border-gray-600 hover:border-[#2E7DE8]' : ''">
+              <button @click="scrollToSection('demo-form')" class="px-8 py-4 border-2 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 border-[#C0C0C0] text-[#0B1F3A] hover:border-[#2E7DE8] hover:text-[#2E7DE8]" :class="isDark ? 'text-white border-gray-600 hover:border-[#2E7DE8]' : ''">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
-                Contactar
+                Solicitar Demo
               </button>
             </div>
 
@@ -208,25 +208,25 @@
       </div>
     </section>
 
-    <!-- Stats Section con Contadores Animados -->
+    <!-- Stats Section -->
     <section class="py-12 border-y relative" :class="isDark ? 'border-[#2E7DE8]/20 bg-[#0B1F3A]/30' : 'border-gray-200 bg-gray-50/50'">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           <div class="p-4 rounded-2xl backdrop-blur-sm group hover:scale-105 transition-transform" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-white/50'">
             <p class="text-3xl md:text-4xl font-bold text-[#2E7DE8]">
-              <AnimatedCounter :end="500" suffix="+" />
+              <AnimatedCounter :target="500" suffix="+" />
             </p>
             <p class="text-sm mt-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">PYMEs confían</p>
           </div>
           <div class="p-4 rounded-2xl backdrop-blur-sm group hover:scale-105 transition-transform" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-white/50'">
             <p class="text-3xl md:text-4xl font-bold text-[#2E7DE8]">
-              <AnimatedCounter :end="25" suffix="%" prefix="+" />
+              <AnimatedCounter :target="25" suffix="%" prefix="+" />
             </p>
             <p class="text-sm mt-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Eficiencia promedio</p>
           </div>
           <div class="p-4 rounded-2xl backdrop-blur-sm group hover:scale-105 transition-transform" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-white/50'">
             <p class="text-3xl md:text-4xl font-bold text-[#2E7DE8]">
-              <AnimatedCounter :end="80" suffix="%" />
+              <AnimatedCounter :target="80" suffix="%" />
             </p>
             <p class="text-sm mt-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">Tiempo ahorrado</p>
           </div>
@@ -237,6 +237,7 @@
         </div>
       </div>
     </section>
+
 
     <!-- Features Section -->
     <section id="features" class="py-20 relative">
@@ -249,7 +250,7 @@
             Todo lo que necesitas para gestionar tu inventario
           </h2>
           <p class="text-lg" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
-            Desde el control básico hasta análisis avanzados, Inventory Pro tiene las herramientas que tu negocio necesita.
+            Desde el control básico hasta análisis avanzados, StockMaster Pro tiene las herramientas que tu negocio necesita.
           </p>
         </div>
 
@@ -264,7 +265,7 @@
       </div>
     </section>
 
-    <!-- Trust Badges / Clientes -->
+    <!-- Trust Badges -->
     <section class="py-12 relative" :class="isDark ? 'bg-[#0B1F3A]/20' : 'bg-gray-100/50'">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <p class="text-center text-sm mb-8" :class="isDark ? 'text-gray-500' : 'text-gray-500'">
@@ -291,52 +292,39 @@
             🎬 Demo en Video
           </span>
           <h2 class="text-3xl md:text-4xl font-bold mb-4" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">
-            Mira Inventory Pro en acción
+            Mira StockMaster Pro en acción
           </h2>
           <p class="text-lg" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
             Descubre cómo transformar tu gestión de inventario en menos de 3 minutos
           </p>
         </div>
 
-        <!-- Video Container -->
         <div class="max-w-4xl mx-auto">
           <div class="relative rounded-2xl overflow-hidden shadow-2xl border-4"
             :class="isDark ? 'border-[#2E7DE8]/30' : 'border-gray-200'">
-            
-            <!-- Placeholder para video (reemplazar con video real) -->
             <div class="aspect-video bg-gradient-to-br from-[#0B1F3A] to-[#1a3a5c] flex items-center justify-center relative group cursor-pointer"
               @click="playVideo">
-              
-              <!-- Thumbnail/Preview -->
               <div class="absolute inset-0 opacity-20">
                 <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, rgba(46,125,232,0.3) 1px, transparent 0); background-size: 30px 30px;"></div>
               </div>
-              
-              <!-- Play Button -->
               <div class="relative z-10 w-24 h-24 rounded-full bg-[#2E7DE8] flex items-center justify-center shadow-lg shadow-[#2E7DE8]/50 group-hover:scale-110 transition-transform">
                 <svg class="w-10 h-10 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z"/>
                 </svg>
               </div>
-              
-              <!-- Text overlay -->
               <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent">
-                <p class="text-white font-semibold text-lg">Tour completo de Inventory Pro</p>
+                <p class="text-white font-semibold text-lg">Tour completo de StockMaster Pro</p>
                 <p class="text-gray-300 text-sm">Duración: 2:45 minutos</p>
               </div>
-              
-              <!-- Duration badge -->
               <div class="absolute top-4 right-4 px-3 py-1 rounded-lg bg-black/60 text-white text-sm font-medium">
                 2:45
               </div>
             </div>
-            
-            <!-- YouTube iframe (hidden until play) -->
             <div v-if="videoPlaying" class="absolute inset-0 bg-black">
               <iframe 
                 class="w-full h-full"
                 src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" 
-                title="Inventory Pro Demo"
+                title="StockMaster Pro Demo"
                 frameborder="0" 
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                 allowfullscreen>
@@ -344,7 +332,6 @@
             </div>
           </div>
           
-          <!-- Video chapters -->
           <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
             <div v-for="(chapter, idx) in videoChapters" :key="idx" 
               class="p-4 rounded-xl border cursor-pointer transition-all hover:border-[#2E7DE8]"
@@ -364,7 +351,7 @@
       </div>
     </section>
 
-    <!-- Screenshots Carrusel -->
+    <!-- Screenshots Carousel -->
     <section id="screenshots" class="py-20 relative" :class="isDark ? 'bg-[#0B1F3A]/30' : 'bg-gray-50/50'">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center max-w-3xl mx-auto mb-12">
@@ -379,16 +366,12 @@
           </p>
         </div>
 
-        <!-- Carrusel -->
         <div class="relative">
-          <!-- Main Display -->
           <div class="rounded-2xl overflow-hidden shadow-2xl border mb-6"
             :class="isDark ? 'border-[#2E7DE8]/30' : 'border-gray-200'">
             <div class="aspect-[16/10] bg-gradient-to-br from-[#0B1F3A] to-[#1a3a5c] p-4">
-              <!-- Browser Chrome -->
               <div class="w-full h-full rounded-lg overflow-hidden bg-[#0B1F3A] border"
                 :class="isDark ? 'border-gray-700' : 'border-gray-300'">
-                <!-- Browser Header -->
                 <div class="h-8 bg-[#1a3050] flex items-center px-3 gap-2">
                   <div class="flex gap-1.5">
                     <div class="w-3 h-3 rounded-full bg-rose-500"></div>
@@ -397,25 +380,22 @@
                   </div>
                   <div class="flex-1 mx-4">
                     <div class="h-5 bg-[#0B1F3A] rounded text-xs flex items-center px-2 text-gray-400">
-                      app.inventorypro.com/{{ screenshots[activeScreenshot].id }}
+                      app.stockmasterpro.com/{{ screenshots[activeScreenshot].id }}
                     </div>
                   </div>
                 </div>
-                <!-- Screenshot Content -->
                 <div class="p-6 h-[calc(100%-2rem)] overflow-hidden">
                   <div class="h-full rounded-lg flex flex-col"
                     :class="isDark ? 'bg-[#0B1F3A]' : 'bg-white'">
-                    <!-- Mock UI Header -->
                     <div class="h-12 border-b flex items-center px-4" :class="isDark ? 'border-gray-700' : 'border-gray-200'">
                       <div class="flex items-center gap-2">
                         <div class="w-8 h-8 rounded bg-gradient-to-br from-[#2E7DE8] to-[#1e6ad1]"></div>
-                        <span class="font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">Inventory Pro</span>
+                        <span class="font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">StockMaster Pro</span>
                       </div>
                       <div class="ml-auto flex gap-2">
                         <div class="w-8 h-8 rounded-full" :class="isDark ? 'bg-gray-700' : 'bg-gray-200'"></div>
                       </div>
                     </div>
-                    <!-- Mock Content -->
                     <div class="flex-1 p-4">
                       <component :is="screenshots[activeScreenshot].component" :is-dark="isDark" />
                     </div>
@@ -425,7 +405,6 @@
             </div>
           </div>
 
-          <!-- Thumbnails -->
           <div class="flex justify-center gap-4 flex-wrap">
             <button v-for="(screenshot, idx) in screenshots" :key="idx"
               @click="activeScreenshot = idx"
@@ -437,7 +416,6 @@
             </button>
           </div>
 
-          <!-- Navigation Arrows -->
           <button @click="prevScreenshot" 
             class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-12 h-12 rounded-full bg-[#2E7DE8] text-white shadow-lg flex items-center justify-center hover:scale-110 transition-transform hidden md:flex">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -454,7 +432,7 @@
       </div>
     </section>
 
-    <!-- Demo Interactiva / Sandbox -->
+    <!-- Demo Interactive Section -->
     <section id="demo-interactive" class="py-20 relative">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center max-w-3xl mx-auto mb-12">
@@ -469,11 +447,8 @@
           </p>
         </div>
 
-        <!-- Interactive Demo Container -->
         <div class="rounded-2xl overflow-hidden shadow-2xl border"
           :class="isDark ? 'border-[#2E7DE8]/30' : 'border-gray-200'">
-          
-          <!-- Demo Header -->
           <div class="p-4 border-b flex items-center justify-between" 
             :class="isDark ? 'bg-[#1a3050] border-gray-700' : 'bg-gray-50 border-gray-200'">
             <div class="flex items-center gap-3">
@@ -490,9 +465,7 @@
             </router-link>
           </div>
 
-          <!-- Demo Interface -->
           <div class="grid lg:grid-cols-[250px,1fr] min-h-[500px]" :class="isDark ? 'bg-[#0B1F3A]' : 'bg-white'">
-            <!-- Sidebar -->
             <div class="p-4 border-r" :class="isDark ? 'border-gray-700' : 'border-gray-200'">
               <div class="space-y-2">
                 <div v-for="item in demoMenu" :key="item"
@@ -504,8 +477,6 @@
                   {{ item }}
                 </div>
               </div>
-              
-              <!-- Demo Alert -->
               <div class="mt-6 p-4 rounded-xl border" :class="isDark ? 'bg-amber-500/10 border-amber-500/30' : 'bg-amber-50 border-amber-200'">
                 <p class="text-sm" :class="isDark ? 'text-amber-400' : 'text-amber-700'">
                   <strong>ℹ️ Modo Demo</strong><br>
@@ -514,9 +485,7 @@
               </div>
             </div>
 
-            <!-- Main Content -->
             <div class="p-6">
-              <!-- Dashboard Demo -->
               <div v-if="demoActiveTab === 'Dashboard'" class="space-y-6">
                 <h3 class="text-xl font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">Dashboard</h3>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -527,8 +496,6 @@
                     <p class="text-2xl font-bold" :class="isDark ? 'text-white' : 'text-gray-900'">{{ stat.value }}</p>
                   </div>
                 </div>
-                
-                <!-- Demo Chart -->
                 <div class="p-6 rounded-xl border" :class="isDark ? 'border-gray-700' : 'border-gray-200'">
                   <h4 class="font-medium mb-4" :class="isDark ? 'text-white' : 'text-gray-900'">Movimientos del mes</h4>
                   <div class="flex items-end gap-2 h-32">
@@ -547,13 +514,10 @@
                 </div>
               </div>
 
-              <!-- Productos Demo -->
               <div v-else-if="demoActiveTab === 'Productos'" class="space-y-6">
                 <div class="flex justify-between items-center">
                   <h3 class="text-xl font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">Productos</h3>
-                  <button class="px-4 py-2 bg-[#2E7DE8] text-white rounded-lg text-sm">
-                    + Nuevo Producto
-                  </button>
+                  <button class="px-4 py-2 bg-[#2E7DE8] text-white rounded-lg text-sm">+ Nuevo Producto</button>
                 </div>
                 <div class="overflow-x-auto">
                   <table class="w-full">
@@ -581,7 +545,6 @@
                 </div>
               </div>
 
-              <!-- Other tabs placeholder -->
               <div v-else class="flex items-center justify-center h-64">
                 <div class="text-center">
                   <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-[#2E7DE8]/20 flex items-center justify-center">
@@ -603,7 +566,7 @@
       </div>
     </section>
 
-    <!-- Testimonios -->
+    <!-- Testimonials Section -->
     <section id="testimonials" class="py-20 relative">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center max-w-3xl mx-auto mb-16">
@@ -622,19 +585,14 @@
           <div v-for="(testimonial, idx) in testimonials" :key="idx" 
             class="p-8 rounded-2xl border transition-all hover:shadow-xl hover:-translate-y-1"
             :class="isDark ? 'bg-[#0B1F3A]/60 border-[#2E7DE8]/20' : 'bg-white border-gray-200'">
-            <!-- Estrellas -->
             <div class="flex gap-1 mb-4">
               <svg v-for="n in 5" :key="n" class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
             </div>
-            
-            <!-- Quote -->
             <p class="mb-6 italic" :class="isDark ? 'text-gray-300' : 'text-gray-600'">
               "{{ testimonial.quote }}"
             </p>
-            
-            <!-- Author -->
             <div class="flex items-center gap-4">
               <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#2E7DE8] to-[#1e6ad1] flex items-center justify-center text-white font-bold">
                 {{ testimonial.name.charAt(0) }}
@@ -650,19 +608,19 @@
       </div>
     </section>
 
-    <!-- Agendar Demo con Calendly -->
-    <section id="schedule-demo" class="py-20 relative">
+    <!-- NUEVO: Formulario de Solicitud de Demo (reemplaza Calendly) -->
+    <section id="demo-form" class="py-20 relative">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="grid lg:grid-cols-2 gap-12 items-start">
           <div>
             <span class="inline-block px-4 py-1 rounded-full text-sm font-medium mb-4 border" :class="isDark ? 'bg-purple-500/10 border-purple-500/30 text-purple-400' : 'bg-purple-50 border-purple-200 text-purple-600'">
-              📅 Agenda una Demo
+              📅 Solicita una Demo Personalizada
             </span>
             <h2 class="text-3xl md:text-4xl font-bold mb-4" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">
               ¿Prefieres una demostración personalizada?
             </h2>
             <p class="text-lg mb-6" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
-              Agenda una llamada de 30 minutos con nuestros consultores. Te mostraremos cómo Inventory Pro se adapta a tu negocio específico.
+              Completa el formulario y nos pondremos en contacto contigo en menos de 24 horas para agendar una videollamada de 30 minutos.
             </p>
             
             <div class="space-y-4">
@@ -705,42 +663,166 @@
             
             <div class="mt-8 p-4 rounded-xl border" :class="isDark ? 'border-gray-700 bg-[#1a3050]/30' : 'border-gray-200 bg-gray-50'">
               <p class="text-sm" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
-                <strong class="text-[#2E7DE8]">Disponibilidad:</strong> Lunes a Viernes, 9:00 AM - 6:00 PM (GMT-6)
+                <strong class="text-[#2E7DE8]">Respuesta garantizada:</strong> Te contactaremos en menos de 24 horas hábiles.
               </p>
             </div>
           </div>
           
-          <!-- Calendly Widget Placeholder -->
+          <!-- Formulario de Demo -->
           <div class="rounded-2xl overflow-hidden border shadow-xl"
             :class="isDark ? 'border-[#2E7DE8]/30 bg-[#0B1F3A]' : 'border-gray-200 bg-white'">
             <div class="p-6 border-b" :class="isDark ? 'border-gray-700' : 'border-gray-200'">
-              <h3 class="font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">Selecciona fecha y hora</h3>
+              <h3 class="font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">Solicitar demostración</h3>
+              <p class="text-sm mt-1" :class="isDark ? 'text-gray-400' : 'text-gray-500'">Completa tus datos y nos pondremos en contacto</p>
             </div>
             <div class="p-6">
-              <!-- Calendly Inline Widget -->
-              <div class="calendly-inline-widget" 
-                data-url="https://calendly.com/carlos-urbina-cj/30min" 
-                style="min-width:320px;height:600px;">
-              </div>
+              <form @submit.prevent="submitDemoRequest" class="space-y-4">
+                <div class="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium mb-2" :class="isDark ? 'text-gray-300' : 'text-gray-700'">Nombre *</label>
+                    <input 
+                      v-model="demoForm.name" 
+                      type="text" 
+                      required
+                      class="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-[#2E7DE8] transition-all"
+                      :class="isDark ? 'bg-[#1a3050] border-gray-700 text-white placeholder-gray-500' : 'bg-white border-gray-300 text-gray-900'"
+                      placeholder="Tu nombre"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium mb-2" :class="isDark ? 'text-gray-300' : 'text-gray-700'">Empresa *</label>
+                    <input 
+                      v-model="demoForm.company" 
+                      type="text" 
+                      required
+                      class="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-[#2E7DE8] transition-all"
+                      :class="isDark ? 'bg-[#1a3050] border-gray-700 text-white placeholder-gray-500' : 'bg-white border-gray-300 text-gray-900'"
+                      placeholder="Nombre de tu empresa"
+                    />
+                  </div>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium mb-2" :class="isDark ? 'text-gray-300' : 'text-gray-700'">Email *</label>
+                    <input 
+                      v-model="demoForm.email" 
+                      type="email" 
+                      required
+                      class="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-[#2E7DE8] transition-all"
+                      :class="isDark ? 'bg-[#1a3050] border-gray-700 text-white placeholder-gray-500' : 'bg-white border-gray-300 text-gray-900'"
+                      placeholder="tu@email.com"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium mb-2" :class="isDark ? 'text-gray-300' : 'text-gray-700'">Teléfono *</label>
+                    <input 
+                      v-model="demoForm.phone" 
+                      type="tel" 
+                      required
+                      class="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-[#2E7DE8] transition-all"
+                      :class="isDark ? 'bg-[#1a3050] border-gray-700 text-white placeholder-gray-500' : 'bg-white border-gray-300 text-gray-900'"
+                      placeholder="+52 123 456 7890"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium mb-2" :class="isDark ? 'text-gray-300' : 'text-gray-700'">Número de empleados</label>
+                  <select 
+                    v-model="demoForm.employees"
+                    class="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-[#2E7DE8] transition-all"
+                    :class="isDark ? 'bg-[#1a3050] border-gray-700 text-white' : 'bg-white border-gray-300 text-gray-900'"
+                  >
+                    <option value="">Selecciona una opción</option>
+                    <option value="1-5">1-5 empleados</option>
+                    <option value="6-20">6-20 empleados</option>
+                    <option value="21-50">21-50 empleados</option>
+                    <option value="51+">Más de 50 empleados</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium mb-2" :class="isDark ? 'text-gray-300' : 'text-gray-700'">¿Qué necesitas gestionar?</label>
+                  <select 
+                    v-model="demoForm.inventoryType"
+                    class="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-[#2E7DE8] transition-all"
+                    :class="isDark ? 'bg-[#1a3050] border-gray-700 text-white' : 'bg-white border-gray-300 text-gray-900'"
+                  >
+                    <option value="">Selecciona una opción</option>
+                    <option value="productos">Productos físicos</option>
+                    <option value="insumos">Insumos y materias primas</option>
+                    <option value="equipos">Equipos y herramientas</option>
+                    <option value="mixto">Combinación de los anteriores</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium mb-2" :class="isDark ? 'text-gray-300' : 'text-gray-700'">Mensaje (opcional)</label>
+                  <textarea 
+                    v-model="demoForm.message" 
+                    rows="3"
+                    class="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-[#2E7DE8] transition-all resize-none"
+                    :class="isDark ? 'bg-[#1a3050] border-gray-700 text-white placeholder-gray-500' : 'bg-white border-gray-300 text-gray-900'"
+                    placeholder="Cuéntanos brevemente sobre tus necesidades..."
+                  ></textarea>
+                </div>
+                
+                <div class="flex items-start gap-3">
+                  <input 
+                    id="demo-consent" 
+                    v-model="demoForm.consent"
+                    type="checkbox" 
+                    required
+                    class="mt-1 w-4 h-4 rounded border-gray-300 text-[#2E7DE8] focus:ring-[#2E7DE8]"
+                  />
+                  <label for="demo-consent" class="text-sm" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
+                    Acepto que CJ Consultoría se comunique conmigo vía email o teléfono para coordinar la demostración. 
+                    <a href="/aviso-privacidad.html" target="_blank" class="text-[#2E7DE8] hover:underline">Aviso de Privacidad</a>.
+                  </label>
+                </div>
+                
+                <button 
+                  type="submit"
+                  :disabled="demoSubmitting"
+                  class="w-full px-6 py-4 bg-gradient-to-r from-[#2E7DE8] to-[#1e6ad1] hover:from-[#1e6ad1] hover:to-[#2E7DE8] text-white rounded-xl font-semibold transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-70"
+                >
+                  <svg v-if="demoSubmitting" class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>{{ demoSubmitting ? 'Enviando...' : 'Solicitar Demo' }}</span>
+                </button>
+                
+                <p v-if="demoSuccess" class="text-center text-emerald-400 text-sm">
+                  ✓ ¡Solicitud enviada! Te contactaremos pronto.
+                </p>
+                <p v-if="demoError" class="text-center text-rose-400 text-sm">
+                  {{ demoError }}
+                </p>
+              </form>
               
-              <!-- Fallback buttons si Calendly no carga -->
-              <div class="mt-4 grid grid-cols-2 gap-3">
-                <button @click="openWhatsApp" 
-                  class="p-3 rounded-xl border flex items-center justify-center gap-2 transition-colors"
-                  :class="isDark ? 'border-[#25D366] text-[#25D366] hover:bg-[#25D366]/10' : 'border-[#25D366] text-[#25D366] hover:bg-[#25D366]/5'">
-                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                  </svg>
-                  WhatsApp
-                </button>
-                <button @click="sendEmail"
-                  class="p-3 rounded-xl border flex items-center justify-center gap-2 transition-colors"
-                  :class="isDark ? 'border-[#2E7DE8] text-[#2E7DE8] hover:bg-[#2E7DE8]/10' : 'border-[#2E7DE8] text-[#2E7DE8] hover:bg-[#2E7DE8]/5'">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  Email
-                </button>
+              <!-- Alternativas de contacto -->
+              <div class="mt-6 pt-6 border-t" :class="isDark ? 'border-gray-700' : 'border-gray-200'">
+                <p class="text-center text-sm mb-4" :class="isDark ? 'text-gray-500' : 'text-gray-500'">O contáctanos directamente:</p>
+                <div class="grid grid-cols-2 gap-3">
+                  <button @click="openWhatsApp" 
+                    class="p-3 rounded-xl border flex items-center justify-center gap-2 transition-colors"
+                    :class="isDark ? 'border-[#25D366] text-[#25D366] hover:bg-[#25D366]/10' : 'border-[#25D366] text-[#25D366] hover:bg-[#25D366]/5'">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    WhatsApp
+                  </button>
+                  <button @click="sendEmail"
+                    class="p-3 rounded-xl border flex items-center justify-center gap-2 transition-colors"
+                    :class="isDark ? 'border-[#2E7DE8] text-[#2E7DE8] hover:bg-[#2E7DE8]/10' : 'border-[#2E7DE8] text-[#2E7DE8] hover:bg-[#2E7DE8]/5'">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Email
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -748,34 +830,29 @@
       </div>
     </section>
 
-    <!-- Blog Preview Section -->
+
+    <!-- Blog Section con Modal de Artículos -->
     <section id="blog" class="py-20 relative" :class="isDark ? 'bg-[#0B1F3A]/30' : 'bg-gray-50/50'">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
           <div>
             <span class="inline-block px-4 py-1 rounded-full text-sm font-medium mb-4 border" :class="isDark ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' : 'bg-cyan-50 border-cyan-200 text-cyan-600'">
-              📝 Blog
+              📝 Recursos y Conocimiento
             </span>
             <h2 class="text-3xl md:text-4xl font-bold" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">
-              Recursos y conocimiento
+              Aprende a optimizar tu negocio
             </h2>
             <p class="mt-2 text-lg" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
-              Aprende a optimizar tu negocio
+              Guías, tutoriales y mejores prácticas
             </p>
           </div>
-          <button class="mt-4 md:mt-0 text-[#2E7DE8] font-medium hover:underline flex items-center gap-2">
-            Ver todos los artículos
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </button>
         </div>
 
         <div class="grid md:grid-cols-3 gap-8">
           <article v-for="(post, idx) in blogPosts" :key="idx" 
             class="rounded-2xl overflow-hidden border transition-all hover:shadow-xl hover:-translate-y-1 group cursor-pointer"
-            :class="isDark ? 'bg-[#0B1F3A] border-[#2E7DE8]/20' : 'bg-white border-gray-200'">
-            <!-- Image placeholder -->
+            :class="isDark ? 'bg-[#0B1F3A] border-[#2E7DE8]/20' : 'bg-white border-gray-200'"
+            @click="openArticle(post)">
             <div class="h-48 bg-gradient-to-br from-[#2E7DE8]/20 to-[#1a3a5c] flex items-center justify-center relative overflow-hidden">
               <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 2px 2px, rgba(46,125,232,0.5) 1px, transparent 0); background-size: 20px 20px;"></div>
               <div class="text-6xl">{{ post.icon }}</div>
@@ -802,7 +879,7 @@
               </p>
               
               <div class="flex items-center text-[#2E7DE8] font-medium text-sm">
-                Leer más
+                Leer artículo completo
                 <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
@@ -813,7 +890,63 @@
       </div>
     </section>
 
-    <!-- Calculadora ROI -->
+    <!-- Modal de Artículo -->
+    <div v-if="selectedArticle" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="selectedArticle = null"></div>
+      <div class="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl"
+        :class="isDark ? 'bg-[#0B1F3A] border border-[#2E7DE8]/30' : 'bg-white border border-gray-200'">
+        <!-- Header -->
+        <div class="sticky top-0 p-6 border-b flex items-center justify-between"
+          :class="isDark ? 'bg-[#0B1F3A] border-gray-700' : 'bg-white border-gray-200'">
+          <div>
+            <span class="px-3 py-1 rounded-full text-xs font-medium" :class="isDark ? 'bg-[#2E7DE8]/30 text-[#2E7DE8]' : 'bg-blue-100 text-blue-700'">
+              {{ selectedArticle.category }}
+            </span>
+            <h2 class="text-xl font-bold mt-2" :class="isDark ? 'text-white' : 'text-gray-900'">{{ selectedArticle.title }}</h2>
+          </div>
+          <button @click="selectedArticle = null" 
+            class="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+            :class="isDark ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-600'">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Content -->
+        <div class="p-6">
+          <div class="flex items-center gap-2 text-sm mb-6" :class="isDark ? 'text-gray-500' : 'text-gray-500'">
+            <span>{{ selectedArticle.date }}</span>
+            <span>•</span>
+            <span>{{ selectedArticle.readTime }} de lectura</span>
+          </div>
+          
+          <div class="prose max-w-none" :class="isDark ? 'prose-invert' : ''">
+            <div v-html="selectedArticle.content"></div>
+          </div>
+          
+          <!-- CTA al final del artículo -->
+          <div class="mt-8 p-6 rounded-xl border" :class="isDark ? 'bg-[#1a3050]/50 border-[#2E7DE8]/30' : 'bg-blue-50 border-blue-200'">
+            <h4 class="font-semibold mb-2" :class="isDark ? 'text-white' : 'text-gray-900'">¿Listo para aplicar esto en tu negocio?</h4>
+            <p class="text-sm mb-4" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
+              StockMaster Pro te ayuda a implementar estas mejores prácticas de forma automática.
+            </p>
+            <div class="flex gap-3">
+              <router-link to="/register" class="px-6 py-3 bg-gradient-to-r from-[#2E7DE8] to-[#1e6ad1] text-white rounded-xl font-medium text-sm hover:shadow-lg transition-all">
+                Prueba Gratis
+              </router-link>
+              <button @click="scrollToSection('demo-form'); selectedArticle = null" 
+                class="px-6 py-3 border rounded-xl font-medium text-sm transition-colors"
+                :class="isDark ? 'border-gray-600 text-gray-300 hover:border-[#2E7DE8]' : 'border-gray-300 text-gray-700 hover:border-[#2E7DE8]'">
+                Solicitar Demo
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROI Calculator Section -->
     <section id="roi-calculator" class="py-20 relative" :class="isDark ? 'bg-[#0B1F3A]/30' : 'bg-gray-50/50'">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
@@ -825,10 +958,9 @@
               Calcula tu ahorro mensual
             </h2>
             <p class="text-lg mb-8" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
-              Descubre cuánto puedes ahorrar al automatizar tu gestión de inventario con Inventory Pro.
+              Descubre cuánto puedes ahorrar al automatizar tu gestión de inventario con StockMaster Pro.
             </p>
             
-            <!-- Inputs -->
             <div class="space-y-6">
               <div>
                 <label class="block text-sm font-medium mb-2" :class="isDark ? 'text-gray-300' : 'text-gray-700'">
@@ -881,7 +1013,6 @@
             </div>
           </div>
           
-          <!-- Resultados -->
           <div class="p-8 rounded-2xl border"
             :class="isDark ? 'bg-gradient-to-br from-[#1a3050] to-[#0B1F3A] border-[#2E7DE8]/30' : 'bg-gradient-to-br from-white to-gray-50 border-gray-200'">
             <h3 class="text-xl font-semibold mb-6" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'">Tu ahorro estimado</h3>
@@ -922,7 +1053,7 @@
       </div>
     </section>
 
-    <!-- Comparativa vs Competencia -->
+    <!-- Comparison Section -->
     <section class="py-20 relative">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center max-w-3xl mx-auto mb-16">
@@ -930,7 +1061,7 @@
             Comparativa
           </span>
           <h2 class="text-3xl md:text-4xl font-bold mb-4" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">
-            ¿Por qué elegir Inventory Pro?
+            ¿Por qué elegir StockMaster Pro?
           </h2>
           <p class="text-lg" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
             Comparación honesta con otras soluciones del mercado
@@ -942,7 +1073,7 @@
             <thead>
               <tr :class="isDark ? 'bg-[#1a3050]' : 'bg-gray-100'">
                 <th class="text-left py-4 px-6 font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">Característica</th>
-                <th class="text-center py-4 px-6 font-bold bg-[#2E7DE8]/20 text-[#2E7DE8]">Inventory Pro</th>
+                <th class="text-center py-4 px-6 font-bold bg-[#2E7DE8]/20 text-[#2E7DE8]">StockMaster Pro</th>
                 <th class="text-center py-4 px-6" :class="isDark ? 'text-gray-400' : 'text-gray-500'">Excel</th>
                 <th class="text-center py-4 px-6" :class="isDark ? 'text-gray-400' : 'text-gray-500'">SAP/Odoo</th>
               </tr>
@@ -951,8 +1082,8 @@
               <tr v-for="(row, idx) in comparisonTable" :key="idx" :class="isDark ? 'bg-[#0B1F3A]/40' : 'bg-white'">
                 <td class="py-4 px-6 font-medium" :class="isDark ? 'text-gray-300' : 'text-gray-700'">{{ row.feature }}</td>
                 <td class="py-4 px-6 text-center">
-                  <span v-if="row.inventoryPro === true" class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400">✓</span>
-                  <span v-else class="text-[#2E7DE8] font-semibold">{{ row.inventoryPro }}</span>
+                  <span v-if="row.stockmaster === true" class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400">✓</span>
+                  <span v-else class="text-[#2E7DE8] font-semibold">{{ row.stockmaster }}</span>
                 </td>
                 <td class="py-4 px-6 text-center">
                   <span v-if="row.excel === true" class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400">✓</span>
@@ -977,7 +1108,7 @@
       </div>
     </section>
 
-    <!-- How It Works -->
+    <!-- How It Works Section -->
     <section id="how-it-works" class="py-20 relative" :class="isDark ? 'bg-[#0B1F3A]/30' : 'bg-gray-50/50'">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center max-w-3xl mx-auto mb-16">
@@ -1029,7 +1160,6 @@
           />
         </div>
 
-        <!-- Enterprise CTA -->
         <div class="mt-16 text-center">
           <p class="text-lg mb-4" :class="isDark ? 'text-gray-300' : 'text-gray-700'">
             ¿Necesitas un plan personalizado para tu empresa?
@@ -1044,7 +1174,8 @@
       </div>
     </section>
 
-    <!-- Consulting Section - CJ -->
+
+    <!-- Consulting Section -->
     <section id="consulting" class="py-20 relative" :class="isDark ? 'bg-[#0B1F3A]/50' : 'bg-gray-50/50'">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
@@ -1238,7 +1369,7 @@
               ¿Listo para transformar tu gestión de inventario?
             </h2>
             <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Únete a las PYMEs que ya confían en Inventory Pro y CJ Consultoría.
+              Únete a las PYMEs que ya confían en StockMaster Pro y CJ Consultoría.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
               <router-link to="/register" class="px-8 py-4 bg-white text-[#2E7DE8] rounded-xl font-semibold hover:bg-blue-50 transition-all shadow-lg active:scale-95">
@@ -1266,7 +1397,7 @@
               <div class="w-12 h-12 rounded-xl overflow-hidden border-2 border-[#C0C0C0] shadow-lg">
                 <img src="/logo-cj.png" alt="CJ Consultoría" class="w-full h-full object-cover" />
               </div>
-              <span class="text-xl font-bold" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">Inventory Pro</span>
+              <span class="text-xl font-bold" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">StockMaster Pro</span>
             </div>
             <p class="text-sm mb-4 max-w-sm" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
               Sistema ERP profesional para gestión de inventario. Desarrollado por 
@@ -1306,12 +1437,18 @@
 
         <div class="pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-4" :class="isDark ? 'border-gray-800' : 'border-gray-200'">
           <p class="text-sm" :class="isDark ? 'text-gray-500' : 'text-gray-500'">
-            © 2026 Inventory Pro & CJ Consultoría. Todos los derechos reservados.
+            © 2026 StockMaster Pro & CJ Consultoría. Todos los derechos reservados.
           </p>
           <div class="flex gap-6 text-sm">
-            <button @click="openWhatsApp" class="text-xs transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-500' : 'text-gray-500'">
+            <a href="/terminos-condiciones.html" target="_blank" class="text-xs transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-500' : 'text-gray-500'">
+              Términos y Condiciones
+            </a>
+            <a href="/aviso-privacidad.html" target="_blank" class="text-xs transition-colors hover:text-[#2E7DE8]" :class="isDark ? 'text-gray-500' : 'text-gray-500'">
+              Aviso de Privacidad
+            </a>
+            <span class="text-xs" :class="isDark ? 'text-gray-500' : 'text-gray-500'">
               <strong class="text-[#2E7DE8]">Tel:</strong> 477 694 0272
-            </button>
+            </span>
           </div>
         </div>
       </div>
@@ -1319,11 +1456,9 @@
 
     <!-- ChatBot Flotante -->
     <div class="fixed bottom-6 right-6 z-50">
-      <!-- Chat Window -->
       <div v-if="chatOpen" 
         class="mb-4 w-80 rounded-2xl shadow-2xl overflow-hidden border animate-fade-in-up"
         :class="isDark ? 'bg-[#0B1F3A] border-[#2E7DE8]/30' : 'bg-white border-gray-200'">
-        <!-- Header -->
         <div class="p-4 bg-gradient-to-r from-[#2E7DE8] to-[#1e6ad1]">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
@@ -1341,7 +1476,6 @@
           </div>
         </div>
         
-        <!-- Messages -->
         <div class="h-64 overflow-y-auto p-4 space-y-4" :class="isDark ? 'bg-[#0B1F3A]' : 'bg-gray-50'">
           <div v-for="(msg, idx) in chatMessages" :key="idx" 
             :class="['flex', msg.from === 'user' ? 'justify-end' : 'justify-start']">
@@ -1354,7 +1488,6 @@
           </div>
         </div>
         
-        <!-- Quick Options -->
         <div class="p-3 border-t" :class="isDark ? 'border-gray-700 bg-[#0B1F3A]' : 'border-gray-200 bg-white'">
           <div class="flex flex-wrap gap-2">
             <button v-for="option in chatOptions" :key="option"
@@ -1367,7 +1500,6 @@
         </div>
       </div>
       
-      <!-- Toggle Button -->
       <button v-if="!chatOpen" @click="chatOpen = true"
         class="w-14 h-14 rounded-full bg-gradient-to-r from-[#2E7DE8] to-[#1e6ad1] text-white shadow-lg shadow-[#2E7DE8]/40 flex items-center justify-center hover:scale-110 transition-transform">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1385,6 +1517,7 @@
     </button>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue'
@@ -1406,7 +1539,7 @@ const roiCalculator = ref({
 })
 
 const monthlyTimeSavings = computed(() => {
-  const hoursSaved = roiCalculator.value.hoursPerWeek * 4 * 0.8 // 80% de eficiencia
+  const hoursSaved = roiCalculator.value.hoursPerWeek * 4 * 0.8
   return Math.round(hoursSaved * roiCalculator.value.hourlyRate)
 })
 
@@ -1417,6 +1550,78 @@ const totalMonthlyROI = computed(() => {
 const roiMultiplier = computed(() => {
   return Math.round(totalMonthlyROI.value / 299)
 })
+
+// NUEVO: Formulario de Demo
+const demoForm = ref({
+  name: '',
+  company: '',
+  email: '',
+  phone: '',
+  employees: '',
+  inventoryType: '',
+  message: '',
+  consent: false
+})
+const demoSubmitting = ref(false)
+const demoSuccess = ref(false)
+const demoError = ref('')
+
+const submitDemoRequest = async () => {
+  demoSubmitting.value = true
+  demoError.value = ''
+  demoSuccess.value = false
+  
+  try {
+    // Simulación de envío - En producción conectarías con tu API
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    
+    // Aquí iría la llamada real a tu API:
+    // await fetch('https://tu-api.com/demo-requests', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(demoForm.value)
+    // })
+    
+    // Por ahora simulamos éxito y enviamos email
+    const emailBody = encodeURIComponent(
+      `Nueva solicitud de demostración StockMaster Pro\n\n` +
+      `Nombre: ${demoForm.value.name}\n` +
+      `Empresa: ${demoForm.value.company}\n` +
+      `Email: ${demoForm.value.email}\n` +
+      `Teléfono: ${demoForm.value.phone}\n` +
+      `Empleados: ${demoForm.value.employees}\n` +
+      `Tipo de inventario: ${demoForm.value.inventoryType}\n` +
+      `Mensaje: ${demoForm.value.message || 'N/A'}\n\n` +
+      `---\nEnviado desde el sitio web StockMaster Pro`
+    )
+    
+    window.location.href = `mailto:ing.carlosurbina@gmail.com?subject=Solicitud Demo StockMaster Pro - ${demoForm.value.company}&body=${emailBody}`
+    
+    demoSuccess.value = true
+    demoForm.value = {
+      name: '',
+      company: '',
+      email: '',
+      phone: '',
+      employees: '',
+      inventoryType: '',
+      message: '',
+      consent: false
+    }
+  } catch (err) {
+    demoError.value = 'Hubo un error al enviar. Por favor intenta de nuevo o contáctanos por WhatsApp.'
+  } finally {
+    demoSubmitting.value = false
+  }
+}
+
+// NUEVO: Modal de Artículos
+const selectedArticle = ref(null)
+
+const openArticle = (article) => {
+  selectedArticle.value = article
+  document.body.style.overflow = 'hidden'
+}
 
 // Testimonials Data
 const testimonials = [
@@ -1451,16 +1656,16 @@ const trustedClients = [
 
 // Comparison Table
 const comparisonTable = [
-  { feature: 'Multi-almacén', inventoryPro: true, excel: false, competitor: true },
-  { feature: 'Reportes avanzados', inventoryPro: true, excel: false, competitor: true },
-  { feature: 'Alertas automáticas', inventoryPro: true, excel: false, competitor: true },
-  { feature: 'App móvil', inventoryPro: true, excel: false, competitor: true },
-  { feature: 'Fácil de usar', inventoryPro: true, excel: true, competitor: false },
-  { feature: 'Soporte en español', inventoryPro: true, excel: false, competitor: false },
-  { feature: 'Setup en < 1 día', inventoryPro: true, excel: true, competitor: false },
-  { feature: 'Precio mensual', inventoryPro: '$299-$799', excel: '$0', competitor: '$2,000+' },
-  { feature: 'Sin contratos forzosos', inventoryPro: true, excel: true, competitor: false },
-  { feature: 'Consultoría incluida', inventoryPro: true, excel: false, competitor: false }
+  { feature: 'Multi-almacén', stockmaster: true, excel: false, competitor: true },
+  { feature: 'Reportes avanzados', stockmaster: true, excel: false, competitor: true },
+  { feature: 'Alertas automáticas', stockmaster: true, excel: false, competitor: true },
+  { feature: 'App móvil', stockmaster: true, excel: false, competitor: true },
+  { feature: 'Fácil de usar', stockmaster: true, excel: true, competitor: false },
+  { feature: 'Soporte en español', stockmaster: true, excel: false, competitor: false },
+  { feature: 'Setup en < 1 día', stockmaster: true, excel: true, competitor: false },
+  { feature: 'Precio mensual', stockmaster: '$299-$799', excel: '$0', competitor: '$2,000+' },
+  { feature: 'Sin contratos forzosos', stockmaster: true, excel: true, competitor: false },
+  { feature: 'Consultoría incluida', stockmaster: true, excel: false, competitor: false }
 ]
 
 const handleScroll = () => {
@@ -1469,6 +1674,8 @@ const handleScroll = () => {
 
 const scrollToSection = (sectionId) => {
   mobileMenuOpen.value = false
+  selectedArticle.value = null
+  document.body.style.overflow = ''
   if (sectionId === 'top') {
     window.scrollTo({ top: 0, behavior: 'smooth' })
     return
@@ -1499,22 +1706,22 @@ const activeScreenshot = ref(0)
 const screenshots = [
   { 
     id: 'dashboard', 
-    component: { props: ['isDark'], template: '<div class="h-full flex flex-col gap-3 p-4"><div class="grid grid-cols-4 gap-3"><div v-for="i in 4" :key="i" class="h-16 rounded-lg" :class="isDark ? \"bg-[#1a3050]\" : \"bg-gray-100\"></div></div><div class="flex-1 rounded-lg" :class="isDark ? \"bg-[#1a3050]\" : \"bg-gray-100\"></div></div>' },
+    component: { props: ['isDark'], template: '<div class="h-full flex flex-col gap-3 p-4"><div class="grid grid-cols-4 gap-3"><div v-for="i in 4" :key="i" class="h-16 rounded-lg" :class="isDark ? `bg-[#1a3050]` : `bg-gray-100`"></div></div><div class="flex-1 rounded-lg" :class="isDark ? `bg-[#1a3050]` : `bg-gray-100`"></div></div>' },
     miniComponent: { template: '<div class="w-full h-full flex gap-1 p-1"><div class="flex-1 bg-[#2E7DE8]/30 rounded"></div><div class="flex-1 bg-[#2E7DE8]/30 rounded"></div></div>' }
   },
   { 
     id: 'products', 
-    component: { props: ['isDark'], template: '<div class="h-full p-4"><div class="space-y-2"><div v-for="i in 5" :key="i" class="h-10 rounded-lg flex items-center px-3 gap-3" :class="isDark ? \"bg-[#1a3050]\" : \"bg-gray-100\""><div class="w-8 h-8 rounded bg-[#2E7DE8]/30"></div><div class="flex-1 h-3 rounded" :class="isDark ? \"bg-gray-700\" : \"bg-gray-300\"></div></div></div></div>' },
+    component: { props: ['isDark'], template: '<div class="h-full p-4"><div class="space-y-2"><div v-for="i in 5" :key="i" class="h-10 rounded-lg flex items-center px-3 gap-3" :class="isDark ? `bg-[#1a3050]` : `bg-gray-100`"><div class="w-8 h-8 rounded bg-[#2E7DE8]/30"></div><div class="flex-1 h-3 rounded" :class="isDark ? `bg-gray-700` : `bg-gray-300`"></div></div></div></div>' },
     miniComponent: { template: '<div class="w-full h-full flex flex-col gap-1 p-1"><div class="h-2 bg-[#2E7DE8]/30 rounded w-full"></div><div class="h-2 bg-[#2E7DE8]/30 rounded w-3/4"></div><div class="h-2 bg-[#2E7DE8]/30 rounded w-5/6"></div></div>' }
   },
   { 
     id: 'reports', 
-    component: { props: ['isDark'], template: '<div class="h-full p-4"><div class="grid grid-cols-2 gap-3 h-full"><div v-for="i in 4" :key="i" class="rounded-lg flex items-center justify-center" :class="isDark ? \"bg-[#1a3050]\" : \"bg-gray-100\""><div class="w-16 h-16 rounded-full border-4" :class="i === 1 ? \"border-emerald-500\" : i === 2 ? \"border-blue-500\" : \"border-amber-500\""></div></div></div></div>' },
+    component: { props: ['isDark'], template: '<div class="h-full p-4"><div class="grid grid-cols-2 gap-3 h-full"><div v-for="i in 4" :key="i" class="rounded-lg flex items-center justify-center" :class="isDark ? `bg-[#1a3050]` : `bg-gray-100`"><div class="w-16 h-16 rounded-full border-4" :class="i === 1 ? `border-emerald-500` : i === 2 ? `border-blue-500` : `border-amber-500`"></div></div></div></div>' },
     miniComponent: { template: '<div class="w-full h-full flex items-center justify-center"><div class="w-8 h-8 rounded-full border-2 border-[#2E7DE8]"></div></div>' }
   },
   { 
     id: 'movements', 
-    component: { props: ['isDark'], template: '<div class="h-full p-4"><div class="space-y-2"><div class="h-8 rounded flex items-center px-3 gap-2" :class="isDark ? \"bg-emerald-500/20\" : \"bg-emerald-100\""><div class="w-2 h-2 rounded-full bg-emerald-500"></div><div class="flex-1 h-2 rounded" :class="isDark ? \"bg-emerald-500/30\" : \"bg-emerald-300\"></div></div><div class="h-8 rounded flex items-center px-3 gap-2" :class="isDark ? \"bg-rose-500/20\" : \"bg-rose-100\""><div class="w-2 h-2 rounded-full bg-rose-500"></div><div class="flex-1 h-2 rounded" :class="isDark ? \"bg-rose-500/30\" : \"bg-rose-300\"></div></div><div v-for="i in 3" :key="i" class="h-8 rounded" :class="isDark ? \"bg-[#1a3050]\" : \"bg-gray-100\"></div></div></div>' },
+    component: { props: ['isDark'], template: '<div class="h-full p-4"><div class="space-y-2"><div class="h-8 rounded flex items-center px-3 gap-2" :class="isDark ? `bg-emerald-500/20` : `bg-emerald-100`"><div class="w-2 h-2 rounded-full bg-emerald-500"></div><div class="flex-1 h-2 rounded" :class="isDark ? `bg-emerald-500/30` : `bg-emerald-300`"></div></div><div class="h-8 rounded flex items-center px-3 gap-2" :class="isDark ? `bg-rose-500/20` : `bg-rose-100`"><div class="w-2 h-2 rounded-full bg-rose-500"></div><div class="flex-1 h-2 rounded" :class="isDark ? `bg-rose-500/30` : `bg-rose-300`"></div></div><div v-for="i in 3" :key="i" class="h-8 rounded" :class="isDark ? `bg-[#1a3050]` : `bg-gray-100`"></div></div></div>' },
     miniComponent: { template: '<div class="w-full h-full flex flex-col gap-1 p-1"><div class="h-3 bg-emerald-500/30 rounded"></div><div class="h-3 bg-rose-500/30 rounded"></div></div>' }
   }
 ]
@@ -1544,7 +1751,7 @@ const demoProducts = [
   { name: 'Webcam HD', sku: 'CAM-HD-001', stock: 15, price: '899' }
 ]
 
-// Blog Posts
+// Blog Posts - CON CONTENIDO COMPLETO
 const blogPosts = [
   {
     icon: '📊',
@@ -1552,7 +1759,33 @@ const blogPosts = [
     title: 'Cómo implementar análisis ABC en tu inventario',
     excerpt: 'Descubre cómo clasificar tus productos por valoración para optimizar tu capital de trabajo.',
     date: '5 Abr 2026',
-    readTime: '5 min'
+    readTime: '5 min',
+    content: `
+      <p>El análisis ABC es una técnica de clasificación de inventario que divide tus productos en tres categorías según su importancia y valor:</p>
+      <h3>Categoría A (20% de productos, 80% del valor)</h3>
+      <p>Son tus productos estrella. Requieren:</p>
+      <ul>
+        <li>Control riguroso y revisión constante</li>
+        <li>Políticas de stock de seguridad más altas</li>
+        <li>Negociación favorable con proveedores</li>
+        <li>Seguimiento de tendencias de demanda</li>
+      </ul>
+      <h3>Categoría B (30% de productos, 15% del valor)</h3>
+      <p>Productos de importancia media:</p>
+      <ul>
+        <li>Revisión periódica mensual</li>
+        <li>Stock de seguridad moderado</li>
+        <li>Análisis de rotación trimestral</li>
+      </ul>
+      <h3>Categoría C (50% de productos, 5% del valor)</h3>
+      <p>Productos de bajo valor pero necesarios:</p>
+      <ul>
+        <li>Control simplificado</li>
+        <li>Pedidos en lotes grandes</li>
+        <li>Revisión semestral</li>
+      </ul>
+      <p><strong>StockMaster Pro te ayuda:</strong> El sistema calcula automáticamente la clasificación ABC de tu inventario basándose en el valor de consumo de cada producto.</p>
+    `
   },
   {
     icon: '🏆',
@@ -1560,7 +1793,33 @@ const blogPosts = [
     title: 'Preparación para auditoría de calidad: checklist 2026',
     excerpt: 'Todo lo que necesitas saber para pasar tu auditoría ISO sin contratiempos.',
     date: '2 Abr 2026',
-    readTime: '8 min'
+    readTime: '8 min',
+    content: `
+      <p>La auditoría de calidad puede ser un proceso estresante, pero con la preparación adecuada, tu empresa puede aprobar sin problemas. Aquí te presentamos un checklist completo:</p>
+      <h3>Documentación Requerida</h3>
+      <ul>
+        <li>Manual de Calidad actualizado</li>
+        <li>Procedimientos documentados (al menos 6 obligatorios)</li>
+        <li>Registros de capacitación del personal</li>
+        <li>Actas de revisión por la dirección</li>
+        <li>Informes de auditorías internas</li>
+      </ul>
+      <h3>Aspectos Operativos</h3>
+      <ul>
+        <li>Matriz de identificación de riesgos y oportunidades</li>
+        <li>Indicadores de desempeño definidos y medidos</li>
+        <li>Proceso de gestión de no conformidades</li>
+        <li>Acciones correctivas implementadas</li>
+      </ul>
+      <h3>Tips para el día de la auditoría</h3>
+      <ul>
+        <li>Ten toda la documentación organizada y accesible</li>
+        <li>Asegúrate de que el personal conozca sus procedimientos</li>
+        <li>Muestra evidencia de mejora continua</li>
+        <li>Sé honesto sobre las áreas de oportunidad</li>
+      </ul>
+      <p><strong>Consejo CJ:</strong> Realiza auditorías internas trimestrales para mantener tu sistema siempre listo.</p>
+    `
   },
   {
     icon: '📱',
@@ -1568,7 +1827,21 @@ const blogPosts = [
     title: '5 señales de que necesitas un sistema de inventario',
     excerpt: 'Si experimentas alguna de estas señales, es hora de modernizar tu gestión.',
     date: '28 Mar 2026',
-    readTime: '4 min'
+    readTime: '4 min',
+    content: `
+      <p>Muchas empresas operan con Excel o incluso papel durante años antes de darse cuenta de que necesitan un cambio. Estas son las señales de alerta:</p>
+      <h3>1. Pérdidas de inventario sin explicación</h3>
+      <p>Si tus conteos físicos no coinciden con tu sistema y no sabes dónde se fue la mercancía, es momento de automatizar. Un sistema profesional rastrea cada movimiento.</p>
+      <h3>2. Stock-outs frecuentes</h3>
+      <p>Quedarte sin producto justo cuando un cliente lo necesita es costoso. Las alertas automáticas de stock bajo previenen esta situación.</p>
+      <h3>3. Exceso de inventario</h3>
+      <p>Tener dinero "congelado" en productos que no se mueven afecta tu flujo de efectivo. El análisis de rotación te ayuda a optimizar.</p>
+      <h3>4. Múltiples almacenes sin visibilidad</h3>
+      <p>Si tienes inventario disperso y no sabes exactamente qué hay en cada ubicación, necesitas centralizar tu información.</p>
+      <h3>5. Toma de decisiones a ciegas</h3>
+      <p>Si tus compras se basan en "intuición" en lugar de datos históricos y proyecciones, estás perdiendo dinero.</p>
+      <p><strong>La buena noticia:</strong> Implementar StockMaster Pro toma menos de un día y puedes empezar gratis.</p>
+    `
   }
 ]
 
@@ -1589,8 +1862,8 @@ const sendChatMessage = (option) => {
         response = 'Tenemos 3 planes: Gratis ($0), Profesional ($299/mes) e Ilimitado ($799/mes). ¿Cuál te interesa?'
         break
       case 'Agendar demo':
-        response = 'Perfecto, te redirigiré a WhatsApp para agendar una demostración personalizada.'
-        setTimeout(() => openWhatsApp(), 1500)
+        response = 'Perfecto, desplázate hasta la sección "Solicitar Demo" o te puedo redirigir a WhatsApp.'
+        setTimeout(() => scrollToSection('demo-form'), 1000)
         break
       case 'Soporte':
         response = 'Nuestro equipo de soporte está disponible de lunes a viernes de 9am a 6pm. ¿Cuál es tu consulta?'
@@ -1608,29 +1881,24 @@ const sendChatMessage = (option) => {
 
 const openWhatsApp = () => {
   const phone = '524776940272'
-  const message = encodeURIComponent('Hola Carlos, estoy interesado en Inventory Pro. ¿Podemos agendar una llamada para conocer más detalles?')
+  const message = encodeURIComponent('Hola Carlos, estoy interesado en StockMaster Pro. ¿Podemos agendar una llamada para conocer más detalles?')
   window.open(`https://wa.me/${phone}?text=${message}`, '_blank', 'noopener,noreferrer')
 }
 
 const sendEmail = () => {
   const email = 'ing.carlosurbina@gmail.com'
-  const subject = encodeURIComponent('Consulta sobre Inventory Pro')
-  const body = encodeURIComponent('Hola Carlos,\n\nEstoy interesado en Inventory Pro para mi empresa. Me gustaría recibir más información.\n\nSaludos,')
+  const subject = encodeURIComponent('Consulta sobre StockMaster Pro')
+  const body = encodeURIComponent('Hola Carlos,\n\nEstoy interesado en StockMaster Pro para mi empresa. Me gustaría recibir más información.\n\nSaludos,')
   window.location.href = `mailto:${email}?subject=${subject}&body=${body}`
 }
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
-  
-  // Load Calendly widget script
-  const calendlyScript = document.createElement('script')
-  calendlyScript.src = 'https://assets.calendly.com/assets/external/widget.js'
-  calendlyScript.async = true
-  document.body.appendChild(calendlyScript)
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+  document.body.style.overflow = ''
 })
 
 const features = [
@@ -1752,6 +2020,7 @@ const values = [
 ]
 </script>
 
+
 <style scoped>
 @keyframes float {
   0%, 100% { transform: translateY(0) rotate(45deg); }
@@ -1835,22 +2104,6 @@ const values = [
   animation: slide-in 0.3s ease-out;
 }
 
-/* Screenshot transition */
-.screenshot-enter-active,
-.screenshot-leave-active {
-  transition: all 0.3s ease;
-}
-
-.screenshot-enter-from {
-  opacity: 0;
-  transform: translateX(20px);
-}
-
-.screenshot-leave-to {
-  opacity: 0;
-  transform: translateX(-20px);
-}
-
 /* Smooth scroll behavior */
 html {
   scroll-behavior: smooth;
@@ -1873,5 +2126,41 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(46, 125, 232, 0.5);
+}
+
+/* Prose styles for article content */
+.prose h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.prose ul li {
+  margin-bottom: 0.5rem;
+}
+
+.prose p {
+  margin-bottom: 1rem;
+  line-height: 1.7;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: #2E7DE8;
+}
+
+.prose-invert {
+  color: #d1d5db;
+}
+
+.prose-invert h3 {
+  color: white;
 }
 </style>

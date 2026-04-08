@@ -130,8 +130,8 @@
               class="mt-1 rounded border-silver-300 text-electric focus:ring-electric" 
             />
             <span class="text-sm text-silver-600 group-hover:text-silver-700 transition-colors">
-              Acepto los <a href="#" class="text-electric-dark hover:text-electric font-medium">Términos de Servicio</a> y la 
-              <a href="#" class="text-electric-dark hover:text-electric font-medium">Política de Privacidad</a>
+              Acepto los <a href="/terminos-condiciones.html" target="_blank" class="text-electric-dark hover:text-electric font-medium underline">Términos y Condiciones</a> y el 
+              <a href="/aviso-privacidad.html" target="_blank" class="text-electric-dark hover:text-electric font-medium underline">Aviso de Privacidad</a>
             </span>
           </label>
 
@@ -205,7 +205,7 @@
 
       <!-- Footer -->
       <div class="mt-6 text-center">
-        <p class="text-xs text-silver-500">© 2026 Inventory Pro. Todos los derechos reservados.</p>
+        <p class="text-xs text-silver-500">© 2026 StockMaster Pro. Todos los derechos reservados.</p>
       </div>
     </div>
   </div>
