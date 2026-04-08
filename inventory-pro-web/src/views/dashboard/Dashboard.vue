@@ -105,7 +105,7 @@
           </button>
         </div>
         <div class="h-64">
-          <DoughnutChart :data="inventoryStatusData" :options="chartOptions" />
+          <Doughnut :data="inventoryStatusData" :options="chartOptions" />
         </div>
       </div>
 
@@ -122,7 +122,7 @@
           </button>
         </div>
         <div class="h-64">
-          <BarChart :data="monthlyMovementsData" :options="chartOptions" />
+          <Bar :data="monthlyMovementsData" :options="chartOptions" />
         </div>
       </div>
 
@@ -139,7 +139,7 @@
           </button>
         </div>
         <div class="h-64">
-          <BarChart :data="topProductsData" :options="horizontalChartOptions" />
+          <Bar :data="topProductsData" :options="horizontalChartOptions" />
         </div>
       </div>
 
@@ -156,7 +156,7 @@
           </button>
         </div>
         <div class="h-64">
-          <PieChart :data="categoryDistributionData" :options="chartOptions" />
+          <Pie :data="categoryDistributionData" :options="chartOptions" />
         </div>
       </div>
     </div>
@@ -233,7 +233,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useDarkMode } from '../../composables/useDarkMode'
 import PageHeader from '../../components/PageHeader.vue'
 import StatCard from '../../components/StatCard.vue'
-import { DoughnutChart, BarChart, PieChart } from 'vue-chartjs'
+import { Doughnut, Bar, Pie } from 'vue-chartjs'
 import apiClient from '../../services/api'
 
 const { isDark } = useDarkMode()
