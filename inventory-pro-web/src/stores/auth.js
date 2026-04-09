@@ -7,7 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'https://inventory-pro-api-v3.on
 // Create axios instance for public routes (no auth needed)
 const publicApi = axios.create({
   baseURL: API_URL,
-  withCredentials: true,
+  withCredentials: false,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -18,7 +18,7 @@ const publicApi = axios.create({
 // Create axios instance for authenticated routes
 const authApi = axios.create({
   baseURL: API_URL,
-  withCredentials: true,
+  withCredentials: false,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',

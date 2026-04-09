@@ -8,7 +8,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'https://inventory-pro-api-v3.on
 // Create axios instance with auth header
 const api = axios.create({
   baseURL: API_URL,
-  withCredentials: true,
+  withCredentials: false,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
