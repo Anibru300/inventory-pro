@@ -199,8 +199,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('warehouses', WarehouseController::class);
     
     // Stock Movements
-    Route::apiResource('stock-movements', StockMovementController::class);
+    // Rutas personalizadas DEBEN ir ANTES de apiResource
     Route::get('/stock-movements/summary', [StockMovementController::class, 'summary']);
+    Route::apiResource('stock-movements', StockMovementController::class);
     Route::get('/products/{product}/kardex', [StockMovementController::class, 'kardex']);
     
     // Reports
