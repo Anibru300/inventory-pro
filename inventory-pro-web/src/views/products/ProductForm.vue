@@ -128,14 +128,14 @@
             <div>
               <label class="block text-sm font-medium mb-2 text-slate-700">Costo de compra *</label>
               <div class="relative">
-                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 z-10">$</span>
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-medium pointer-events-none">$</span>
                 <input
                   v-model="form.cost"
                   type="number"
                   step="0.01"
                   min="0"
                   required
-                  class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                  class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-slate-800"
                   placeholder="0.00"
                 />
               </div>
@@ -143,14 +143,14 @@
             <div>
               <label class="block text-sm font-medium mb-2 text-slate-700">Precio de venta *</label>
               <div class="relative">
-                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 z-10">$</span>
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-medium pointer-events-none">$</span>
                 <input
                   v-model="form.price"
                   type="number"
                   step="0.01"
                   min="0"
                   required
-                  class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                  class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-slate-800"
                   placeholder="0.00"
                 />
               </div>

@@ -88,9 +88,9 @@
             <div>
               <label class="block text-sm font-medium mb-2 text-slate-700">Costo Unitario</label>
               <div class="relative">
-                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 z-10">$</span>
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-medium pointer-events-none">$</span>
                 <input v-model.number="form.unit_cost" type="number" step="0.01" min="0" 
-                  class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all" 
+                  class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-slate-800" 
                   placeholder="0.00" />
               </div>
             </div>
@@ -288,6 +288,19 @@ async function handleSubmit() {
   generatedReceipt.value = null
 
   try {
+    // Validate stock for exits
+    if (form.value.type === 'exit') {
+      const selectedProduct = products.value.find(p => p.id === form.value.product_id)
+      if (selectedProduct) {
+        const totalStock = selectedProduct.stock_levels?.reduce((a, b) => a + (b.quantity || 0), 0) || 0
+        if (form.value.quantity > totalStock) {
+          error.value = `Stock insuficiente. Disponible: ${totalStock}, Solicitado: ${form.value.quantity}`
+          loading.value = false
+          return
+        }
+      }
+    }
+
     const response = await apiClient.post('/stock-movements', {
       ...form.value,
       quantity: form.value.quantity,
