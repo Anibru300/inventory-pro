@@ -72,8 +72,8 @@ class ProductController extends Controller
         try {
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
-                'sku' => 'required|string|max:100|unique:products',
-                'barcode' => 'nullable|string|max:100|unique:products',
+                'sku' => 'required|string|max:100|unique:products,sku,NULL,id,tenant_id,' . $user->tenant_id,
+                'barcode' => 'nullable|string|max:100|unique:products,barcode,NULL,id,tenant_id,' . $user->tenant_id,
                 'description' => 'nullable|string',
                 'category_id' => 'nullable|exists:categories,id',
                 'unit' => 'nullable|string|max:50',

@@ -26,22 +26,28 @@ class DashboardController extends Controller
     {
         $tenantId = $request->user()->tenant_id;
         
-        // Stats - Total de productos
-        $totalProducts = Product::where('tenant_id', $tenantId)->count();
+        // Stats - Total de productos (solo activos, no eliminados)
+        $totalProducts = Product::where('tenant_id', $tenantId)
+            ->whereNull('deleted_at')
+            ->count();
         
         // Valor total del inventario (suma de cantidad * costo unitario)
+        // Solo productos no eliminados
         $totalValue = StockLevel::where('stock_levels.tenant_id', $tenantId)
             ->join('products', 'stock_levels.product_id', '=', 'products.id')
+            ->whereNull('products.deleted_at')
             ->sum(DB::raw('stock_levels.quantity * products.unit_cost'));
         
-        // Valor en tránsito
+        // Valor en tránsito (solo productos no eliminados)
         $inTransitValue = StockLevel::where('stock_levels.tenant_id', $tenantId)
             ->where('stock_levels.in_transit_quantity', '>', 0)
             ->join('products', 'stock_levels.product_id', '=', 'products.id')
+            ->whereNull('products.deleted_at')
             ->sum(DB::raw('stock_levels.in_transit_quantity * products.unit_cost'));
         
-        // Productos con stock bajo - consulta simplificada para SQLite
+        // Productos con stock bajo - solo productos activos
         $productsWithStock = Product::where('tenant_id', $tenantId)
+            ->whereNull('deleted_at')
             ->with(['stockLevels', 'category'])
             ->get();
         
@@ -149,8 +155,9 @@ class DashboardController extends Controller
     {
         $tenantId = $request->user()->tenant_id;
         
-        // Obtener todos los productos con sus niveles de stock
+        // Obtener todos los productos activos (no eliminados) con sus niveles de stock
         $products = Product::where('tenant_id', $tenantId)
+            ->whereNull('deleted_at')
             ->with(['category', 'stockLevels.warehouse'])
             ->get();
         
