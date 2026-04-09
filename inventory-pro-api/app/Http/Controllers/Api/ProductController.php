@@ -8,7 +8,6 @@ use App\Models\ProductPriceHistory;
 use App\Models\StockLevel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log; // Logging
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -222,7 +221,6 @@ class ProductController extends Controller
             ], 422);
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::error('Error creating product: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error al crear el producto: ' . $e->getMessage()
             ], 500);

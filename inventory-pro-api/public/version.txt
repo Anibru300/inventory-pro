@@ -1,2 +1,2 @@
-Build: 2026-04-09-143000
-Fix: Log facade import added
+Build: 2026-04-09-150000
+Fix: Removed all Log usage from ProductController
