@@ -34,17 +34,27 @@ Route::get('/health', function () {
 
 // Simple test endpoint to check if token is being received
 Route::get('/token-test', function (Request $request) {
+    $allHeaders = $request->headers->all();
+    $normalizedHeaders = [];
+    
+    foreach ($allHeaders as $key => $values) {
+        $normalizedHeaders[$key] = is_array($values) ? implode(', ', $values) : $values;
+    }
+    
     $authHeader = $request->header('Authorization');
     $hasToken = $authHeader && str_starts_with($authHeader, 'Bearer ');
     $tokenPreview = $hasToken ? substr($authHeader, 7, 20) . '...' : null;
     
     return response()->json([
         'has_auth_header' => !!$authHeader,
-        'auth_header_preview' => $authHeader ? substr($authHeader, 0, 30) . '...' : null,
+        'auth_header_preview' => $authHeader ? substr($authHeader, 0, 50) : null,
         'has_bearer_token' => $hasToken,
         'token_preview' => $tokenPreview,
         'user_authenticated' => auth()->check(),
         'user_id' => auth()->id(),
+        'all_headers' => $normalizedHeaders,
+        'method' => $request->method(),
+        'origin' => $request->header('Origin'),
     ]);
 });
 

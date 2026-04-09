@@ -15,8 +15,13 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
+        \Log::info('ProductController@index called');
+        \Log::info('Authorization header: ' . ($request->header('Authorization') ? 'present' : 'missing'));
+        \Log::info('All headers: ' . json_encode($request->headers->all()));
+        
         try {
             $user = auth()->user();
+            \Log::info('Auth user: ' . ($user ? $user->id : 'null'));
             
             if (!$user) {
                 return response()->json(['message' => 'Usuario no autenticado'], 401);
