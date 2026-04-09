@@ -16,7 +16,6 @@ return Application::configure(basePath: dirname(__DIR__))
         // Global middleware
         $middleware->use([
             \Illuminate\Http\Middleware\TrustProxies::class,
-            \Illuminate\Http\Middleware\HandleCors::class,
             \App\Http\Middleware\AddCorsHeaders::class,
             \Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance::class,
             \Illuminate\Http\Middleware\ValidatePostSize::class,
@@ -26,7 +25,6 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // API middleware group (stateless - no CSRF)
         $middleware->api(prepend: [
-            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \App\Http\Middleware\SetTenantContext::class,
         ]);
