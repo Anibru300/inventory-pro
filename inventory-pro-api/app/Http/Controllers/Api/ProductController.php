@@ -29,76 +29,20 @@ class ProductController extends Controller
         }
         
         try {
-            // Get categories for lookup
-            $categories = DB::table('categories')
+            // Simple query first - just get products
+            $products = DB::table('products')
                 ->where('tenant_id', $user->tenant_id)
-                ->pluck('name', 'id');
+                ->whereNull('deleted_at')
+                ->orderBy('created_at', 'desc')
+                ->paginate(25);
             
-            // Get stock levels aggregated by product
-            $stockLevels = DB::table('stock_levels')
-                ->select('product_id', DB::raw('SUM(quantity) as total'), DB::raw('SUM(available_quantity) as available'))
-                ->where('tenant_id', $user->tenant_id)
-                ->groupBy('product_id')
-                ->get()
-                ->keyBy('product_id');
-            
-            // Build product query
-            $query = DB::table('products')
-                ->where('tenant_id', $user->tenant_id)
-                ->whereNull('deleted_at');
-            
-            // Apply search filter if provided
-            if ($request->has('search') && $request->search) {
-                $search = $request->search;
-                $query->where(function($q) use ($search) {
-                    $q->where('name', 'ilike', "%{$search}%")
-                      ->orWhere('sku', 'ilike', "%{$search}%")
-                      ->orWhere('barcode', 'ilike', "%{$search}%");
-                });
-            }
-            
-            // Apply category filter if provided
-            if ($request->has('category_id') && $request->category_id) {
-                $query->where('category_id', $request->category_id);
-            }
-            
-            $products = $query->orderBy('created_at', 'desc')->paginate(25);
-            
-            // Transform the response to match frontend expectations
-            $transformed = $products->through(function ($product) use ($categories, $stockLevels) {
-                $stock = $stockLevels[$product->id] ?? (object)['total' => 0, 'available' => 0];
-                $categoryId = $product->category_id;
-                
-                return [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'sku' => $product->sku,
-                    'barcode' => $product->barcode,
-                    'description' => $product->description,
-                    'category_id' => $categoryId,
-                    'category' => $categoryId && isset($categories[$categoryId]) ? ['id' => $categoryId, 'name' => $categories[$categoryId]] : null,
-                    'unit_of_measure' => $product->unit_of_measure,
-                    'unit_cost' => $product->unit_cost,
-                    'selling_price' => $product->selling_price,
-                    'stock_min' => $product->stock_min,
-                    'stock_max' => $product->stock_max,
-                    'total_stock' => (int) ($stock->total ?? 0),
-                    'available_stock' => (int) ($stock->available ?? 0),
-                    'images' => $product->images ? json_decode($product->images, true) : [],
-                    'is_active' => $product->is_active,
-                    'valuation_method' => $product->valuation_method,
-                    'created_at' => $product->created_at,
-                    'updated_at' => $product->updated_at,
-                    'stock_status' => $this->getStockStatus($stock->total ?? 0, $product->stock_min),
-                ];
-            });
-            
-            return response()->json($transformed);
+            return response()->json($products);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al cargar productos: ' . $e->getMessage(),
                 'file' => $e->getFile(),
-                'line' => $e->getLine()
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
             ], 500);
         }
     }
