@@ -44,3 +44,6 @@ bootstrap/cache/*
 
 # Render CLI tokens (backup)
 render-config-backup.yaml
+
+# Other projects (not part of Inventory Pro)
+cj-consultoria-web/
