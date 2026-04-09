@@ -13,12 +13,14 @@ const apiClient = axios.create({
 })
 
 // Request interceptor to add auth token
+// Usando X-Auth-Token para evitar problema de Apache 2.4 + mod_php que filtra Authorization header
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('token')
   console.log('API Interceptor - Token:', token ? 'Presente' : 'No encontrado')
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`
-    console.log('API Interceptor - Header set:', `Bearer ${token.substring(0, 20)}...`)
+    // Usar X-Auth-Token en lugar de Authorization para evitar filtrado de Apache
+    config.headers['X-Auth-Token'] = token
+    console.log('API Interceptor - X-Auth-Token set:', `${token.substring(0, 20)}...`)
   }
   return config
 })
