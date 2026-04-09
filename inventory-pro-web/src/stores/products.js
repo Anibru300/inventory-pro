@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import axios from 'axios'
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://inventory-pro-api-v2.onrender.com/api'
+const API_URL = import.meta.env.VITE_API_URL || 'https://inventory-pro-api-v3.onrender.com/api'
 
 // Create axios instance with auth header
 function getAuthHeaders() {

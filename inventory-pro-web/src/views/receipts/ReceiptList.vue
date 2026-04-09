@@ -190,7 +190,7 @@ const pagination = ref({
   total: 0,
 })
 
-const apiUrl = import.meta.env.VITE_API_URL || 'https://inventory-pro-api-v2.onrender.com/api'
+const apiUrl = import.meta.env.VITE_API_URL || 'https://inventory-pro-api-v3.onrender.com/api'
 
 function formatDate(date) {
   return new Date(date).toLocaleDateString('es-ES', {
