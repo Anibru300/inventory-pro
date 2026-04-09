@@ -47,9 +47,13 @@ RUN mkdir -p storage/framework/cache \
 RUN chmod -R 777 storage bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache
 
-# Copy nginx configuration
+# Copy nginx configuration (CRITICAL ORDER)
 COPY docker/nginx.conf /etc/nginx/nginx.conf
 COPY docker/site.conf /etc/nginx/sites-available/default
+
+# Remove default site if exists and create symlink
+RUN rm -f /etc/nginx/sites-enabled/default && \
+    ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 # Copy startup script
 COPY docker/start.sh /start.sh
