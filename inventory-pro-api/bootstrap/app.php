@@ -26,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // API middleware group (stateless - no CSRF)
         $middleware->api(prepend: [
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
+            \App\Http\Middleware\TokenFromQueryString::class,
             \App\Http\Middleware\SetTenantContext::class,
         ]);
 
