@@ -13,8 +13,12 @@ class WarehouseController extends Controller
         try {
             $user = auth()->user();
             
-            if (!$user || !$user->tenant_id) {
-                return response()->json(['message' => 'No autorizado'], 403);
+            if (!$user) {
+                return response()->json(['message' => 'Usuario no autenticado'], 401);
+            }
+            
+            if (!$user->tenant_id) {
+                return response()->json(['message' => 'Usuario sin empresa asignada'], 403);
             }
             
             $warehouses = Warehouse::where('is_active', true)
@@ -23,13 +27,18 @@ class WarehouseController extends Controller
                 ->orderBy('name')
                 ->get();
             
-            // Add product count for each warehouse
+            // Add product count for each warehouse (safe query)
             foreach ($warehouses as $warehouse) {
-                $warehouse->products_count = \DB::table('stock_levels')
-                    ->where('warehouse_id', $warehouse->id)
-                    ->where('tenant_id', $user->tenant_id)
-                    ->distinct('product_id')
-                    ->count('product_id');
+                try {
+                    $warehouse->products_count = \DB::table('stock_levels')
+                        ->where('warehouse_id', $warehouse->id)
+                        ->where('tenant_id', $user->tenant_id)
+                        ->distinct('product_id')
+                        ->count('product_id');
+                } catch (\Exception $e) {
+                    // Si la tabla no existe, retornar 0
+                    $warehouse->products_count = 0;
+                }
             }
             
             return response()->json($warehouses);
