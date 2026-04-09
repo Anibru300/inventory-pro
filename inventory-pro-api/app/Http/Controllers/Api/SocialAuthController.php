@@ -92,9 +92,32 @@ class SocialAuthController extends Controller
             $user = User::where('email', $googleUser->email)->first();
 
             if ($user) {
-                // Existing user - login
-                if (!$user->google_id) {
-                    $user->update(['google_id' => $googleUser->id]);
+                // Existing user - check if has tenant
+                if (!$user->tenant_id) {
+                    // Create tenant for existing user without one
+                    $companyName = $request->company_name ?? $googleUser->name . ' Company';
+                    $tenant = Tenant::create([
+                        'name' => $companyName,
+                        'slug' => $this->generateSlug($companyName),
+                        'email' => $googleUser->email,
+                        'plan' => 'starter',
+                        'status' => 'active',
+                        'trial_ends_at' => now()->addDays(14),
+                    ]);
+                    
+                    $user->update([
+                        'tenant_id' => $tenant->id,
+                        'google_id' => $googleUser->id,
+                    ]);
+                    
+                    // Run tenant seeders
+                    $seeder = new TenantSeeder();
+                    $seeder->run($tenant->id);
+                } else {
+                    // Just update google_id if needed
+                    if (!$user->google_id) {
+                        $user->update(['google_id' => $googleUser->id]);
+                    }
                 }
 
                 $token = $user->createToken('auth-token')->plainTextToken;

@@ -19,14 +19,17 @@ class ProductController extends Controller
             $user = auth()->user();
             \Log::info('Product index - User: ' . ($user ? $user->id : 'null') . ', Tenant: ' . ($user ? $user->tenant_id : 'null'));
             
-            if (!$user || !$user->tenant_id) {
+            if (!$user) {
                 return response()->json([
-                    'data' => [],
-                    'current_page' => 1,
-                    'last_page' => 1,
-                    'per_page' => 25,
-                    'total' => 0
-                ]);
+                    'message' => 'Usuario no autenticado'
+                ], 401);
+            }
+            
+            if (!$user->tenant_id) {
+                return response()->json([
+                    'message' => 'Usuario sin empresa asignada. Por favor, cierra sesión y vuelve a iniciar.',
+                    'requires_tenant' => true
+                ], 403);
             }
             
             // Query without global scopes
