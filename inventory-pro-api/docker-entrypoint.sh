@@ -9,6 +9,22 @@ echo "🔧 Configurando Apache para puerto $PORT..."
 sed -i "s/Listen 80/Listen $PORT/g" /etc/apache2/ports.conf
 sed -ri -e "s/<VirtualHost \*:80>/<VirtualHost *:$PORT>/g" /etc/apache2/sites-available/*.conf
 
+# Configurar Apache para pasar el header Authorization a PHP
+echo "🔧 Configurando Apache para Authorization headers..."
+cat > /etc/apache2/conf-available/authorization.conf << 'EOF'
+# Pass Authorization header to PHP
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTP:Authorization} ^(.*)
+    RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+</IfModule>
+EOF
+a2enconf authorization
+
+# Habilitar mod_rewrite si no está habilitado
+a2enmod rewrite
+
 # FORZAR APP_KEY correcta
 export APP_KEY="base64:GKeBjry+gf8vc+uhMm73SC6wqtRNdQcFE8Oy+okKXb8="
 echo "🔑 APP_KEY configurada"
