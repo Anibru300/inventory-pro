@@ -1,9 +1,20 @@
 <template>
   <div class="p-6" :class="isDark ? 'bg-[#0B1F3A] min-h-screen' : 'bg-slate-50 min-h-screen'">
     <div class="flex justify-between items-center mb-6">
-      <div>
-        <h1 class="text-3xl font-bold" :class="isDark ? 'text-white' : 'text-slate-800'">Ordenes de Compra</h1>
-        <p :class="isDark ? 'text-slate-400' : 'text-slate-500'">Gestiona tus ordenes de compra</p>
+      <div class="flex items-center gap-4">
+        <button 
+          @click="$router.push('/menu')"
+          class="flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm"
+          title="Volver al menú"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+        </button>
+        <div>
+          <h1 class="text-3xl font-bold" :class="isDark ? 'text-white' : 'text-slate-800'">Ordenes de Compra</h1>
+          <p :class="isDark ? 'text-slate-400' : 'text-slate-500'">Gestiona tus ordenes de compra</p>
+        </div>
       </div>
       <router-link to="/purchase-orders/new" class="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
         Nueva Orden

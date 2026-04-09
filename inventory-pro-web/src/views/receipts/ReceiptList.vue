@@ -2,9 +2,20 @@
   <div>
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
-      <div>
-        <h1 class="text-3xl font-bold gradient-text font-heading mb-2">Vales de Movimiento</h1>
-        <p class="text-cj-silver-dark font-tagline italic">Comprobantes de entradas y salidas</p>
+      <div class="flex items-center gap-4">
+        <button 
+          @click="$router.push('/menu')"
+          class="flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm"
+          title="Volver al menú"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+        </button>
+        <div>
+          <h1 class="text-3xl font-bold gradient-text font-heading mb-2">Vales de Movimiento</h1>
+          <p class="text-cj-silver-dark font-tagline italic">Comprobantes de entradas y salidas</p>
+        </div>
       </div>
       <div class="flex gap-3">
         <button @click="fetchStatistics" class="btn-secondary">

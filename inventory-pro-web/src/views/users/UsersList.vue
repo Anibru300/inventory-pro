@@ -2,9 +2,20 @@
   <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-      <div>
-        <h1 class="text-3xl font-bold text-slate-800 mb-1">Usuarios</h1>
-        <p class="text-slate-500">Gestiona los usuarios de tu equipo</p>
+      <div class="flex items-center gap-4">
+        <button 
+          @click="$router.push('/menu')"
+          class="flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm"
+          title="Volver al menú"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+        </button>
+        <div>
+          <h1 class="text-3xl font-bold text-slate-800 mb-1">Usuarios</h1>
+          <p class="text-slate-500">Gestiona los usuarios de tu equipo</p>
+        </div>
       </div>
       <button @click="showAddModal = true" 
         class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20">

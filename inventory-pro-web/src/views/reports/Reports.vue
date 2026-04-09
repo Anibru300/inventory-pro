@@ -4,13 +4,24 @@
     <div class="border-b" :class="isDark ? 'bg-[#0B1F3A]/90 border-[#2E7DE8]/20' : 'bg-white border-gray-200'">
       <div class="max-w-7xl mx-auto px-6 py-6">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div>
-            <h1 class="text-3xl font-bold" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">
-              Centro de Reportes
-            </h1>
-            <p class="mt-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
-              Análisis detallado y estadísticas de inventario
-            </p>
+          <div class="flex items-center gap-4">
+            <button 
+              @click="$router.push('/menu')"
+              class="flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm"
+              title="Volver al menú"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+            </button>
+            <div>
+              <h1 class="text-3xl font-bold" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">
+                Centro de Reportes
+              </h1>
+              <p class="mt-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
+                Análisis detallado y estadísticas de inventario
+              </p>
+            </div>
           </div>
           
           <!-- Selector de Reporte -->
