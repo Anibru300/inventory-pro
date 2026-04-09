@@ -55,7 +55,7 @@
               <input v-model="form.remember" type="checkbox" class="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
               <span class="text-slate-600">Recordarme</span>
             </label>
-            <a href="#" class="text-blue-600 hover:text-blue-700 font-medium">¿Olvidaste tu contraseña?</a>
+            <router-link to="/forgot-password" class="text-blue-600 hover:text-blue-700 font-medium">¿Olvidaste tu contraseña?</router-link>
           </div>
 
           <!-- Error message -->
@@ -75,6 +75,21 @@
             <span>{{ authStore.loading ? 'Iniciando...' : 'Iniciar Sesión' }}</span>
           </button>
         </form>
+
+        <div class="relative my-6">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-slate-200"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-white text-slate-500">o continúa con</span>
+          </div>
+        </div>
+
+        <!-- Debug wrapper -->
+        <div id="google-btn-debug" class="border border-red-500 p-2">
+          <p class="text-xs text-red-500 mb-2">Debug: Componente cargado</p>
+          <GoogleLoginButton @error="(msg) => authStore.error = msg" />
+        </div>
 
         <div class="relative my-6">
           <div class="absolute inset-0 flex items-center">
@@ -103,6 +118,7 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
+import GoogleLoginButton from '../../components/GoogleLoginButton.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
