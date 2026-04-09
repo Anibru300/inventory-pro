@@ -92,8 +92,26 @@
       </div>
     </div>
 
+    <!-- Error Message -->
+    <div v-if="loadError" class="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-6">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="font-semibold text-amber-800">Configuración incompleta</h3>
+          <p class="text-amber-700 text-sm mt-1">{{ loadError }}</p>
+          <button @click="logoutAndReload" class="mt-3 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors text-sm font-medium">
+            Cerrar sesión y reintentar
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Products Table -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div v-else class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
       <div v-if="productsStore.loading" class="p-12 text-center">
         <div class="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto"></div>
         <p class="mt-4 text-slate-500">Cargando productos...</p>
@@ -199,12 +217,18 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useProductsStore } from '../../stores/products'
+import { useAuthStore } from '../../stores/auth'
 import ModuleHelp from '../../components/ModuleHelp.vue'
 import apiClient from '../../services/api'
 
+const router = useRouter()
 const productsStore = useProductsStore()
+const authStore = useAuthStore()
 const categories = ref([])
+const loadError = ref('')
 
 const filters = ref({
   search: '',
@@ -222,12 +246,19 @@ function debouncedSearch() {
 }
 
 async function fetchProducts() {
-  await productsStore.fetchProducts({
-    page: productsStore.pagination.current_page,
-    search: filters.value.search,
-    category_id: filters.value.category,
-    stock_status: filters.value.stock_status,
-  })
+  try {
+    loadError.value = ''
+    await productsStore.fetchProducts({
+      page: productsStore.pagination.current_page,
+      search: filters.value.search,
+      category_id: filters.value.category,
+      stock_status: filters.value.stock_status,
+    })
+  } catch (err) {
+    if (err.response?.data?.requires_tenant) {
+      loadError.value = err.response?.data?.message || 'Usuario sin empresa asignada'
+    }
+  }
 }
 
 function changePage(page) {
@@ -238,6 +269,11 @@ function changePage(page) {
 async function deleteProduct(id) {
   if (!confirm('¿Estás seguro de eliminar este producto?')) return
   await productsStore.deleteProduct(id)
+}
+
+function logoutAndReload() {
+  authStore.logout()
+  router.push('/login')
 }
 
 onMounted(async () => {
