@@ -17,41 +17,52 @@ class ProductController extends Controller
     {
         try {
             $user = auth()->user();
-            \Log::info('Product index - User: ' . ($user ? $user->id : 'null') . ', Tenant: ' . ($user ? $user->tenant_id : 'null'));
             
             if (!$user) {
-                return response()->json([
-                    'message' => 'Usuario no autenticado'
-                ], 401);
+                return response()->json(['message' => 'Usuario no autenticado'], 401);
             }
             
             if (!$user->tenant_id) {
                 return response()->json([
-                    'message' => 'Usuario sin empresa asignada. Por favor, cierra sesión y vuelve a iniciar.',
+                    'message' => 'Usuario sin empresa asignada',
                     'requires_tenant' => true
                 ], 403);
             }
             
-            // Simple query - filter by tenant_id only
-            $query = Product::where('tenant_id', $user->tenant_id);
-            
-            // Search
-            if ($request->has('search') && !empty($request->search)) {
-                $search = $request->search;
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'ilike', "%{$search}%")
-                      ->orWhere('sku', 'ilike', "%{$search}%");
-                });
+            // DIAGNOSTIC: Try raw DB query first
+            try {
+                $count = \DB::table('products')
+                    ->where('tenant_id', $user->tenant_id)
+                    ->count();
+                \Log::info("Raw DB query works. Count: {$count}");
+            } catch (\Exception $dbError) {
+                \Log::error('Raw DB query failed: ' . $dbError->getMessage());
+                return response()->json([
+                    'message' => 'DB Error: ' . $dbError->getMessage(),
+                    'debug' => 'Raw query failed'
+                ], 500);
             }
-
-            $products = $query->orderBy('created_at', 'desc')->paginate($request->per_page ?? 25);
-
-            return response()->json($products);
+            
+            // Try Eloquent without scopes
+            try {
+                $query = (new Product)->newQueryWithoutScopes();
+                $query->where('tenant_id', $user->tenant_id);
+                
+                $products = $query->orderBy('created_at', 'desc')->paginate(25);
+                
+                return response()->json($products);
+            } catch (\Exception $eloquentError) {
+                \Log::error('Eloquent query failed: ' . $eloquentError->getMessage());
+                return response()->json([
+                    'message' => 'Eloquent Error: ' . $eloquentError->getMessage(),
+                    'debug' => 'Eloquent failed'
+                ], 500);
+            }
+            
         } catch (\Exception $e) {
-            \Log::error('Error in product index: ' . $e->getMessage());
-            \Log::error($e->getTraceAsString());
+            \Log::error('General error: ' . $e->getMessage());
             return response()->json([
-                'message' => 'Error al cargar productos: ' . $e->getMessage()
+                'message' => 'Error general: ' . $e->getMessage()
             ], 500);
         }
     }

@@ -31,6 +31,44 @@ Route::get('/health', function () {
     ]);
 });
 
+// Diagnostic endpoint
+Route::get('/diagnostic', function () {
+    $user = auth()->user();
+    $results = [
+        'authenticated' => !!$user,
+        'user_id' => $user?->id,
+        'tenant_id' => $user?->tenant_id,
+        'timestamp' => now()->toIso8601String(),
+    ];
+    
+    if ($user) {
+        // Check database connection
+        try {
+            $tables = \DB::select("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'");
+            $results['tables'] = array_map(fn($t) => $t->table_name, $tables);
+        } catch (\Exception $e) {
+            $results['db_error'] = $e->getMessage();
+        }
+        
+        // Check products table specifically
+        try {
+            $productCount = \DB::table('products')->count();
+            $results['total_products'] = $productCount;
+            
+            if ($user->tenant_id) {
+                $tenantProducts = \DB::table('products')
+                    ->where('tenant_id', $user->tenant_id)
+                    ->count();
+                $results['tenant_products'] = $tenantProducts;
+            }
+        } catch (\Exception $e) {
+            $results['products_error'] = $e->getMessage();
+        }
+    }
+    
+    return response()->json($results);
+});
+
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
