@@ -28,21 +28,86 @@ class ProductController extends Controller
             ], 403);
         }
         
-        // Simple query without scopes or complex relations
         try {
-            $products = DB::table('products')
-                ->where('tenant_id', $user->tenant_id)
-                ->whereNull('deleted_at')
-                ->orderBy('created_at', 'desc')
-                ->paginate(25);
+            // Build query with joins for category and stock
+            $query = DB::table('products')
+                ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
+                ->leftJoin('stock_levels', 'products.id', '=', 'stock_levels.product_id')
+                ->select(
+                    'products.*',
+                    'categories.name as category_name',
+                    DB::raw('COALESCE(SUM(stock_levels.quantity), 0) as total_stock'),
+                    DB::raw('COALESCE(SUM(stock_levels.available_quantity), 0) as available_stock')
+                )
+                ->where('products.tenant_id', $user->tenant_id)
+                ->whereNull('products.deleted_at')
+                ->groupBy('products.id', 'categories.name')
+                ->orderBy('products.created_at', 'desc');
             
-            return response()->json($products);
+            // Apply search filter if provided
+            if ($request->has('search') && $request->search) {
+                $search = $request->search;
+                $query->where(function($q) use ($search) {
+                    $q->where('products.name', 'ilike', "%{$search}%")
+                      ->orWhere('products.sku', 'ilike', "%{$search}%")
+                      ->orWhere('products.barcode', 'ilike', "%{$search}%");
+                });
+            }
+            
+            // Apply category filter if provided
+            if ($request->has('category_id') && $request->category_id) {
+                $query->where('products.category_id', $request->category_id);
+            }
+            
+            $products = $query->paginate(25);
+            
+            // Transform the response to match frontend expectations
+            $transformed = $products->through(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'sku' => $product->sku,
+                    'barcode' => $product->barcode,
+                    'description' => $product->description,
+                    'category_id' => $product->category_id,
+                    'category' => $product->category_name ? ['id' => $product->category_id, 'name' => $product->category_name] : null,
+                    'unit_of_measure' => $product->unit_of_measure,
+                    'unit_cost' => $product->unit_cost,
+                    'selling_price' => $product->selling_price,
+                    'stock_min' => $product->stock_min,
+                    'stock_max' => $product->stock_max,
+                    'total_stock' => (int) $product->total_stock,
+                    'available_stock' => (int) $product->available_stock,
+                    'images' => $product->images ? json_decode($product->images, true) : [],
+                    'is_active' => $product->is_active,
+                    'valuation_method' => $product->valuation_method,
+                    'created_at' => $product->created_at,
+                    'updated_at' => $product->updated_at,
+                    'stock_status' => $this->getStockStatus($product->total_stock, $product->stock_min),
+                ];
+            });
+            
+            return response()->json($transformed);
         } catch (\Exception $e) {
             \Log::error('Error fetching products: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error al cargar productos: ' . $e->getMessage()
             ], 500);
         }
+    }
+    
+    private function getStockStatus($stock, $minStock)
+    {
+        $stock = (int) $stock;
+        $minStock = (int) $minStock;
+        
+        if ($stock <= 0) {
+            return 'out_of_stock';
+        }
+        if ($minStock > 0 && $stock <= $minStock) {
+            return 'low_stock';
+        }
+        return 'ok';
     }
 
     public function store(Request $request)
