@@ -96,7 +96,6 @@ class ProductController extends Controller
             
             return response()->json($transformed);
         } catch (\Exception $e) {
-            \Log::error('Error fetching products: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error al cargar productos: ' . $e->getMessage(),
                 'file' => $e->getFile(),
