@@ -27,6 +27,9 @@ class User extends Authenticatable
         'is_active',
         'email_verified_at',
         'mfa_enabled',
+        'verification_token',
+        'verification_token_expires_at',
+        'google_id',
     ];
 
     protected $hidden = [
@@ -42,6 +45,7 @@ class User extends Authenticatable
         'mfa_enabled' => 'boolean',
         'permissions' => 'array',
         'preferences' => 'array',
+        'verification_token_expires_at' => 'datetime',
     ];
 
     protected $attributes = [

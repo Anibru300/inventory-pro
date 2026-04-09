@@ -35,12 +35,30 @@ Route::get('/health', function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+// Social Auth (Google)
+Route::get('/auth/google', [\App\Http\Controllers\Api\SocialAuthController::class, 'redirectToGoogle']);
+Route::get('/auth/google/callback', [\App\Http\Controllers\Api\SocialAuthController::class, 'handleGoogleCallback']);
+Route::post('/auth/google/token', [\App\Http\Controllers\Api\SocialAuthController::class, 'googleTokenLogin']);
+
+// Password Reset
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+Route::post('/validate-reset-token', [AuthController::class, 'validateResetToken']);
+
+// Email Verification
+Route::post('/resend-verification', [AuthController::class, 'resendVerification']);
+Route::post('/verify-email', [AuthController::class, 'verifyEmail']);
+
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
     
     // Auth
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+    
+    // Social Auth Management
+    Route::post('/auth/google/link', [\App\Http\Controllers\Api\SocialAuthController::class, 'linkGoogleAccount']);
+    Route::post('/auth/google/unlink', [\App\Http\Controllers\Api\SocialAuthController::class, 'unlinkGoogleAccount']);
     
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index']);
@@ -75,6 +93,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/movements', [\App\Http\Controllers\Api\ReportController::class, 'movementsReport']);
         Route::get('/low-stock', [\App\Http\Controllers\Api\ReportController::class, 'lowStock']);
         Route::get('/top-products', [\App\Http\Controllers\Api\ReportController::class, 'topProducts']);
+        
+        // Export routes
+        Route::get('/export/csv', [\App\Http\Controllers\Api\ReportController::class, 'exportCsv']);
+        Route::get('/export/excel', [\App\Http\Controllers\Api\ReportController::class, 'exportExcel']);
+        Route::get('/export/pdf', [\App\Http\Controllers\Api\ReportController::class, 'exportPdf']);
     });
     
     // Import
@@ -128,6 +151,20 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/products-analysis/abc', [ProductController::class, 'abcAnalysis']);
     Route::post('/products-import/bulk', [ProductController::class, 'import']);
     Route::get('/products-import/template', [ProductController::class, 'downloadTemplate']);
+    Route::get('/products/{product}/price-history', [ProductController::class, 'priceHistory']);
+    Route::get('/stock-levels', [ProductController::class, 'getAllStockLevels']);
+    
+    // Purchase Orders
+    Route::apiResource('purchase-orders', \App\Http\Controllers\Api\PurchaseOrderController::class);
+    Route::post('/purchase-orders/{id}/send', [\App\Http\Controllers\Api\PurchaseOrderController::class, 'send']);
+    Route::post('/purchase-orders/{id}/receive', [\App\Http\Controllers\Api\PurchaseOrderController::class, 'receive']);
+    Route::post('/purchase-orders/{id}/cancel', [\App\Http\Controllers\Api\PurchaseOrderController::class, 'cancel']);
+    Route::get('/purchase-orders-stats/overview', [\App\Http\Controllers\Api\PurchaseOrderController::class, 'stats']);
+    
+    // Integrations
+    Route::apiResource('integrations', \App\Http\Controllers\Api\IntegrationController::class);
+    Route::post('/integrations/{id}/sync', [\App\Http\Controllers\Api\IntegrationController::class, 'sync']);
+    Route::post('/integrations/{id}/test', [\App\Http\Controllers\Api\IntegrationController::class, 'test']);
     
 });
 
