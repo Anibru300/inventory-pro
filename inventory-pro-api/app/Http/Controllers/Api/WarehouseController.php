@@ -10,10 +10,26 @@ class WarehouseController extends Controller
 {
     public function index()
     {
+        $user = auth()->user();
+        
+        if (!$user || !$user->tenant_id) {
+            return response()->json(['message' => 'No autorizado'], 403);
+        }
+        
         $warehouses = Warehouse::active()
+            ->where('tenant_id', $user->tenant_id)
             ->orderBy('is_primary', 'desc')
             ->orderBy('name')
             ->get();
+        
+        // Add product count for each warehouse
+        foreach ($warehouses as $warehouse) {
+            $warehouse->products_count = \DB::table('stock_levels')
+                ->where('warehouse_id', $warehouse->id)
+                ->where('tenant_id', $user->tenant_id)
+                ->distinct('product_id')
+                ->count('product_id');
+        }
         
         return response()->json($warehouses);
     }
