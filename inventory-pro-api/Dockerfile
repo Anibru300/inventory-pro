@@ -36,6 +36,7 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-script
 # Copy env file
 COPY .env.render .env
 
+# Force rebuild timestamp: 2026-04-09T14:30:00Z
 # Copy the rest of the application
 COPY . .
 
