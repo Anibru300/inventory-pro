@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { useAuthStore } from '@/stores/auth'
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://inventory-pro-api-v3.onrender.com/api'
 
@@ -15,7 +16,21 @@ const apiClient = axios.create({
 // Request interceptor to add auth token
 // Usando X-Auth-Token para evitar problema de Apache 2.4 + mod_php que filtra Authorization header
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token')
+  // Intentar obtener token del authStore primero, luego de localStorage
+  let token = null
+  try {
+    const authStore = useAuthStore()
+    token = authStore.token
+  } catch (e) {
+    // Si no podemos acceder al store (ej: fuera de componente), usar localStorage
+    token = localStorage.getItem('token')
+  }
+  
+  // Fallback a localStorage si el store no tiene token
+  if (!token) {
+    token = localStorage.getItem('token')
+  }
+  
   console.log('API Interceptor - Token:', token ? 'Presente' : 'No encontrado')
   if (token) {
     // Usar X-Auth-Token en lugar de Authorization para evitar filtrado de Apache
