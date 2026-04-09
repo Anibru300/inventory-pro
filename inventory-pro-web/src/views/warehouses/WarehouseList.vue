@@ -13,7 +13,29 @@
           </svg>
         </button>
         <div>
-          <h1 class="text-3xl font-bold text-slate-800 mb-1">Almacenes</h1>
+          <div class="flex items-center gap-3">
+            <h1 class="text-3xl font-bold text-slate-800 mb-1">Almacenes</h1>
+            <ModuleHelp title="Almacenes - Ubicaciones">
+              <div class="space-y-4">
+                <div>
+                  <h4 class="font-semibold text-slate-800 mb-2">¿Qué son los Almacenes?</h4>
+                  <p class="text-slate-600 text-sm">Los almacenes son ubicaciones físicas donde se almacena tu inventario. Puedes crear múltiples almacenes para organizar mejor tus productos según su ubicación geográfica o funcional.</p>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-slate-800 mb-2">Crear un Almacén</h4>
+                  <p class="text-slate-600 text-sm">Haz clic en "Nuevo Almacén" y completa la información: nombre, código único, dirección, ciudad y estado. El código debe ser único para identificar cada almacén.</p>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-slate-800 mb-2">Organización del Stock</h4>
+                  <p class="text-slate-600 text-sm">Cada producto puede tener stock distribuido en diferentes almacenes. El sistema mantiene el control independiente de cada ubicación y permite transferencias entre almacenes.</p>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-slate-800 mb-2">Almacén Principal</h4>
+                  <p class="text-slate-600 text-sm">El almacén marcado como "Principal" es el ubicación predeterminada para nuevos movimientos. Solo puede haber un almacén principal en el sistema.</p>
+                </div>
+              </div>
+            </ModuleHelp>
+          </div>
           <p class="text-slate-500">Gestión de ubicaciones de inventario</p>
         </div>
       </div>
@@ -141,6 +163,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import apiClient from '../../services/api'
+import ModuleHelp from '../../components/ModuleHelp.vue'
 
 const warehouses = ref([])
 const showCreateModal = ref(false)

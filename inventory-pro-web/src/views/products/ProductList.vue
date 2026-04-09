@@ -16,6 +16,43 @@
           <h1 class="text-3xl font-bold text-slate-800 mb-1">Productos</h1>
           <p class="text-slate-500">Gestiona tu catálogo de productos</p>
         </div>
+        <ModuleHelp title="Productos - Catálogo">
+          <div class="space-y-4">
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">📦 ¿Qué son los Productos?</h4>
+              <p class="text-slate-600">Los productos son todos los artículos que gestionas en tu inventario. Cada producto tiene información detallada como nombre, código, stock y precio.</p>
+            </div>
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">➕ Crear un Producto</h4>
+              <ol class="list-decimal list-inside text-slate-600 space-y-1">
+                <li>Haz clic en <strong>"Nuevo Producto"</strong></li>
+                <li>Completa los datos: nombre, código SKU, categoría</li>
+                <li>Define el stock inicial y el stock mínimo (para alertas)</li>
+                <li>Agrega el costo y precio de venta</li>
+                <li>Guarda el producto</li>
+              </ol>
+            </div>
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">🔍 Buscar y Filtrar</h4>
+              <ul class="list-disc list-inside text-slate-600 space-y-1">
+                <li>Usa la barra de búsqueda para encontrar por nombre o código</li>
+                <li>Filtra por categoría para ver productos específicos</li>
+                <li>Filtra por estado de stock (en stock, bajo, agotado)</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">⚠️ Estados de Stock</h4>
+              <ul class="list-disc list-inside text-slate-600 space-y-1">
+                <li><span class="text-emerald-600">● En Stock:</span> Cantidad normal disponible</li>
+                <li><span class="text-amber-600">● Stock Bajo:</span> Por debajo del mínimo definido</li>
+                <li><span class="text-rose-600">● Sin Stock:</span> Agotado (cantidad = 0)</li>
+              </ul>
+            </div>
+            <div class="bg-emerald-50 p-4 rounded-xl">
+              <p class="text-emerald-700 text-sm"><strong>💡 Tip:</strong> Define un stock mínimo realista para cada producto. El sistema te alertará cuando necesites reabastecer.</p>
+            </div>
+          </div>
+        </ModuleHelp>
       </div>
       <router-link to="/products/new" 
         class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 hover:shadow-xl hover:shadow-blue-600/30">
@@ -163,6 +200,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useProductsStore } from '../../stores/products'
+import ModuleHelp from '../../components/ModuleHelp.vue'
 import apiClient from '../../services/api'
 
 const productsStore = useProductsStore()

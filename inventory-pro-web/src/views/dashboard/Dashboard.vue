@@ -3,6 +3,37 @@
     <!-- Page Header -->
     <PageHeader title="Dashboard" subtitle="Métricas y análisis de inventario">
       <template #actions>
+        <!-- Help Button -->
+        <ModuleHelp title="Dashboard - Centro de Control">
+          <div class="space-y-4">
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">📊 ¿Qué es el Dashboard?</h4>
+              <p class="text-slate-600">El Dashboard es tu centro de control visual donde puedes monitorear el estado de tu inventario en tiempo real.</p>
+            </div>
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">📈 Tarjetas de Estadísticas</h4>
+              <ul class="list-disc list-inside text-slate-600 space-y-1">
+                <li><strong>Total Productos:</strong> Cantidad de productos registrados</li>
+                <li><strong>Valor Inventario:</strong> Valor monetario total de tu stock</li>
+                <li><strong>Stock Bajo:</strong> Productos que necesitan reabastecimiento</li>
+                <li><strong>Sin Stock:</strong> Productos agotados</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">📉 Gráficas Disponibles</h4>
+              <ul class="list-disc list-inside text-slate-600 space-y-1">
+                <li><strong>Estado del Inventario:</strong> Distribución visual de tu stock</li>
+                <li><strong>Movimientos Mensuales:</strong> Entradas vs Salidas</li>
+                <li><strong>Top Productos:</strong> Los más movidos</li>
+                <li><strong>Valor del Inventario:</strong> Tendencia de valoración</li>
+              </ul>
+            </div>
+            <div class="bg-blue-50 p-4 rounded-xl">
+              <p class="text-blue-700 text-sm"><strong>💡 Tip:</strong> Usa el filtro de fechas para ver diferentes períodos. Las alertas en rojo indican productos que requieren atención inmediata.</p>
+            </div>
+          </div>
+        </ModuleHelp>
+
         <!-- Date Filter -->
         <div class="flex items-center gap-2">
           <select v-model="dateRange" @change="updateDashboard" 
@@ -233,6 +264,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useDarkMode } from '../../composables/useDarkMode'
 import PageHeader from '../../components/PageHeader.vue'
 import StatCard from '../../components/StatCard.vue'
+import ModuleHelp from '../../components/ModuleHelp.vue'
 import { Doughnut, Bar, Pie } from 'vue-chartjs'
 import apiClient from '../../services/api'
 

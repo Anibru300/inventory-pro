@@ -16,6 +16,37 @@
           <h1 class="text-3xl font-bold text-slate-800 mb-1">Transferencias</h1>
           <p class="text-slate-500">Gestiona las transferencias entre almacenes</p>
         </div>
+        <ModuleHelp title="Transferencias entre Almacenes">
+          <div class="space-y-4">
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">🚚 ¿Qué son las Transferencias?</h4>
+              <p class="text-slate-600">Las transferencias permiten mover productos entre diferentes almacenes. El stock se descuenta del almacén origen y se suma al almacén destino.</p>
+            </div>
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">📋 Estados de Transferencia</h4>
+              <ul class="list-disc list-inside text-slate-600 space-y-1">
+                <li><strong>Pendiente:</strong> Transferencia creada pero no enviada</li>
+                <li><strong>En Preparación:</strong> Se están preparando los productos</li>
+                <li><strong>En Tránsito:</strong> Productos en camino al destino</li>
+                <li><strong>Recibida:</strong> El destino confirmó la recepción</li>
+                <li><strong>Parcialmente Recibida:</strong> Se recibió solo parte de los productos</li>
+                <li><strong>Cancelada:</strong> Transferencia anulada</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">🔄 Proceso de Transferencia</h4>
+              <ol class="list-decimal list-inside text-slate-600 space-y-1">
+                <li>Crea la transferencia seleccionando origen y destino</li>
+                <li>Agrega los productos y cantidades a transferir</li>
+                <li>Marca como "Enviada" cuando salga el producto</li>
+                <li>El destino marca como "Recibida" al llegar</li>
+              </ol>
+            </div>
+            <div class="bg-indigo-50 p-4 rounded-xl">
+              <p class="text-indigo-700 text-sm"><strong>💡 Tip:</strong> Puedes ver el estado de todas tus transferencias en tiempo real. Las pendientes de recepción se destacan en el dashboard.</p>
+            </div>
+          </div>
+        </ModuleHelp>
       </div>
       <router-link to="/transfers/new" 
         class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 hover:shadow-xl hover:shadow-blue-600/30">
@@ -205,6 +236,7 @@ import { ref, onMounted } from 'vue'
 import { transferService } from '@/services/transferService'
 import { warehouseService } from '@/services/warehouseService'
 import { useDebounce } from '@/composables/useDebounce'
+import ModuleHelp from '@/components/ModuleHelp.vue'
 
 const transfers = ref([])
 const warehouses = ref([])

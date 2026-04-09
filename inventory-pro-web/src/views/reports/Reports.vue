@@ -15,9 +15,37 @@
               </svg>
             </button>
             <div>
-              <h1 class="text-3xl font-bold" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">
-                Centro de Reportes
-              </h1>
+              <div class="flex items-center gap-3">
+                <h1 class="text-3xl font-bold" :class="isDark ? 'text-white' : 'text-[#0B1F3A]'" style="font-family: 'Montserrat', sans-serif;">
+                  Centro de Reportes
+                </h1>
+                <ModuleHelp title="Reportes - Análisis de Inventario">
+                  <div class="space-y-4">
+                    <div>
+                      <h4 class="font-semibold text-slate-800 mb-2">Reportes Disponibles</h4>
+                      <ul class="text-slate-600 text-sm space-y-1 list-disc list-inside">
+                        <li><strong>Valoración:</strong> Valor total del inventario al costo y precio de venta</li>
+                        <li><strong>Movimientos:</strong> Entradas y salidas de productos en un período</li>
+                        <li><strong>Stock Bajo:</strong> Productos que requieren reabastecimiento</li>
+                        <li><strong>Top Productos:</strong> Los productos más movidos del inventario</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 class="font-semibold text-slate-800 mb-2">Exportar Datos</h4>
+                      <p class="text-slate-600 text-sm">Exporta tus reportes en múltiples formatos:</p>
+                      <ul class="text-slate-600 text-sm space-y-1 list-disc list-inside mt-1">
+                        <li><strong>PDF:</strong> Formato profesional para imprimir o compartir</li>
+                        <li><strong>Excel:</strong> Para análisis avanzado en hojas de cálculo</li>
+                        <li><strong>CSV:</strong> Datos en formato compatible con otros sistemas</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 class="font-semibold text-slate-800 mb-2">Filtro por Fechas</h4>
+                      <p class="text-slate-600 text-sm">Selecciona un rango de fechas para filtrar los movimientos. Por defecto muestra el mes actual. Puedes analizar períodos históricos para comparar tendencias.</p>
+                    </div>
+                  </div>
+                </ModuleHelp>
+              </div>
               <p class="mt-1" :class="isDark ? 'text-gray-400' : 'text-gray-600'">
                 Análisis detallado y estadísticas de inventario
               </p>
@@ -776,6 +804,7 @@ import { ref, h, computed, watch } from 'vue'
 import { useDarkMode } from '../../composables/useDarkMode'
 import { Bar, Doughnut, Pie } from 'vue-chartjs'
 import apiClient from '../../services/api'
+import ModuleHelp from '../../components/ModuleHelp.vue'
 
 const { isDark } = useDarkMode()
 

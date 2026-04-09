@@ -3,6 +3,41 @@
     <!-- Page Header -->
     <PageHeader title="Movimientos de Inventario" subtitle="Control de entradas y salidas">
       <template #actions>
+        <ModuleHelp title="Movimientos - Entradas y Salidas">
+          <div class="space-y-4">
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">🔄 ¿Qué son los Movimientos?</h4>
+              <p class="text-slate-600">Los movimientos registran cada entrada o salida de productos de tu inventario. Cada movimiento actualiza automáticamente el stock.</p>
+            </div>
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">📥 Tipos de Entrada</h4>
+              <ul class="list-disc list-inside text-slate-600 space-y-1">
+                <li><strong>Compra:</strong> Adquisición de productos a proveedores</li>
+                <li><strong>Devolución de Cliente:</strong> Productos que regresan de clientes</li>
+                <li><strong>Transferencia:</strong> Entrada desde otro almacén</li>
+                <li><strong>Ajuste Positivo:</strong> Corrección de inventario (stock encontrado)</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">📤 Tipos de Salida</h4>
+              <ul class="list-disc list-inside text-slate-600 space-y-1">
+                <li><strong>Venta:</strong> Productos vendidos a clientes</li>
+                <li><strong>Devolución a Proveedor:</strong> Productos regresados a proveedores</li>
+                <li><strong>Transferencia:</strong> Salida hacia otro almacén</li>
+                <li><strong>Ajuste Negativo:</strong> Corrección de inventario (stock perdido)</li>
+                <li><strong>Merma:</strong> Productos dañados o expirados</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">⚠️ Validación de Stock</h4>
+              <p class="text-slate-600">El sistema valida que haya stock suficiente antes de permitir una salida. Si intentas sacar más de lo disponible, te mostrará un error.</p>
+            </div>
+            <div class="bg-blue-50 p-4 rounded-xl">
+              <p class="text-blue-700 text-sm"><strong>💡 Tip:</strong> Siempre registra el número de referencia (factura, remisión, etc.) para tener trazabilidad completa.</p>
+            </div>
+          </div>
+        </ModuleHelp>
+
         <button @click="showFilters = !showFilters" 
           class="flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors font-medium"
           :class="isDark 
@@ -161,6 +196,7 @@
 import { ref, onMounted } from 'vue'
 import { useDarkMode } from '../../composables/useDarkMode'
 import PageHeader from '../../components/PageHeader.vue'
+import ModuleHelp from '../../components/ModuleHelp.vue'
 import apiClient from '../../services/api'
 
 const { isDark } = useDarkMode()

@@ -13,7 +13,29 @@
           </svg>
         </button>
         <div>
-          <h1 class="text-3xl font-bold text-slate-800 mb-1">Configuración</h1>
+          <div class="flex items-center gap-3">
+            <h1 class="text-3xl font-bold text-slate-800 mb-1">Configuración</h1>
+            <ModuleHelp title="Configuración - Ajustes del Sistema">
+              <div class="space-y-4">
+                <div>
+                  <h4 class="font-semibold text-slate-800 mb-2">Perfil de la Empresa</h4>
+                  <p class="text-slate-600 text-sm">Configura los datos de tu empresa: nombre, email de contacto, teléfono y dirección. Esta información aparecerá en los reportes y documentos generados por el sistema.</p>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-slate-800 mb-2">Subir Logo</h4>
+                  <p class="text-slate-600 text-sm">Personaliza tus reportes con el logo de tu empresa. Haz clic en "Subir Logo" y selecciona una imagen PNG o JPG (máximo 2MB). El logo se mostrará en todos los reportes PDF.</p>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-slate-800 mb-2">Perfil de Usuario</h4>
+                  <p class="text-slate-600 text-sm">Actualiza tu información personal: nombre y apellido. El email no puede modificarse ya que es tu identificador de acceso al sistema.</p>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-slate-800 mb-2">Actualizar Plan</h4>
+                  <p class="text-slate-600 text-sm">Mejora tu plan para acceder a más funcionalidades. Haz clic en "Actualizar Plan" para ver las opciones disponibles y completar el pago de forma segura.</p>
+                </div>
+              </div>
+            </ModuleHelp>
+          </div>
           <p class="text-slate-500">Personaliza tu sistema de inventario</p>
         </div>
       </div>
@@ -248,6 +270,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
 import apiClient from '../../services/api'
+import ModuleHelp from '../../components/ModuleHelp.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()

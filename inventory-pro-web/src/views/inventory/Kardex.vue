@@ -11,7 +11,29 @@
         </svg>
       </button>
       <div>
-        <h1 class="text-3xl font-bold text-slate-800 dark:text-white">Kardex</h1>
+        <div class="flex items-center gap-3">
+          <h1 class="text-3xl font-bold text-slate-800 dark:text-white">Kardex</h1>
+          <ModuleHelp title="Kardex - Historial de Movimientos">
+            <div class="space-y-4">
+              <div>
+                <h4 class="font-semibold text-slate-800 mb-2">¿Qué es el Kardex?</h4>
+                <p class="text-slate-600 text-sm">El Kardex es un registro histórico completo de todos los movimientos de un producto. Muestra cada entrada, salida y el saldo resultante en orden cronológico.</p>
+              </div>
+              <div>
+                <h4 class="font-semibold text-slate-800 mb-2">Buscar Historial de Producto</h4>
+                <p class="text-slate-600 text-sm">Escribe el nombre del producto en el campo de búsqueda. Selecciona de la lista desplegable para cargar su historial completo. También puedes filtrar por almacén específico.</p>
+              </div>
+              <div>
+                <h4 class="font-semibold text-slate-800 mb-2">Lectura del Movimiento</h4>
+                <p class="text-slate-600 text-sm">Cada fila muestra: fecha del movimiento, tipo (entrada/salida), concepto (compra, venta, ajuste), cantidad, saldo acumulado y usuario que realizó la operación.</p>
+              </div>
+              <div>
+                <h4 class="font-semibold text-slate-800 mb-2">Stock Físico vs Sistema</h4>
+                <p class="text-slate-600 text-sm">El Kardex muestra el stock según el sistema. Si hay diferencias con el stock físico real, usa la función de ajuste de inventario para corregir y mantener el registro actualizado.</p>
+              </div>
+            </div>
+          </ModuleHelp>
+        </div>
         <p class="text-slate-500 dark:text-slate-400">Movimientos y transferencias del producto</p>
       </div>
     </div>
@@ -234,6 +256,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import apiClient from '../../services/api'
+import ModuleHelp from '../../components/ModuleHelp.vue'
 
 const route = useRoute()
 
