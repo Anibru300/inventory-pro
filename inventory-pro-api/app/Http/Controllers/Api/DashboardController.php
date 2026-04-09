@@ -168,7 +168,9 @@ class DashboardController extends Controller
             ->count();
         
         $result = [
-            'products_count' => Product::where('tenant_id', $tenantId)->count(),
+            'products_count' => Product::where('tenant_id', $tenantId)
+                ->whereNull('deleted_at')
+                ->count(),
             'movements_today' => $movementsToday,
         ];
         
@@ -225,14 +227,18 @@ class DashboardController extends Controller
             ->get()
             ->keyBy('id');
         
-        // Obtener stock por producto y almacén
+        // Obtener stock por producto y almacén (solo almacenes activos)
+        $activeWarehouseIds = $warehouses->pluck('id');
         $stockData = StockLevel::where('tenant_id', $tenantId)
+            ->whereIn('warehouse_id', $activeWarehouseIds)
             ->select('product_id', 'warehouse_id', 'quantity')
             ->get()
             ->groupBy('product_id');
         
-        // Obtener almacenes
+        // Obtener almacenes (solo activos, no eliminados)
         $warehouses = \App\Models\Warehouse::where('tenant_id', $tenantId)
+            ->whereNull('deleted_at')
+            ->where('is_active', true)
             ->orderBy('name')
             ->get(['id', 'name']);
         
