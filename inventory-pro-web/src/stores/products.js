@@ -1,18 +1,27 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import axios from 'axios'
+import { useAuthStore } from './auth'
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://inventory-pro-api-v3.onrender.com/api'
 
 // Create axios instance with auth header
-function getAuthHeaders() {
-  const token = localStorage.getItem('token')
-  return {
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
   }
-}
+})
+
+// Add request interceptor to add token
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
 
 export const useProductsStore = defineStore('products', () => {
   // State
@@ -43,10 +52,7 @@ export const useProductsStore = defineStore('products', () => {
 
     try {
       console.log('Fetching products from:', `${API_URL}/products`)
-      const response = await axios.get(`${API_URL}/products`, { 
-        params,
-        headers: getAuthHeaders()
-      })
+      const response = await api.get('/products', { params })
       console.log('Products response:', response.data)
       
       // Handle different response structures
@@ -90,9 +96,7 @@ export const useProductsStore = defineStore('products', () => {
     error.value = null
 
     try {
-      const response = await axios.get(`${API_URL}/products/${id}`, {
-        headers: getAuthHeaders()
-      })
+      const response = await api.get(`/products/${id}`)
       currentProduct.value = response.data
       return response.data
     } catch (err) {
@@ -108,9 +112,7 @@ export const useProductsStore = defineStore('products', () => {
     error.value = null
 
     try {
-      const response = await axios.post(`${API_URL}/products`, data, {
-        headers: getAuthHeaders()
-      })
+      const response = await api.post('/products', data)
       products.value.unshift(response.data.product)
       return response.data
     } catch (err) {
@@ -126,9 +128,7 @@ export const useProductsStore = defineStore('products', () => {
     error.value = null
 
     try {
-      const response = await axios.put(`${API_URL}/products/${id}`, data, {
-        headers: getAuthHeaders()
-      })
+      const response = await api.put(`/products/${id}`, data)
       const index = products.value.findIndex(p => p.id === id)
       if (index !== -1) {
         products.value[index] = response.data.product
@@ -147,9 +147,7 @@ export const useProductsStore = defineStore('products', () => {
     error.value = null
 
     try {
-      await axios.delete(`${API_URL}/products/${id}`, {
-        headers: getAuthHeaders()
-      })
+      await api.delete(`/products/${id}`)
       products.value = products.value.filter(p => p.id !== id)
     } catch (err) {
       error.value = err.response?.data?.message || 'Error al eliminar producto'
