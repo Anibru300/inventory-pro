@@ -37,6 +37,8 @@
           d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
         <path v-else-if="icon === 'settings'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
           d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path v-else-if="icon === 'history'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     </div>
     <p class="font-semibold mb-0.5 transition-colors" :class="isDark ? 'text-white' : 'text-slate-800'">
@@ -75,7 +77,8 @@ const iconBgClass = computed(() => {
     rose: isDark.value ? 'bg-rose-500/20' : 'bg-rose-100',
     lime: isDark.value ? 'bg-lime-500/20' : 'bg-lime-100',
     violet: isDark.value ? 'bg-violet-500/20' : 'bg-violet-100',
-    slate: isDark.value ? 'bg-slate-500/20' : 'bg-slate-100'
+    slate: isDark.value ? 'bg-slate-500/20' : 'bg-slate-100',
+    orange: isDark.value ? 'bg-orange-500/20' : 'bg-orange-100'
   }
   return colors[props.color] || colors.blue
 })
@@ -91,7 +94,8 @@ const iconColorClass = computed(() => {
     rose: isDark.value ? 'text-rose-400' : 'text-rose-600',
     lime: isDark.value ? 'text-lime-400' : 'text-lime-600',
     violet: isDark.value ? 'text-violet-400' : 'text-violet-600',
-    slate: isDark.value ? 'text-slate-400' : 'text-slate-600'
+    slate: isDark.value ? 'text-slate-400' : 'text-slate-600',
+    orange: isDark.value ? 'text-orange-400' : 'text-orange-600'
   }
   return colors[props.color] || colors.blue
 })

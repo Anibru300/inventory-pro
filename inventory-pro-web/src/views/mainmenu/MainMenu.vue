@@ -302,6 +302,7 @@ const modules = [
   { label: 'Almacén General', description: 'Vista consolidada', to: '/warehouse/general', icon: 'grid', color: 'purple' },
   { label: 'Movimientos', description: 'Entradas y salidas', to: '/movements', icon: 'arrows', color: 'amber' },
   { label: 'Transferencias', description: 'Entre almacenes', to: '/transfers', icon: 'transfer', color: 'cyan' },
+  { label: 'Kardex', description: 'Historial de movimientos', to: '/kardex', icon: 'history', color: 'orange' },
   { label: 'Reportes', description: 'Análisis y estadísticas', to: '/reports', icon: 'report', color: 'rose' },
   { label: 'Importar', description: 'Carga masiva', to: '/import', icon: 'upload', color: 'lime' },
   { label: 'Usuarios', description: 'Gestión de equipo', to: '/users', icon: 'users', color: 'violet', admin: true },
