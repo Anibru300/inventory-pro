@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->use([
             \Illuminate\Http\Middleware\TrustProxies::class,
             \App\Http\Middleware\AddCorsHeaders::class,
+            \App\Http\Middleware\CustomAuthHeader::class,  // CRÍTICO: Convertir X-Auth-Token antes de cualquier auth
             \Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance::class,
             \Illuminate\Http\Middleware\ValidatePostSize::class,
             \Illuminate\Foundation\Http\Middleware\TrimStrings::class,
@@ -26,7 +27,6 @@ return Application::configure(basePath: dirname(__DIR__))
         // API middleware group (stateless - no CSRF)
         $middleware->api(prepend: [
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
-            \App\Http\Middleware\CustomAuthHeader::class,  // Convierte X-Auth-Token a Authorization
             \App\Http\Middleware\TokenFromQueryString::class,
             \App\Http\Middleware\SetTenantContext::class,
         ]);
