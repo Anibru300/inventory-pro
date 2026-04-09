@@ -32,19 +32,19 @@ class ProductController extends Controller
                 ], 403);
             }
             
-            // Query without global scopes
-            $query = Product::withoutGlobalScopes()->where('tenant_id', $user->tenant_id);
+            // Simple query - filter by tenant_id only
+            $query = Product::where('tenant_id', $user->tenant_id);
             
             // Search
             if ($request->has('search') && !empty($request->search)) {
                 $search = $request->search;
                 $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                      ->orWhere('sku', 'like', "%{$search}%");
+                    $q->where('name', 'ilike', "%{$search}%")
+                      ->orWhere('sku', 'ilike', "%{$search}%");
                 });
             }
 
-            $products = $query->latest()->paginate($request->per_page ?? 25);
+            $products = $query->orderBy('created_at', 'desc')->paginate($request->per_page ?? 25);
 
             return response()->json($products);
         } catch (\Exception $e) {
