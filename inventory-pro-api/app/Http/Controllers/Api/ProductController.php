@@ -56,93 +56,106 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'sku' => 'required|string|max:100|unique:products',
-            'barcode' => 'nullable|string|max:100|unique:products',
-            'description' => 'nullable|string',
-            'category_id' => 'nullable|exists:categories,id',
-            'unit' => 'nullable|string|max:50',
-            'cost' => 'required|numeric|min:0',
-            'price' => 'required|numeric|min:0',
-            'min_stock' => 'nullable|numeric|min:0',
-            'max_stock' => 'nullable|numeric|min:0',
-            'initial_stock' => 'nullable|numeric|min:0',
-            'warehouse_id' => 'nullable|exists:warehouses,id',
-            'valuation_method' => 'nullable|in:FIFO,AVERAGE,LIFO',
-            'is_active' => 'boolean',
-            'image' => 'nullable|image|max:2048', // Max 2MB
-        ], [
-            'name.required' => 'El nombre del producto es obligatorio.',
-            'sku.required' => 'El código SKU es obligatorio.',
-            'sku.unique' => 'Este código SKU ya está en uso. Por favor, usa otro código.',
-            'barcode.unique' => 'Este código de barras ya está registrado.',
-            'cost.required' => 'El costo unitario es obligatorio.',
-            'cost.numeric' => 'El costo debe ser un número.',
-            'cost.min' => 'El costo no puede ser negativo.',
-            'price.required' => 'El precio de venta es obligatorio.',
-            'price.numeric' => 'El precio debe ser un número.',
-            'price.min' => 'El precio no puede ser negativo.',
-            'category_id.exists' => 'La categoría seleccionada no existe.',
-            'warehouse_id.exists' => 'El almacén seleccionado no existe.',
-            'image.image' => 'El archivo debe ser una imagen.',
-            'image.max' => 'La imagen no puede superar los 2MB.',
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'sku' => 'required|string|max:100|unique:products',
+                'barcode' => 'nullable|string|max:100|unique:products',
+                'description' => 'nullable|string',
+                'category_id' => 'nullable|exists:categories,id',
+                'unit' => 'nullable|string|max:50',
+                'cost' => 'required|numeric|min:0',
+                'price' => 'required|numeric|min:0',
+                'min_stock' => 'nullable|numeric|min:0',
+                'max_stock' => 'nullable|numeric|min:0',
+                'initial_stock' => 'nullable|numeric|min:0',
+                'warehouse_id' => 'nullable|exists:warehouses,id',
+                'valuation_method' => 'nullable|in:FIFO,AVERAGE,LIFO',
+                'is_active' => 'boolean',
+                'image' => 'nullable|image|max:2048', // Max 2MB
+            ], [
+                'name.required' => 'El nombre del producto es obligatorio.',
+                'sku.required' => 'El código SKU es obligatorio.',
+                'sku.unique' => 'Este código SKU ya está en uso. Por favor, usa otro código.',
+                'barcode.unique' => 'Este código de barras ya está registrado.',
+                'cost.required' => 'El costo unitario es obligatorio.',
+                'cost.numeric' => 'El costo debe ser un número.',
+                'cost.min' => 'El costo no puede ser negativo.',
+                'price.required' => 'El precio de venta es obligatorio.',
+                'price.numeric' => 'El precio debe ser un número.',
+                'price.min' => 'El precio no puede ser negativo.',
+                'category_id.exists' => 'La categoría seleccionada no existe.',
+                'warehouse_id.exists' => 'El almacén seleccionado no existe.',
+                'image.image' => 'El archivo debe ser una imagen.',
+                'image.max' => 'La imagen no puede superar los 2MB.',
+            ]);
 
-        $initialStock = $validated['initial_stock'] ?? 0;
-        $warehouseId = $validated['warehouse_id'] ?? null;
-        
-        // Mapear campos del frontend a nombres de BD
-        $productData = [
-            'name' => $validated['name'],
-            'sku' => $validated['sku'],
-            'barcode' => $validated['barcode'] ?? null,
-            'description' => $validated['description'] ?? null,
-            'category_id' => $validated['category_id'] ?? null,
-            'unit_of_measure' => $validated['unit'] ?? 'piece',
-            'unit_cost' => $validated['cost'],
-            'selling_price' => $validated['price'],
-            'stock_min' => $validated['min_stock'] ?? 0,
-            'stock_max' => $validated['max_stock'] ?? null,
-            'reorder_point' => $validated['min_stock'] ?? 0,
-            'valuation_method' => $validated['valuation_method'] ?? 'FIFO',
-            'is_active' => $validated['is_active'] ?? true,
-        ];
-
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'public');
-            $productData['images'] = [
-                [
-                    'url' => Storage::url($path),
-                    'path' => $path,
-                    'is_primary' => true,
-                ]
-            ];
-        }
-
-        // Use transaction to ensure data consistency
-        $product = DB::transaction(function () use ($productData, $warehouseId, $initialStock) {
-            $product = Product::create($productData);
-
-            // Create stock level if warehouse specified
-            if ($warehouseId && $initialStock > 0) {
-                StockLevel::create([
-                    'tenant_id' => $product->tenant_id,
-                    'product_id' => $product->id,
-                    'warehouse_id' => $warehouseId,
-                    'quantity' => $initialStock,
-                    'available_quantity' => $initialStock,
-                    'reserved_quantity' => 0,
-                    'reorder_point' => $productData['stock_min'],
-                    'max_stock' => $productData['stock_max'],
-                ]);
-            }
+            $initialStock = $validated['initial_stock'] ?? 0;
+            $warehouseId = $validated['warehouse_id'] ?? null;
             
-            return $product;
-        });
+            // Mapear campos del frontend a nombres de BD
+            $productData = [
+                'name' => $validated['name'],
+                'sku' => $validated['sku'],
+                'barcode' => $validated['barcode'] ?? null,
+                'description' => $validated['description'] ?? null,
+                'category_id' => $validated['category_id'] ?? null,
+                'unit_of_measure' => $validated['unit'] ?? 'piece',
+                'unit_cost' => $validated['cost'],
+                'selling_price' => $validated['price'],
+                'stock_min' => $validated['min_stock'] ?? 0,
+                'stock_max' => $validated['max_stock'] ?? null,
+                'reorder_point' => $validated['min_stock'] ?? 0,
+                'valuation_method' => $validated['valuation_method'] ?? 'FIFO',
+                'is_active' => $validated['is_active'] ?? true,
+            ];
 
-        return response()->json($product->load(['category', 'stockLevels.warehouse']), 201);
+            // Handle image upload
+            if ($request->hasFile('image')) {
+                $path = $request->file('image')->store('products', 'public');
+                $productData['images'] = [
+                    [
+                        'url' => Storage::url($path),
+                        'path' => $path,
+                        'is_primary' => true,
+                    ]
+                ];
+            }
+
+            // Use transaction to ensure data consistency
+            $product = DB::transaction(function () use ($productData, $warehouseId, $initialStock) {
+                $product = Product::create($productData);
+
+                // Create stock level if warehouse specified
+                if ($warehouseId && $initialStock > 0) {
+                    StockLevel::create([
+                        'tenant_id' => $product->tenant_id,
+                        'product_id' => $product->id,
+                        'warehouse_id' => $warehouseId,
+                        'quantity' => $initialStock,
+                        'available_quantity' => $initialStock,
+                        'reserved_quantity' => 0,
+                        'reorder_point' => $productData['stock_min'],
+                        'max_stock' => $productData['stock_max'],
+                    ]);
+                }
+                
+                return $product;
+            });
+
+            return response()->json($product->load(['category', 'stockLevels.warehouse']), 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Error de validación',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Error creating product: ' . $e->getMessage());
+            \Log::error($e->getTraceAsString());
+            return response()->json([
+                'message' => 'Error del servidor: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function show(Product $product)
