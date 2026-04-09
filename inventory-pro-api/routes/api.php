@@ -17,6 +17,29 @@ use App\Http\Controllers\Api\WarehouseTransferController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+// Debug routes (remove in production)
+Route::get('/debug/headers', function (Request $request) {
+    return response()->json([
+        'message' => 'Debug headers endpoint',
+        'headers_received' => $request->headers->all(),
+        'server_vars' => [
+            'HTTP_AUTHORIZATION' => $_SERVER['HTTP_AUTHORIZATION'] ?? 'NO SET',
+            'HTTP_X_AUTH_TOKEN' => $_SERVER['HTTP_X_AUTH_TOKEN'] ?? 'NO SET',
+            'REDIRECT_HTTP_AUTHORIZATION' => $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? 'NO SET',
+        ],
+        'bearer_token_from_request' => $request->bearerToken() ?? 'NO TOKEN',
+        'auth_check' => auth()->check(),
+        'user' => auth()->user()?->email ?? 'NO USER',
+    ]);
+});
+
+Route::middleware('auth:sanctum')->get('/debug/auth-test', function (Request $request) {
+    return response()->json([
+        'message' => 'Auth successful',
+        'user' => $request->user()->email,
+    ]);
+});
+
 /*
 |--------------------------------------------------------------------------
 | API Routes

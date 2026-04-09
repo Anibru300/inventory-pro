@@ -21,18 +21,13 @@ class CustomAuthHeader
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Debug logging
+        // Si hay X-Auth-Token, convertirlo a Authorization Bearer
+        // Sin importar si ya hay Authorization o no (damos prioridad a X-Auth-Token)
         $customToken = $request->header('X-Auth-Token');
-        $hasAuth = $request->hasHeader('Authorization');
         
-        error_log("CustomAuthHeader Middleware:");
-        error_log("  X-Auth-Token presente: " . ($customToken ? 'SÍ' : 'NO'));
-        error_log("  Authorization presente: " . ($hasAuth ? 'SÍ' : 'NO'));
-        
-        // Si no hay header Authorization pero sí X-Auth-Token, convertirlo
-        if ($customToken && !$request->bearerToken()) {
+        if ($customToken) {
             $request->headers->set('Authorization', 'Bearer ' . $customToken);
-            error_log("  -> Token convertido a Authorization Bearer");
+            error_log("CustomAuthHeader: X-Auth-Token convertido a Authorization Bearer");
         }
         
         return $next($request);
