@@ -1,2 +1,2 @@
-Build: 2026-04-09-151000
-Fix: Apache headers config and Authorization header pass
+Build: 2026-04-09-152000
+Fix: Migrated from Apache to NGINX + PHP-FPM for proper Authorization header support
