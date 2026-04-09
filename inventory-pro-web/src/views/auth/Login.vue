@@ -122,7 +122,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import GoogleLoginButton from '@/components/auth/GoogleLoginButton.vue'
+import GoogleLoginButton from '@/components/GoogleLoginButton.vue'
 import { InputAnimated, ButtonAnimated } from '@/components/ui'
 import { h } from 'vue'
 
