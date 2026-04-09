@@ -1,2 +1,2 @@
-Build: 2026-04-09-150000
-Fix: Removed all Log usage from ProductController
+Build: 2026-04-09-151000
+Fix: Apache headers config and Authorization header pass

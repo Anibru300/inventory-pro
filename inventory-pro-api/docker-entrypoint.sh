@@ -22,8 +22,9 @@ SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
 EOF
 a2enconf authorization
 
-# Habilitar mod_rewrite si no está habilitado
+# Habilitar mod_rewrite y mod_headers si no están habilitados
 a2enmod rewrite
+a2enmod headers
 
 # FORZAR APP_KEY correcta
 export APP_KEY="base64:GKeBjry+gf8vc+uhMm73SC6wqtRNdQcFE8Oy+okKXb8="
