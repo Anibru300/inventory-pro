@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductPriceHistory;
 use App\Models\StockLevel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -199,6 +200,20 @@ class ProductController extends Controller
                 }
             }
             $productData['images'] = null;
+        }
+
+        // Track price changes
+        if (isset($productData['unit_cost']) || isset($productData['selling_price'])) {
+            ProductPriceHistory::create([
+                'tenant_id' => $product->tenant_id,
+                'product_id' => $product->id,
+                'changed_by' => auth()->id(),
+                'old_cost' => $product->unit_cost,
+                'new_cost' => $productData['unit_cost'] ?? $product->unit_cost,
+                'old_price' => $product->selling_price,
+                'new_price' => $productData['selling_price'] ?? $product->selling_price,
+                'reason' => $request->input('price_change_reason', 'Actualización manual'),
+            ]);
         }
 
         $product->update($productData);
@@ -426,5 +441,49 @@ class ProductController extends Controller
                 'class_c' => $classified->where('abc_class', 'C')->count(),
             ],
         ]);
+    }
+
+    /**
+     * Historial de precios del producto
+     */
+    public function priceHistory(Product $product)
+    {
+        $history = $product->priceHistory()
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+
+        return response()->json($history);
+    }
+
+    /**
+     * Get all stock levels for offline sync
+     */
+    public function getAllStockLevels(Request $request)
+    {
+        $tenantId = $request->user()->tenant_id;
+        
+        $stockLevels = StockLevel::where('tenant_id', $tenantId)
+            ->with(['product', 'warehouse'])
+            ->get()
+            ->map(function ($level) {
+                return [
+                    'id' => $level->id,
+                    'product_id' => $level->product_id,
+                    'warehouse_id' => $level->warehouse_id,
+                    'quantity' => $level->quantity,
+                    'product' => [
+                        'id' => $level->product?->id,
+                        'name' => $level->product?->name,
+                        'sku' => $level->product?->sku,
+                    ],
+                    'warehouse' => [
+                        'id' => $level->warehouse?->id,
+                        'name' => $level->warehouse?->name,
+                    ],
+                ];
+            });
+
+        return response()->json($stockLevels);
     }
 }

@@ -29,6 +29,8 @@ return [
     */
     'url' => env('APP_URL', 'http://localhost'),
 
+    'frontend_url' => env('FRONTEND_URL', 'https://inventory-pro-z81e.onrender.com'),
+
     'asset_url' => env('ASSET_URL'),
 
     /*

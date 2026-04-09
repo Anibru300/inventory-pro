@@ -42,6 +42,11 @@ class Supplier extends Model
         return $this->hasMany(Product::class, 'preferred_supplier_id');
     }
 
+    public function purchaseOrders()
+    {
+        return $this->hasMany(PurchaseOrder::class);
+    }
+
     // Scopes
     public function scopeActive($query)
     {

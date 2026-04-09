@@ -78,6 +78,11 @@ class Product extends Model
         return $this->hasMany(StockMovement::class);
     }
 
+    public function priceHistory()
+    {
+        return $this->hasMany(ProductPriceHistory::class)->orderBy('created_at', 'desc');
+    }
+
     public function preferredSupplier()
     {
         return $this->belongsTo(Supplier::class, 'preferred_supplier_id');

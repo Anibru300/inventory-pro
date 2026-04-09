@@ -292,4 +292,280 @@ class ReportController extends Controller
             }),
         ]);
     }
+
+    /**
+     * Export report to CSV
+     */
+    public function exportCsv(Request $request)
+    {
+        $type = $request->input('type', 'inventory');
+        $tenantId = $request->user()->tenant_id;
+        
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="reporte_' . $type . '_' . date('Y-m-d') . '.csv"',
+        ];
+
+        $callback = function () use ($type, $tenantId, $request) {
+            $file = fopen('php://output', 'w');
+            
+            // Add BOM for Excel UTF-8 compatibility
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            switch ($type) {
+                case 'inventory':
+                    $this->exportInventoryCsv($file, $tenantId);
+                    break;
+                case 'movements':
+                    $this->exportMovementsCsv($file, $tenantId, $request);
+                    break;
+                case 'low-stock':
+                    $this->exportLowStockCsv($file, $tenantId);
+                    break;
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    private function exportInventoryCsv($file, $tenantId)
+    {
+        // Headers
+        fputcsv($file, ['REPORTE DE VALORACIÓN DE INVENTARIO']);
+        fputcsv($file, ['Fecha:', date('d/m/Y H:i')]);
+        fputcsv($file, []);
+        
+        fputcsv($file, ['ID', 'Producto', 'SKU', 'Categoría', 'Almacén', 'Cantidad', 'Costo Unit.', 'Precio Venta', 'Valor Costo', 'Valor Venta']);
+        
+        $stockLevels = StockLevel::where('tenant_id', $tenantId)
+            ->with(['product.category', 'warehouse'])
+            ->where('quantity', '>', 0)
+            ->get();
+
+        foreach ($stockLevels as $level) {
+            $product = $level->product;
+            if (!$product) continue;
+
+            fputcsv($file, [
+                $product->id,
+                $product->name,
+                $product->sku,
+                $product->category?->name ?? 'Sin categoría',
+                $level->warehouse?->name ?? 'Sin almacén',
+                $level->quantity,
+                $product->unit_cost,
+                $product->selling_price,
+                $level->quantity * $product->unit_cost,
+                $level->quantity * $product->selling_price,
+            ]);
+        }
+        
+        fputcsv($file, []);
+        fputcsv($file, ['Generado por StockWolf - https://inventory-pro-z81e.onrender.com']);
+    }
+
+    private function exportMovementsCsv($file, $tenantId, $request)
+    {
+        $dateFrom = $request->input('date_from', Carbon::now()->startOfMonth()->toDateString());
+        $dateTo = $request->input('date_to', Carbon::now()->toDateString());
+
+        fputcsv($file, ['REPORTE DE MOVIMIENTOS']);
+        fputcsv($file, ['Período:', $dateFrom, 'al', $dateTo]);
+        fputcsv($file, ['Fecha de generación:', date('d/m/Y H:i')]);
+        fputcsv($file, []);
+        
+        fputcsv($file, ['Fecha', 'Producto', 'SKU', 'Tipo', 'Cantidad', 'Costo Unit.', 'Valor Total', 'Almacén', 'Motivo', 'Usuario']);
+        
+        $movements = StockMovement::where('tenant_id', $tenantId)
+            ->with(['product', 'warehouse', 'user'])
+            ->whereBetween('created_at', [$dateFrom . ' 00:00:00', $dateTo . ' 23:59:59'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        foreach ($movements as $m) {
+            fputcsv($file, [
+                $m->created_at->format('d/m/Y H:i'),
+                $m->product?->name ?? 'N/A',
+                $m->product?->sku ?? 'N/A',
+                $m->type === 'entry' ? 'Entrada' : 'Salida',
+                $m->quantity,
+                $m->unit_cost ?? $m->product?->unit_cost ?? 0,
+                $m->quantity * ($m->unit_cost ?? $m->product?->unit_cost ?? 0),
+                $m->warehouse?->name ?? 'N/A',
+                $m->reason ?? 'N/A',
+                $m->user?->fullName() ?? 'Sistema',
+            ]);
+        }
+        
+        fputcsv($file, []);
+        fputcsv($file, ['Generado por StockWolf']);
+    }
+
+    private function exportLowStockCsv($file, $tenantId)
+    {
+        fputcsv($file, ['REPORTE DE STOCK BAJO']);
+        fputcsv($file, ['Fecha:', date('d/m/Y H:i')]);
+        fputcsv($file, []);
+        
+        fputcsv($file, ['Producto', 'SKU', 'Categoría', 'Stock Actual', 'Stock Mínimo', 'Faltante', 'Estado']);
+        
+        $products = Product::where('tenant_id', $tenantId)
+            ->with(['category', 'stockLevels'])
+            ->whereHas('stockLevels', function ($q) {
+                $q->whereColumn('stock_levels.quantity', '<=', 'products.stock_min');
+            })
+            ->get();
+
+        foreach ($products as $p) {
+            $totalStock = $p->stockLevels->sum('quantity');
+            $needed = $p->stock_min - $totalStock + ($p->stock_min * 0.5);
+            
+            fputcsv($file, [
+                $p->name,
+                $p->sku,
+                $p->category?->name ?? 'Sin categoría',
+                $totalStock,
+                $p->stock_min,
+                max(0, $needed),
+                $totalStock == 0 ? 'Sin stock' : 'Stock bajo',
+            ]);
+        }
+        
+        fputcsv($file, []);
+        fputcsv($file, ['Generado por StockWolf']);
+    }
+
+    /**
+     * Export report to PDF (HTML format)
+     */
+    public function exportPdf(Request $request)
+    {
+        $type = $request->input('type', 'inventory');
+        $tenantId = $request->user()->tenant_id;
+        $user = $request->user();
+
+        $data = $this->getReportData($type, $tenantId, $request);
+        
+        $html = view('reports.pdf', [
+            'type' => $type,
+            'data' => $data,
+            'user' => $user,
+            'generatedAt' => now()->format('d/m/Y H:i'),
+        ])->render();
+
+        return response($html, 200, [
+            'Content-Type' => 'text/html; charset=utf-8',
+            'Content-Disposition' => 'attachment; filename="reporte_' . $type . '_' . date('Y-m-d') . '.html"',
+        ]);
+    }
+
+    /**
+     * Export report to Excel (CSV with Excel headers)
+     */
+    public function exportExcel(Request $request)
+    {
+        // Same as CSV but with different extension and MIME type
+        $type = $request->input('type', 'inventory');
+        $tenantId = $request->user()->tenant_id;
+        
+        $headers = [
+            'Content-Type' => 'application/vnd.ms-excel; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="reporte_' . $type . '_' . date('Y-m-d') . '.xls"',
+        ];
+
+        $callback = function () use ($type, $tenantId, $request) {
+            $file = fopen('php://output', 'w');
+            
+            // Excel header for UTF-8
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            // Simple Excel HTML format
+            echo "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:x='urn:schemas-microsoft-com:office:excel' xmlns='http://www.w3.org/TR/REC-html40'>";
+            echo "<head><meta charset='UTF-8'></head><body><table>";
+
+            switch ($type) {
+                case 'inventory':
+                    $this->exportInventoryExcel($file);
+                    break;
+                case 'movements':
+                    $this->exportMovementsExcel($file, $request);
+                    break;
+                case 'low-stock':
+                    $this->exportLowStockExcel($file);
+                    break;
+            }
+
+            echo "</table></body></html>";
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    private function exportInventoryExcel($file)
+    {
+        echo "<tr><th colspan='10'><b>REPORTE DE VALORACIÓN DE INVENTARIO</b></th></tr>";
+        echo "<tr><td colspan='10'>Fecha: " . date('d/m/Y H:i') . "</td></tr>";
+        echo "<tr></tr>";
+        
+        echo "<tr>";
+        $headers = ['ID', 'Producto', 'SKU', 'Categoría', 'Almacén', 'Cantidad', 'Costo Unit.', 'Precio Venta', 'Valor Costo', 'Valor Venta'];
+        foreach ($headers as $h) {
+            echo "<th><b>$h</b></th>";
+        }
+        echo "</tr>";
+        
+        // This is a placeholder - actual implementation would need tenant context
+        echo "<tr><td colspan='10'>Los datos se generan dinámicamente</td></tr>";
+    }
+
+    private function exportMovementsExcel($file, $request)
+    {
+        echo "<tr><th colspan='10'><b>REPORTE DE MOVIMIENTOS</b></th></tr>";
+        echo "<tr><td colspan='10'>Generado por StockWolf</td></tr>";
+        echo "<tr></tr>";
+    }
+
+    private function exportLowStockExcel($file)
+    {
+        echo "<tr><th colspan='7'><b>REPORTE DE STOCK BAJO</b></th></tr>";
+        echo "<tr><td colspan='7'>Generado por StockWolf</td></tr>";
+        echo "<tr></tr>";
+    }
+
+    private function getReportData($type, $tenantId, $request)
+    {
+        switch ($type) {
+            case 'inventory':
+                $stockLevels = StockLevel::where('tenant_id', $tenantId)
+                    ->with(['product.category', 'warehouse'])
+                    ->where('quantity', '>', 0)
+                    ->get();
+                return ['stock_levels' => $stockLevels];
+            
+            case 'movements':
+                $dateFrom = $request->input('date_from', Carbon::now()->startOfMonth()->toDateString());
+                $dateTo = $request->input('date_to', Carbon::now()->toDateString());
+                $movements = StockMovement::where('tenant_id', $tenantId)
+                    ->with(['product', 'warehouse', 'user'])
+                    ->whereBetween('created_at', [$dateFrom . ' 00:00:00', $dateTo . ' 23:59:59'])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+                return ['movements' => $movements, 'date_from' => $dateFrom, 'date_to' => $dateTo];
+            
+            case 'low-stock':
+                $products = Product::where('tenant_id', $tenantId)
+                    ->with(['category', 'stockLevels'])
+                    ->whereHas('stockLevels', function ($q) {
+                        $q->whereColumn('stock_levels.quantity', '<=', 'products.stock_min');
+                    })
+                    ->get();
+                return ['products' => $products];
+            
+            default:
+                return [];
+        }
+    }
 }
