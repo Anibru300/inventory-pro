@@ -31,8 +31,8 @@ Route::get('/health', function () {
     ]);
 });
 
-// Diagnostic endpoint
-Route::get('/diagnostic', function () {
+// Diagnostic endpoint (protected)
+Route::middleware('auth:sanctum')->get('/diagnostic', function () {
     $user = auth()->user();
     $results = [
         'authenticated' => !!$user,
