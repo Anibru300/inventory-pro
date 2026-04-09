@@ -212,7 +212,16 @@ class DashboardController extends Controller
             return response()->json($cached);
         }
         
-        // Obtener datos en una sola consulta
+        // Obtener almacenes PRIMERO (solo activos, no eliminados)
+        $warehouses = \App\Models\Warehouse::where('tenant_id', $tenantId)
+            ->whereNull('deleted_at')
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get(['id', 'name']);
+        
+        $activeWarehouseIds = $warehouses->pluck('id');
+        
+        // Obtener datos de productos
         $products = Product::where('products.tenant_id', $tenantId)
             ->whereNull('products.deleted_at')
             ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
@@ -228,19 +237,11 @@ class DashboardController extends Controller
             ->keyBy('id');
         
         // Obtener stock por producto y almacén (solo almacenes activos)
-        $activeWarehouseIds = $warehouses->pluck('id');
         $stockData = StockLevel::where('tenant_id', $tenantId)
             ->whereIn('warehouse_id', $activeWarehouseIds)
             ->select('product_id', 'warehouse_id', 'quantity')
             ->get()
             ->groupBy('product_id');
-        
-        // Obtener almacenes (solo activos, no eliminados)
-        $warehouses = \App\Models\Warehouse::where('tenant_id', $tenantId)
-            ->whereNull('deleted_at')
-            ->where('is_active', true)
-            ->orderBy('name')
-            ->get(['id', 'name']);
         
         // Construir el inventario
         $inventory = [];
