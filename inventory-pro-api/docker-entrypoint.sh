@@ -9,22 +9,37 @@ echo "🔧 Configurando Apache para puerto $PORT..."
 sed -i "s/Listen 80/Listen $PORT/g" /etc/apache2/ports.conf
 sed -ri -e "s/<VirtualHost \*:80>/<VirtualHost *:$PORT>/g" /etc/apache2/sites-available/*.conf
 
-# Configurar Apache para pasar el header Authorization a PHP
+# CRITICAL: Configurar Apache para pasar el header Authorization a PHP
+# Solución según investigación: CGIPassAuth On en VirtualHost
 echo "🔧 Configurando Apache para Authorization headers..."
-cat > /etc/apache2/conf-available/authorization.conf << 'EOF'
-# Pass Authorization header to PHP
-SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteCond %{HTTP:Authorization} ^(.*)
-    RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
-</IfModule>
-EOF
-a2enconf authorization
+APACHE_CONFIG="/etc/apache2/sites-enabled/000-default.conf"
 
-# Habilitar mod_rewrite y mod_headers si no están habilitados
-a2enmod rewrite
-a2enmod headers
+if [ -f "$APACHE_CONFIG" ]; then
+    # Verificar si CGIPassAuth ya está configurado
+    if ! grep -q "CGIPassAuth" "$APACHE_CONFIG"; then
+        echo "   Aplicando CGIPassAuth On..."
+        # Insertar CGIPassAuth On después de DocumentRoot
+        sed -i '/DocumentRoot/a\    CGIPassAuth On' "$APACHE_CONFIG"
+        echo "   ✓ CGIPassAuth configurado"
+    else
+        echo "   ✓ CGIPassAuth ya estaba configurado"
+    fi
+    
+    # Backup: también agregar SetEnvIf por si acaso
+    if ! grep -q "SetEnvIf Authorization" "$APACHE_CONFIG"; then
+        echo "   Aplicando SetEnvIf como respaldo..."
+        sed -i '/<\/VirtualHost>/i\    SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1' "$APACHE_CONFIG"
+        echo "   ✓ SetEnvIf configurado"
+    fi
+fi
+
+# Verificar sintaxis de Apache
+echo "🔍 Verificando sintaxis de Apache..."
+if apache2ctl configtest 2>&1 | grep -q "Syntax OK"; then
+    echo "   ✓ Sintaxis correcta"
+else
+    echo "   ⚠ Error en sintaxis, pero continuando..."
+fi
 
 # FORZAR APP_KEY correcta
 export APP_KEY="base64:GKeBjry+gf8vc+uhMm73SC6wqtRNdQcFE8Oy+okKXb8="
