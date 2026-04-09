@@ -16,6 +16,19 @@
       </div>
     </div>
 
+    <!-- Error Message -->
+    <div v-if="error" class="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-xl">
+      <div class="flex items-start gap-3">
+        <svg class="w-5 h-5 text-rose-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <div>
+          <h3 class="font-semibold text-rose-800">Error al guardar</h3>
+          <p class="text-rose-600 text-sm">{{ error }}</p>
+        </div>
+      </div>
+    </div>
+
     <!-- Form -->
     <form @submit.prevent="handleSubmit" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Main Info -->
@@ -275,6 +288,7 @@ const categories = ref([])
 const warehouses = ref([])
 const galleryImages = ref([]) // Array of { url, file } for new uploads
 const imagesToDelete = ref([]) // Array of indices to delete on server
+const error = ref('') // Error message
 
 async function loadProduct() {
   if (isEditing.value) {
@@ -398,7 +412,25 @@ async function handleSubmit() {
     router.push('/products')
   } catch (err) {
     console.error('Error saving product:', err)
-    alert(err.response?.data?.message || 'Error al guardar el producto')
+    
+    // Manejar errores de validación
+    if (err.response?.status === 422) {
+      const errors = err.response?.data?.errors
+      if (errors) {
+        // Mostrar el primer error de validación
+        const firstError = Object.values(errors)[0]
+        error.value = Array.isArray(firstError) ? firstError[0] : firstError
+      } else {
+        error.value = err.response?.data?.message || 'Error de validación. Verifica los datos ingresados.'
+      }
+    } else if (err.response?.status === 500) {
+      error.value = 'Error del servidor. Por favor, intenta de nuevo en unos momentos.'
+    } else {
+      error.value = err.response?.data?.message || 'Error al guardar el producto. Intenta de nuevo.'
+    }
+    
+    // Scroll al mensaje de error
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   } finally {
     saving.value = false
   }
