@@ -4,6 +4,9 @@ import { VueQueryPlugin } from '@tanstack/vue-query'
 import router from './router'
 import App from './App.vue'
 
+// Import Chart.js configuration (must be before components)
+import './config/chartjs'
+
 import './assets/styles.css'
 
 const app = createApp(App)
