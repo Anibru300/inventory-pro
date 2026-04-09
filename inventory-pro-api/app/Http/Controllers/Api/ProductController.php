@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\ProductPriceHistory;
 use App\Models\StockLevel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -71,6 +72,21 @@ class ProductController extends Controller
             'valuation_method' => 'nullable|in:FIFO,AVERAGE,LIFO',
             'is_active' => 'boolean',
             'image' => 'nullable|image|max:2048', // Max 2MB
+        ], [
+            'name.required' => 'El nombre del producto es obligatorio.',
+            'sku.required' => 'El código SKU es obligatorio.',
+            'sku.unique' => 'Este código SKU ya está en uso. Por favor, usa otro código.',
+            'barcode.unique' => 'Este código de barras ya está registrado.',
+            'cost.required' => 'El costo unitario es obligatorio.',
+            'cost.numeric' => 'El costo debe ser un número.',
+            'cost.min' => 'El costo no puede ser negativo.',
+            'price.required' => 'El precio de venta es obligatorio.',
+            'price.numeric' => 'El precio debe ser un número.',
+            'price.min' => 'El precio no puede ser negativo.',
+            'category_id.exists' => 'La categoría seleccionada no existe.',
+            'warehouse_id.exists' => 'El almacén seleccionado no existe.',
+            'image.image' => 'El archivo debe ser una imagen.',
+            'image.max' => 'La imagen no puede superar los 2MB.',
         ]);
 
         $initialStock = $validated['initial_stock'] ?? 0;
@@ -105,21 +121,26 @@ class ProductController extends Controller
             ];
         }
 
-        $product = Product::create($productData);
+        // Use transaction to ensure data consistency
+        $product = DB::transaction(function () use ($productData, $warehouseId, $initialStock) {
+            $product = Product::create($productData);
 
-        // Create stock level if warehouse specified
-        if ($warehouseId && $initialStock > 0) {
-            StockLevel::create([
-                'tenant_id' => $product->tenant_id,
-                'product_id' => $product->id,
-                'warehouse_id' => $warehouseId,
-                'quantity' => $initialStock,
-                'available_quantity' => $initialStock,
-                'reserved_quantity' => 0,
-                'reorder_point' => $productData['stock_min'],
-                'max_stock' => $productData['stock_max'],
-            ]);
-        }
+            // Create stock level if warehouse specified
+            if ($warehouseId && $initialStock > 0) {
+                StockLevel::create([
+                    'tenant_id' => $product->tenant_id,
+                    'product_id' => $product->id,
+                    'warehouse_id' => $warehouseId,
+                    'quantity' => $initialStock,
+                    'available_quantity' => $initialStock,
+                    'reserved_quantity' => 0,
+                    'reorder_point' => $productData['stock_min'],
+                    'max_stock' => $productData['stock_max'],
+                ]);
+            }
+            
+            return $product;
+        });
 
         return response()->json($product->load(['category', 'stockLevels.warehouse']), 201);
     }
