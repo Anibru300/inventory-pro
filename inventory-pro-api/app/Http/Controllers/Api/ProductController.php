@@ -19,29 +19,26 @@ class ProductController extends Controller
             $user = auth()->user();
             \Log::info('Product index - User: ' . ($user ? $user->id : 'null') . ', Tenant: ' . ($user ? $user->tenant_id : 'null'));
             
-            // Start with simple query, add relations carefully
-            $query = Product::query();
-            
-            // Try to add category relation
-            try {
-                $query->with('category');
-            } catch (\Exception $e) {
-                \Log::error('Error loading category relation: ' . $e->getMessage());
+            if (!$user || !$user->tenant_id) {
+                return response()->json([
+                    'data' => [],
+                    'current_page' => 1,
+                    'last_page' => 1,
+                    'per_page' => 25,
+                    'total' => 0
+                ]);
             }
-
+            
+            // Query without global scopes
+            $query = Product::withoutGlobalScopes()->where('tenant_id', $user->tenant_id);
+            
             // Search
             if ($request->has('search') && !empty($request->search)) {
                 $search = $request->search;
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
-                      ->orWhere('sku', 'like', "%{$search}%")
-                      ->orWhere('barcode', 'like', "%{$search}%");
+                      ->orWhere('sku', 'like', "%{$search}%");
                 });
-            }
-
-            // Category filter
-            if ($request->has('category_id') && !empty($request->category_id)) {
-                $query->where('category_id', $request->category_id);
             }
 
             $products = $query->latest()->paginate($request->per_page ?? 25);
