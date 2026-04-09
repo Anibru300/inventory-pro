@@ -1,11 +1,5 @@
 <template>
-  <div class="space-y-4" style="border: 2px dashed green; padding: 10px;">
-    <!-- Debug info visible -->
-    <div class="text-xs text-green-600 bg-green-50 p-2 rounded">
-      <p>🐛 Debug Mode</p>
-      <p>Client ID exists: {{ clientId ? '✅ YES' : '❌ NO' }}</p>
-      <p>Client ID value: {{ clientId ? clientId.substring(0, 20) + '...' : 'NOT SET' }}</p>
-    </div>
+  <div class="space-y-4">
     <button 
       @click="handleGoogleLogin"
       :disabled="loading"
@@ -92,8 +86,6 @@ const googleUserData = ref(null)
 
 // Load Google API
 onMounted(() => {
-  console.log('Google Client ID:', import.meta.env.VITE_GOOGLE_CLIENT_ID)
-  
   if (!window.google) {
     const script = document.createElement('script')
     script.src = 'https://accounts.google.com/gsi/client'
@@ -108,12 +100,6 @@ onMounted(() => {
     document.head.appendChild(script)
   }
 })
-
-// DEBUG: Log all env vars
-console.log('=== ENV DEBUG ===')
-console.log('import.meta.env:', import.meta.env)
-console.log('VITE_GOOGLE_CLIENT_ID:', import.meta.env.VITE_GOOGLE_CLIENT_ID)
-console.log('=================')
 
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
 

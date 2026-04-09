@@ -85,11 +85,7 @@
           </div>
         </div>
 
-        <!-- Debug wrapper -->
-        <div id="google-btn-debug" class="border border-red-500 p-2">
-          <p class="text-xs text-red-500 mb-2">Debug: Componente cargado</p>
-          <GoogleLoginButton @error="(msg) => authStore.error = msg" />
-        </div>
+        <GoogleLoginButton @error="(msg) => authStore.error = msg" />
 
         <div class="relative my-6">
           <div class="absolute inset-0 flex items-center">
