@@ -12,10 +12,14 @@ use App\Models\WarehouseTransfer;
 use App\Services\InventoryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class DashboardController extends Controller
 {
     protected InventoryService $inventoryService;
+    
+    // Cache TTL: 2 minutos para dashboard (datos cambian frecuentemente)
+    private const CACHE_TTL = 120;
 
     public function __construct(InventoryService $inventoryService)
     {
@@ -25,53 +29,76 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $tenantId = $request->user()->tenant_id;
+        $cacheKey = "dashboard:{$tenantId}";
+        
+        // Intentar obtener de caché
+        $cached = Cache::get($cacheKey);
+        if ($cached) {
+            return response()->json($cached);
+        }
         
         // Stats - Total de productos (solo activos, no eliminados)
         $totalProducts = Product::where('tenant_id', $tenantId)
             ->whereNull('deleted_at')
             ->count();
         
-        // Valor total del inventario (suma de cantidad * costo unitario)
-        // Solo productos no eliminados
+        // Valor total del inventario - consulta optimizada
         $totalValue = StockLevel::where('stock_levels.tenant_id', $tenantId)
             ->join('products', 'stock_levels.product_id', '=', 'products.id')
             ->whereNull('products.deleted_at')
-            ->sum(DB::raw('stock_levels.quantity * products.unit_cost'));
+            ->sum(DB::raw('stock_levels.quantity * stock_levels.avg_unit_cost'));
         
-        // Valor en tránsito (solo productos no eliminados)
-        $inTransitValue = StockLevel::where('stock_levels.tenant_id', $tenantId)
-            ->where('stock_levels.in_transit_quantity', '>', 0)
-            ->join('products', 'stock_levels.product_id', '=', 'products.id')
+        // Productos con stock bajo - consulta optimizada
+        $stockSummary = DB::table('products')
+            ->leftJoin('stock_levels', function($join) use ($tenantId) {
+                $join->on('products.id', '=', 'stock_levels.product_id')
+                     ->where('stock_levels.tenant_id', '=', $tenantId);
+            })
+            ->where('products.tenant_id', $tenantId)
             ->whereNull('products.deleted_at')
-            ->sum(DB::raw('stock_levels.in_transit_quantity * products.unit_cost'));
-        
-        // Productos con stock bajo - solo productos activos
-        $productsWithStock = Product::where('tenant_id', $tenantId)
-            ->whereNull('deleted_at')
-            ->with(['stockLevels', 'category'])
+            ->select(
+                'products.id',
+                'products.name',
+                'products.sku',
+                'products.stock_min',
+                DB::raw('COALESCE(SUM(stock_levels.quantity), 0) as total_stock')
+            )
+            ->groupBy('products.id', 'products.name', 'products.sku', 'products.stock_min')
             ->get();
         
-        $lowStockProducts = [];
         $lowStockCount = 0;
         $outOfStockCount = 0;
+        $lowStockProducts = [];
         
-        foreach ($productsWithStock as $product) {
-            $totalStock = $product->stockLevels->sum('quantity');
-            
-            if ($totalStock <= 0) {
+        foreach ($stockSummary as $product) {
+            if ($product->total_stock <= 0) {
                 $outOfStockCount++;
-            } elseif ($totalStock <= $product->stock_min) {
+            } elseif ($product->stock_min > 0 && $product->total_stock <= $product->stock_min) {
                 $lowStockCount++;
                 if (count($lowStockProducts) < 5) {
-                    $lowStockProducts[] = $product;
+                    $lowStockProducts[] = [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'sku' => $product->sku,
+                        'stock_quantity' => (int) $product->total_stock,
+                        'stock_min' => $product->stock_min,
+                    ];
                 }
             }
         }
         
-        // Recent movements
-        $recentMovements = StockMovement::where('tenant_id', $tenantId)
-            ->with(['product', 'warehouse'])
-            ->orderBy('created_at', 'desc')
+        // Recent movements - solo campos necesarios
+        $recentMovements = StockMovement::where('stock_movements.tenant_id', $tenantId)
+            ->join('products', 'stock_movements.product_id', '=', 'products.id')
+            ->select(
+                'stock_movements.id',
+                'stock_movements.type',
+                'stock_movements.quantity',
+                'stock_movements.created_at',
+                'products.name as product_name',
+                'products.sku'
+            )
+            ->orderBy('stock_movements.created_at', 'desc')
             ->limit(5)
             ->get();
         
@@ -101,11 +128,10 @@ class DashboardController extends Controller
             ->exits()
             ->sum('quantity');
         
-        return response()->json([
+        $result = [
             'stats' => [
                 'totalProducts' => $totalProducts,
                 'totalValue' => round($totalValue ?? 0, 2),
-                'inTransitValue' => round($inTransitValue ?? 0, 2),
                 'lowStock' => $lowStockCount,
                 'outOfStock' => $outOfStockCount,
                 'activeTransfers' => $activeTransfers,
@@ -113,27 +139,42 @@ class DashboardController extends Controller
                 'unprocessedEvents' => $unprocessedEvents,
             ],
             'today_summary' => [
-                'entries' => $todayEntries,
-                'exits' => $todayExits,
+                'entries' => (int) $todayEntries,
+                'exits' => (int) $todayExits,
             ],
             'recent_movements' => $recentMovements,
             'low_stock_products' => $lowStockProducts,
-        ]);
+        ];
+        
+        // Guardar en caché
+        Cache::put($cacheKey, $result, self::CACHE_TTL);
+        
+        return response()->json($result);
     }
     
     public function stats(Request $request)
     {
         $tenantId = $request->user()->tenant_id;
+        $cacheKey = "dashboard:stats:{$tenantId}";
+        
+        $cached = Cache::get($cacheKey);
+        if ($cached) {
+            return response()->json($cached);
+        }
         
         // Movimientos de hoy
         $movementsToday = StockMovement::where('tenant_id', $tenantId)
             ->whereDate('created_at', now()->toDateString())
             ->count();
         
-        return response()->json([
+        $result = [
             'products_count' => Product::where('tenant_id', $tenantId)->count(),
             'movements_today' => $movementsToday,
-        ]);
+        ];
+        
+        Cache::put($cacheKey, $result, self::CACHE_TTL);
+        
+        return response()->json($result);
     }
 
     /**
@@ -142,8 +183,16 @@ class DashboardController extends Controller
     public function advancedStats(Request $request)
     {
         $tenantId = $request->user()->tenant_id;
+        $cacheKey = "dashboard:advanced:{$tenantId}";
+        
+        $cached = Cache::get($cacheKey);
+        if ($cached) {
+            return response()->json($cached);
+        }
         
         $stats = $this->inventoryService->getInventoryStats($tenantId);
+        
+        Cache::put($cacheKey, $stats, self::CACHE_TTL);
         
         return response()->json($stats);
     }
@@ -154,29 +203,52 @@ class DashboardController extends Controller
     public function generalWarehouse(Request $request)
     {
         $tenantId = $request->user()->tenant_id;
+        $cacheKey = "dashboard:warehouse:{$tenantId}";
         
-        // Obtener todos los productos activos (no eliminados) con sus niveles de stock
-        $products = Product::where('tenant_id', $tenantId)
-            ->whereNull('deleted_at')
-            ->with(['category', 'stockLevels.warehouse'])
-            ->get();
+        $cached = Cache::get($cacheKey);
+        if ($cached) {
+            return response()->json($cached);
+        }
         
-        // Obtener todos los almacenes
+        // Obtener datos en una sola consulta
+        $products = Product::where('products.tenant_id', $tenantId)
+            ->whereNull('products.deleted_at')
+            ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
+            ->select(
+                'products.id',
+                'products.name',
+                'products.sku',
+                'products.unit_cost',
+                'products.stock_min',
+                'categories.name as category_name'
+            )
+            ->get()
+            ->keyBy('id');
+        
+        // Obtener stock por producto y almacén
+        $stockData = StockLevel::where('tenant_id', $tenantId)
+            ->select('product_id', 'warehouse_id', 'quantity')
+            ->get()
+            ->groupBy('product_id');
+        
+        // Obtener almacenes
         $warehouses = \App\Models\Warehouse::where('tenant_id', $tenantId)
             ->orderBy('name')
-            ->get();
+            ->get(['id', 'name']);
         
-        // Construir el inventario general
+        // Construir el inventario
         $inventory = [];
         $totalValue = 0;
         $lowStockCount = 0;
         
-        foreach ($products as $product) {
+        foreach ($products as $productId => $product) {
             $warehouseStock = [];
             $totalStock = 0;
             
+            $productStocks = $stockData->get($productId, collect());
+            
             foreach ($warehouses as $warehouse) {
-                $stock = $product->stockLevels->where('warehouse_id', $warehouse->id)->first();
+                $stock = $productStocks->firstWhere('warehouse_id', $warehouse->id);
                 $qty = $stock ? $stock->quantity : 0;
                 $warehouseStock[$warehouse->id] = $qty;
                 $totalStock += $qty;
@@ -193,23 +265,25 @@ class DashboardController extends Controller
                 'product_id' => $product->id,
                 'product_name' => $product->name,
                 'sku' => $product->sku,
-                'category_id' => $product->category_id,
-                'category' => $product->category ? $product->category->name : 'Sin categoría',
+                'category' => $product->category_name ?? 'Sin categoría',
                 'min_stock' => $product->stock_min,
                 'total_stock' => $totalStock,
                 'warehouse_stock' => $warehouseStock,
                 'unit_cost' => $product->unit_cost,
                 'total_value' => $productValue,
-                'image' => $product->image_url,
             ];
         }
         
-        return response()->json([
+        $result = [
             'warehouses' => $warehouses,
             'inventory' => $inventory,
             'total_products' => count($products),
             'total_value' => $totalValue,
             'low_stock_count' => $lowStockCount,
-        ]);
+        ];
+        
+        Cache::put($cacheKey, $result, self::CACHE_TTL);
+        
+        return response()->json($result);
     }
 }

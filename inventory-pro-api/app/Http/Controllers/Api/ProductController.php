@@ -9,10 +9,16 @@ use App\Models\StockLevel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
+    /**
+     * Cache TTL en segundos (5 minutos)
+     */
+    private const CACHE_TTL = 300;
+
     public function index(Request $request)
     {
         $user = auth()->user();
@@ -29,14 +35,88 @@ class ProductController extends Controller
         }
         
         try {
-            // Simple query first - just get products
-            $products = DB::table('products')
-                ->where('tenant_id', $user->tenant_id)
-                ->whereNull('deleted_at')
-                ->orderBy('created_at', 'desc')
-                ->paginate(25);
+            // Generar cache key única basada en tenant y parámetros
+            $cacheKey = "products:{$user->tenant_id}:" . md5(serialize($request->all()));
             
-            return response()->json($products);
+            // Intentar obtener de caché
+            $cached = Cache::get($cacheKey);
+            if ($cached) {
+                return response()->json($cached);
+            }
+            
+            // Query optimizada con índices
+            $query = DB::table('products')
+                ->where('tenant_id', $user->tenant_id)
+                ->whereNull('deleted_at');
+            
+            // Filtros opcionales
+            if ($request->has('search')) {
+                $search = $request->get('search');
+                $query->where(function($q) use ($search) {
+                    $q->where('name', 'ilike', "%{$search}%")
+                      ->orWhere('sku', 'ilike', "%{$search}%")
+                      ->orWhere('barcode', 'ilike', "%{$search}%");
+                });
+            }
+            
+            if ($request->has('category_id')) {
+                $query->where('category_id', $request->get('category_id'));
+            }
+            
+            if ($request->has('status')) {
+                switch ($request->get('status')) {
+                    case 'active':
+                        $query->where('is_active', true);
+                        break;
+                    case 'inactive':
+                        $query->where('is_active', false);
+                        break;
+                }
+            }
+            
+            // Ordenamiento
+            $sortBy = $request->get('sort_by', 'created_at');
+            $sortOrder = $request->get('sort_order', 'desc');
+            $allowedSortColumns = ['name', 'sku', 'created_at', 'updated_at', 'price'];
+            
+            if (in_array($sortBy, $allowedSortColumns)) {
+                $query->orderBy($sortBy, $sortOrder === 'asc' ? 'asc' : 'desc');
+            }
+            
+            // Paginación con límite máximo
+            $perPage = min($request->get('per_page', 25), 100);
+            $products = $query->paginate($perPage);
+            
+            // Agregar datos de stock para cada producto (query optimizada)
+            $productIds = collect($products->items())->pluck('id');
+            
+            if ($productIds->isNotEmpty()) {
+                $stockData = DB::table('stock_levels')
+                    ->whereIn('product_id', $productIds)
+                    ->where('tenant_id', $user->tenant_id)
+                    ->select('product_id', DB::raw('SUM(quantity) as total_quantity'))
+                    ->groupBy('product_id')
+                    ->get()
+                    ->keyBy('product_id');
+                
+                // Agregar stock a cada producto
+                foreach ($products->items() as $product) {
+                    $stock = $stockData->get($product->id);
+                    $product->stock_quantity = $stock ? (int) $stock->total_quantity : 0;
+                    $product->stock_status = $this->getStockStatus(
+                        $product->stock_quantity, 
+                        $product->min_stock ?? 0
+                    );
+                }
+            }
+            
+            $result = $products->toArray();
+            
+            // Guardar en caché
+            Cache::put($cacheKey, $result, self::CACHE_TTL);
+            
+            return response()->json($result);
+            
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al cargar productos: ' . $e->getMessage(),
@@ -47,18 +127,14 @@ class ProductController extends Controller
         }
     }
     
-    private function getStockStatus($stock, $minStock)
+    /**
+     * Invalidar caché de productos para un tenant
+     */
+    private function clearProductsCache($tenantId)
     {
-        $stock = (int) $stock;
-        $minStock = (int) $minStock;
-        
-        if ($stock <= 0) {
-            return 'out_of_stock';
-        }
-        if ($minStock > 0 && $stock <= $minStock) {
-            return 'low_stock';
-        }
-        return 'ok';
+        // Nota: En caché file/array no podemos borrar por patrón fácilmente
+        // pero podemos usar tags si tenemos Redis
+        // Por ahora, las entradas expirarán en CACHE_TTL segundos
     }
 
     public function store(Request $request)
@@ -99,74 +175,43 @@ class ProductController extends Controller
                 'price.min' => 'El precio no puede ser negativo.',
                 'category_id.exists' => 'La categoría seleccionada no existe.',
             ]);
-
-            DB::beginTransaction();
             
-            $product = new Product();
-            $product->tenant_id = $user->tenant_id;
-            $product->name = $validated['name'];
-            $product->sku = $validated['sku'];
-            $product->barcode = $validated['barcode'] ?? null;
-            $product->description = $validated['description'] ?? null;
-            $product->category_id = $validated['category_id'] ?? null;
-            $product->unit_of_measure = $validated['unit'] ?? 'piece';
-            $product->unit_cost = $validated['cost'];
-            $product->selling_price = $validated['price'];
-            $product->stock_min = $validated['min_stock'] ?? 0;
-            $product->stock_max = $validated['max_stock'] ?? null;
-            $product->reorder_point = $validated['min_stock'] ?? 0;
-            $product->valuation_method = $validated['valuation_method'] ?? 'FIFO';
-            $product->is_active = $validated['is_active'] ?? true;
-            $product->save();
-
             // Handle image upload
+            $imagePath = null;
             if ($request->hasFile('image')) {
-                $path = $request->file('image')->store('products', 'public');
-                $product->images = [['url' => Storage::url($path), 'is_primary' => true]];
-                $product->save();
+                $imagePath = $request->file('image')->store('products', 'public');
             }
-
+            
+            // Set defaults
+            $validated['tenant_id'] = $user->tenant_id;
+            $validated['is_active'] = $validated['is_active'] ?? true;
+            $validated['valuation_method'] = $validated['valuation_method'] ?? 'AVERAGE';
+            $validated['image'] = $imagePath;
+            
+            // Create product
+            $product = Product::create($validated);
+            
             // Create initial stock if provided
             if (!empty($validated['initial_stock']) && $validated['initial_stock'] > 0) {
-                $warehouseId = $validated['warehouse_id'] ?? $this->getDefaultWarehouseId($user->tenant_id);
+                $warehouseId = $validated['warehouse_id'] ?? $this->getPrimaryWarehouseId($user->tenant_id);
                 
-                if ($warehouseId) {
-                    StockLevel::create([
-                        'tenant_id' => $user->tenant_id,
-                        'product_id' => $product->id,
-                        'warehouse_id' => $warehouseId,
-                        'quantity' => $validated['initial_stock'],
-                        'available_quantity' => $validated['initial_stock'],
-                    ]);
-
-                    // Create price history entry
-                    ProductPriceHistory::create([
-                        'tenant_id' => $user->tenant_id,
-                        'product_id' => $product->id,
-                        'unit_cost' => $validated['cost'],
-                        'selling_price' => $validated['price'],
-                        'movement_type' => 'initial',
-                    ]);
-                }
+                StockLevel::create([
+                    'tenant_id' => $user->tenant_id,
+                    'product_id' => $product->id,
+                    'warehouse_id' => $warehouseId,
+                    'quantity' => $validated['initial_stock'],
+                    'avg_unit_cost' => $validated['cost'],
+                ]);
             }
-
-            DB::commit();
-
+            
             return response()->json([
-                'product' => $product->fresh(),
-                'message' => 'Producto creado exitosamente'
+                'message' => 'Producto creado exitosamente',
+                'product' => $product->load(['category', 'stockLevels.warehouse'])
             ], 201);
-
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            DB::rollBack();
-            return response()->json([
-                'message' => 'Error de validación',
-                'errors' => $e->errors()
-            ], 422);
+            
         } catch (\Exception $e) {
-            DB::rollBack();
             return response()->json([
-                'message' => 'Error al crear el producto: ' . $e->getMessage()
+                'message' => 'Error al crear producto: ' . $e->getMessage(),
             ], 500);
         }
     }
@@ -180,19 +225,42 @@ class ProductController extends Controller
         }
         
         try {
-            $product = DB::table('products')
+            $cacheKey = "product:{$user->tenant_id}:{$id}";
+            
+            $cached = Cache::get($cacheKey);
+            if ($cached) {
+                return response()->json($cached);
+            }
+            
+            $product = Product::with([
+                    'category',
+                    'stockLevels.warehouse',
+                    'images'
+                ])
                 ->where('id', $id)
                 ->where('tenant_id', $user->tenant_id)
-                ->whereNull('deleted_at')
                 ->first();
             
             if (!$product) {
                 return response()->json(['message' => 'Producto no encontrado'], 404);
             }
             
-            return response()->json($product);
+            // Calculate total stock
+            $product->total_stock = $product->stockLevels->sum('quantity');
+            $product->stock_status = $this->getStockStatus(
+                $product->total_stock, 
+                $product->min_stock ?? 0
+            );
+            
+            $result = $product->toArray();
+            Cache::put($cacheKey, $result, self::CACHE_TTL);
+            
+            return response()->json($result);
+            
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+            return response()->json([
+                'message' => 'Error al cargar producto: ' . $e->getMessage()
+            ], 500);
         }
     }
 
@@ -204,55 +272,66 @@ class ProductController extends Controller
             return response()->json(['message' => 'No autorizado'], 403);
         }
         
-        $product = Product::where('id', $id)
-            ->where('tenant_id', $user->tenant_id)
-            ->first();
-        
-        if (!$product) {
-            return response()->json(['message' => 'Producto no encontrado'], 404);
+        try {
+            $product = Product::where('id', $id)
+                ->where('tenant_id', $user->tenant_id)
+                ->first();
+            
+            if (!$product) {
+                return response()->json(['message' => 'Producto no encontrado'], 404);
+            }
+            
+            $validated = $request->validate([
+                'name' => 'string|max:255',
+                'sku' => 'string|max:100|unique:products,sku,' . $id . ',id,tenant_id,' . $user->tenant_id,
+                'barcode' => 'nullable|string|max:100|unique:products,barcode,' . $id . ',id,tenant_id,' . $user->tenant_id,
+                'description' => 'nullable|string',
+                'category_id' => 'nullable|exists:categories,id',
+                'unit' => 'nullable|string|max:50',
+                'cost' => 'numeric|min:0',
+                'price' => 'numeric|min:0',
+                'min_stock' => 'nullable|numeric|min:0',
+                'max_stock' => 'nullable|numeric|min:0',
+                'is_active' => 'boolean',
+                'image' => 'nullable|image|max:2048',
+            ]);
+            
+            // Track price changes
+            if (isset($validated['price']) && $validated['price'] != $product->price) {
+                ProductPriceHistory::create([
+                    'tenant_id' => $user->tenant_id,
+                    'product_id' => $product->id,
+                    'old_price' => $product->price,
+                    'new_price' => $validated['price'],
+                    'changed_by' => $user->id,
+                    'reason' => $request->input('price_change_reason', 'Actualización manual'),
+                ]);
+            }
+            
+            // Handle image upload
+            if ($request->hasFile('image')) {
+                // Delete old image if exists
+                if ($product->image) {
+                    Storage::disk('public')->delete($product->image);
+                }
+                $validated['image'] = $request->file('image')->store('products', 'public');
+            }
+            
+            $product->update($validated);
+            
+            // Invalidar caché del producto
+            Cache::forget("product:{$user->tenant_id}:{$id}");
+            
+            return response()->json([
+                'message' => 'Producto actualizado exitosamente',
+                'product' => $product->fresh(['category', 'stockLevels.warehouse'])
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al actualizar producto: ' . $e->getMessage()
+            ], 500);
         }
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'sku' => 'required|string|max:100|unique:products,sku,' . $id,
-            'barcode' => 'nullable|string|max:100|unique:products,barcode,' . $id,
-            'description' => 'nullable|string',
-            'category_id' => 'nullable|exists:categories,id',
-            'unit' => 'nullable|string|max:50',
-            'cost' => 'required|numeric|min:0',
-            'price' => 'required|numeric|min:0',
-            'min_stock' => 'nullable|numeric|min:0',
-            'max_stock' => 'nullable|numeric|min:0',
-            'valuation_method' => 'nullable|in:FIFO,AVERAGE,LIFO',
-            'is_active' => 'boolean',
-            'image' => 'nullable|image|max:2048',
-        ]);
-
-        $product->name = $validated['name'];
-        $product->sku = $validated['sku'];
-        $product->barcode = $validated['barcode'] ?? null;
-        $product->description = $validated['description'] ?? null;
-        $product->category_id = $validated['category_id'] ?? null;
-        $product->unit_of_measure = $validated['unit'] ?? $product->unit_of_measure;
-        $product->unit_cost = $validated['cost'];
-        $product->selling_price = $validated['price'];
-        $product->stock_min = $validated['min_stock'] ?? 0;
-        $product->stock_max = $validated['max_stock'] ?? null;
-        $product->reorder_point = $validated['min_stock'] ?? 0;
-        $product->valuation_method = $validated['valuation_method'] ?? $product->valuation_method;
-        $product->is_active = $validated['is_active'] ?? $product->is_active;
-
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'public');
-            $product->images = [['url' => Storage::url($path), 'is_primary' => true]];
-        }
-
-        $product->save();
-
-        return response()->json([
-            'product' => $product,
-            'message' => 'Producto actualizado exitosamente'
-        ]);
     }
 
     public function destroy($id)
@@ -263,56 +342,53 @@ class ProductController extends Controller
             return response()->json(['message' => 'No autorizado'], 403);
         }
         
-        $product = Product::where('id', $id)
-            ->where('tenant_id', $user->tenant_id)
-            ->first();
-        
-        if (!$product) {
-            return response()->json(['message' => 'Producto no encontrado'], 404);
+        try {
+            $product = Product::where('id', $id)
+                ->where('tenant_id', $user->tenant_id)
+                ->first();
+            
+            if (!$product) {
+                return response()->json(['message' => 'Producto no encontrado'], 404);
+            }
+            
+            // Soft delete
+            $product->delete();
+            
+            // Invalidar caché
+            Cache::forget("product:{$user->tenant_id}:{$id}");
+            
+            return response()->json([
+                'message' => 'Producto eliminado exitosamente'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al eliminar producto: ' . $e->getMessage()
+            ], 500);
         }
-
-        $product->delete();
-
-        return response()->json(['message' => 'Producto eliminado exitosamente']);
     }
-
-    protected function getDefaultWarehouseId($tenantId)
+    
+    private function getPrimaryWarehouseId($tenantId)
     {
         $warehouse = DB::table('warehouses')
             ->where('tenant_id', $tenantId)
-            ->where('is_active', true)
+            ->where('is_primary', true)
             ->first();
-        
+            
         return $warehouse?->id;
     }
-
-    // Additional methods (lowStock, etc.) would go here...
-    public function lowStock()
+    
+    private function getStockStatus($stock, $minStock)
     {
-        $user = auth()->user();
+        $stock = (int) $stock;
+        $minStock = (int) $minStock;
         
-        if (!$user || !$user->tenant_id) {
-            return response()->json(['message' => 'No autorizado'], 403);
+        if ($stock <= 0) {
+            return 'out_of_stock';
         }
-        
-        // Simplified low stock query
-        $products = DB::table('products')
-            ->where('tenant_id', $user->tenant_id)
-            ->whereNull('deleted_at')
-            ->get();
-        
-        $lowStockProducts = [];
-        foreach ($products as $product) {
-            $totalStock = DB::table('stock_levels')
-                ->where('product_id', $product->id)
-                ->sum('quantity');
-            
-            if ($totalStock > 0 && $totalStock <= $product->stock_min) {
-                $product->total_stock = $totalStock;
-                $lowStockProducts[] = $product;
-            }
+        if ($minStock > 0 && $stock <= $minStock) {
+            return 'low_stock';
         }
-        
-        return response()->json($lowStockProducts);
+        return 'ok';
     }
 }
