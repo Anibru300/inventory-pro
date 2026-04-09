@@ -20,9 +20,6 @@ api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token')
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
-    // Also add to query string as fallback for proxy issues
-    config.params = config.params || {}
-    config.params.api_token = token
   }
   return config
 })
