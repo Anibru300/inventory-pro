@@ -92,7 +92,7 @@ class DashboardController extends Controller
             ->join('products', 'stock_movements.product_id', '=', 'products.id')
             ->select(
                 'stock_movements.id',
-                'stock_movements.type',
+                'stock_movements.movement_type as type',
                 'stock_movements.quantity',
                 'stock_movements.created_at',
                 'products.name as product_name',
