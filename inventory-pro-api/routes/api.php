@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\StockMovementController;
 use App\Http\Controllers\Api\StripeController;
 use App\Http\Controllers\Api\WarehouseController;
 use App\Http\Controllers\Api\WarehouseTransferController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,6 +29,22 @@ Route::get('/health', function () {
         'status' => 'ok',
         'timestamp' => now()->toIso8601String(),
         'version' => '1.0.0',
+    ]);
+});
+
+// Simple test endpoint to check if token is being received
+Route::get('/token-test', function (Request $request) {
+    $authHeader = $request->header('Authorization');
+    $hasToken = $authHeader && str_starts_with($authHeader, 'Bearer ');
+    $tokenPreview = $hasToken ? substr($authHeader, 7, 20) . '...' : null;
+    
+    return response()->json([
+        'has_auth_header' => !!$authHeader,
+        'auth_header_preview' => $authHeader ? substr($authHeader, 0, 30) . '...' : null,
+        'has_bearer_token' => $hasToken,
+        'token_preview' => $tokenPreview,
+        'user_authenticated' => auth()->check(),
+        'user_id' => auth()->id(),
     ]);
 });
 
