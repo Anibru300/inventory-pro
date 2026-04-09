@@ -32,6 +32,20 @@ Route::get('/health', function () {
     ]);
 });
 
+// CRITICAL DEBUG: Check all headers received
+Route::get('/debug-headers', function (Request $request) {
+    $allHeaders = getallheaders() ?: [];
+    $serverAuth = $_SERVER['HTTP_AUTHORIZATION'] ?? 'NOT SET';
+    
+    return response()->json([
+        'all_headers' => $allHeaders,
+        'server_http_authorization' => $serverAuth,
+        'request_header_authorization' => $request->header('Authorization'),
+        'has_auth_header' => !!$request->header('Authorization'),
+        'auth_check' => auth()->check(),
+    ]);
+});
+
 // Simple test endpoint to check if token is being received
 Route::get('/token-test', function (Request $request) {
     $authHeader = $request->header('Authorization');
