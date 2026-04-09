@@ -29,61 +29,67 @@ class ProductController extends Controller
         }
         
         try {
-            // Build query with joins for category and stock
+            // Get categories for lookup
+            $categories = DB::table('categories')
+                ->where('tenant_id', $user->tenant_id)
+                ->pluck('name', 'id');
+            
+            // Get stock levels aggregated by product
+            $stockLevels = DB::table('stock_levels')
+                ->select('product_id', DB::raw('SUM(quantity) as total'), DB::raw('SUM(available_quantity) as available'))
+                ->where('tenant_id', $user->tenant_id)
+                ->groupBy('product_id')
+                ->get()
+                ->keyBy('product_id');
+            
+            // Build product query
             $query = DB::table('products')
-                ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
-                ->leftJoin('stock_levels', 'products.id', '=', 'stock_levels.product_id')
-                ->select(
-                    'products.*',
-                    'categories.name as category_name',
-                    DB::raw('COALESCE(SUM(stock_levels.quantity), 0) as total_stock'),
-                    DB::raw('COALESCE(SUM(stock_levels.available_quantity), 0) as available_stock')
-                )
-                ->where('products.tenant_id', $user->tenant_id)
-                ->whereNull('products.deleted_at')
-                ->groupBy('products.id', 'categories.name')
-                ->orderBy('products.created_at', 'desc');
+                ->where('tenant_id', $user->tenant_id)
+                ->whereNull('deleted_at');
             
             // Apply search filter if provided
             if ($request->has('search') && $request->search) {
                 $search = $request->search;
                 $query->where(function($q) use ($search) {
-                    $q->where('products.name', 'ilike', "%{$search}%")
-                      ->orWhere('products.sku', 'ilike', "%{$search}%")
-                      ->orWhere('products.barcode', 'ilike', "%{$search}%");
+                    $q->where('name', 'ilike', "%{$search}%")
+                      ->orWhere('sku', 'ilike', "%{$search}%")
+                      ->orWhere('barcode', 'ilike', "%{$search}%");
                 });
             }
             
             // Apply category filter if provided
             if ($request->has('category_id') && $request->category_id) {
-                $query->where('products.category_id', $request->category_id);
+                $query->where('category_id', $request->category_id);
             }
             
-            $products = $query->paginate(25);
+            $products = $query->orderBy('created_at', 'desc')->paginate(25);
             
             // Transform the response to match frontend expectations
-            $transformed = $products->through(function ($product) {
+            $transformed = $products->through(function ($product) use ($categories, $stockLevels) {
+                $stock = $stockLevels[$product->id] ?? (object)['total' => 0, 'available' => 0];
+                $categoryId = $product->category_id;
+                
                 return [
                     'id' => $product->id,
                     'name' => $product->name,
                     'sku' => $product->sku,
                     'barcode' => $product->barcode,
                     'description' => $product->description,
-                    'category_id' => $product->category_id,
-                    'category' => $product->category_name ? ['id' => $product->category_id, 'name' => $product->category_name] : null,
+                    'category_id' => $categoryId,
+                    'category' => $categoryId && isset($categories[$categoryId]) ? ['id' => $categoryId, 'name' => $categories[$categoryId]] : null,
                     'unit_of_measure' => $product->unit_of_measure,
                     'unit_cost' => $product->unit_cost,
                     'selling_price' => $product->selling_price,
                     'stock_min' => $product->stock_min,
                     'stock_max' => $product->stock_max,
-                    'total_stock' => (int) $product->total_stock,
-                    'available_stock' => (int) $product->available_stock,
+                    'total_stock' => (int) ($stock->total ?? 0),
+                    'available_stock' => (int) ($stock->available ?? 0),
                     'images' => $product->images ? json_decode($product->images, true) : [],
                     'is_active' => $product->is_active,
                     'valuation_method' => $product->valuation_method,
                     'created_at' => $product->created_at,
                     'updated_at' => $product->updated_at,
-                    'stock_status' => $this->getStockStatus($product->total_stock, $product->stock_min),
+                    'stock_status' => $this->getStockStatus($stock->total ?? 0, $product->stock_min),
                 ];
             });
             
