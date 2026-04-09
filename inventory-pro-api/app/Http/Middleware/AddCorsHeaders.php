@@ -18,7 +18,7 @@ class AddCorsHeaders
         
         $response->headers->set('Access-Control-Allow-Origin', '*');
         $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, X-Tenant-ID, Accept, Origin');
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Auth-Token, X-Requested-With, X-Tenant-ID, Accept, Origin');
         $response->headers->set('Access-Control-Expose-Headers', 'Authorization');
         
         return $response;
