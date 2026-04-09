@@ -10,13 +10,17 @@
     >
       <!-- Logo -->
       <div class="h-16 flex items-center px-5 border-b" :class="isDark ? 'border-slate-800' : 'border-slate-700'">
-        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 overflow-hidden"
+          :class="authStore.tenant?.logo_url ? 'bg-white' : 'bg-blue-600'">
+          <img v-if="authStore.tenant?.logo_url" :src="authStore.tenant.logo_url" class="w-full h-full object-contain p-0.5" />
+          <svg v-else class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
           </svg>
         </div>
-        <div>
-          <h1 class="font-semibold text-base text-white tracking-tight">Inventory Pro</h1>
+        <div class="flex-1 min-w-0">
+          <h1 class="font-semibold text-base text-white tracking-tight truncate">
+            {{ authStore.tenant?.name || 'Inventory Pro' }}
+          </h1>
           <p class="text-xs text-slate-400">Sistema ERP</p>
         </div>
       </div>
@@ -234,6 +238,7 @@ const ReceiptIcon = { render: () => h('svg', { class: 'w-5 h-5', fill: 'none', s
 const ImportIcon = { render: () => h('svg', { class: 'w-5 h-5', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' }, [h('path', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-width': '2', d: 'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12' })]) }
 const TransferIcon = { render: () => h('svg', { class: 'w-5 h-5', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' }, [h('path', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-width': '2', d: 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4' })]) }
 const LotIcon = { render: () => h('svg', { class: 'w-5 h-5', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' }, [h('path', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-width': '2', d: 'M7 20l4-16m2 16l4-16M6 9h14M4 15h14' })]) }
+const HistoryIcon = { render: () => h('svg', { class: 'w-5 h-5', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' }, [h('path', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-width': '2', d: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' })]) }
 
 const navigation = [
   { name: 'Dashboard', to: '/dashboard', icon: HomeIcon },
@@ -242,6 +247,7 @@ const navigation = [
   { name: 'Transferencias', to: '/transfers', icon: TransferIcon },
   { name: 'Lotes', to: '/lots', icon: LotIcon },
   { name: 'Almacenes', to: '/warehouses', icon: WarehouseIcon },
+  { name: 'Kardex', to: '/kardex', icon: HistoryIcon },
   { name: 'Categorías', to: '/categories', icon: TagIcon },
   { name: 'Vales', to: '/receipts', icon: ReceiptIcon },
   { name: 'Reportes', to: '/reports', icon: ChartIcon },
