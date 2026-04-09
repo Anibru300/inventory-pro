@@ -15,46 +15,45 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $user = auth()->user();
-        \Log::info('Product index - User: ' . ($user ? $user->id : 'null') . ', Tenant: ' . ($user ? $user->tenant_id : 'null'));
-        
-        $query = Product::with(['category', 'stockLevels.warehouse']);
-
-        // Search
-        if ($request->has('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('sku', 'like', "%{$search}%")
-                  ->orWhere('barcode', 'like', "%{$search}%");
-            });
-        }
-
-        // Category filter
-        if ($request->has('category_id')) {
-            $query->where('category_id', $request->category_id);
-        }
-
-        // Stock status filter
-        if ($request->has('stock_status')) {
-            switch ($request->stock_status) {
-                case 'low_stock':
-                    $query->lowStock();
-                    break;
-                case 'out_of_stock':
-                    $query->outOfStock();
-                    break;
-                case 'in_stock':
-                    $query->whereHas('stockLevels', function ($q) {
-                        $q->where('quantity', '>', 0);
-                    });
-                    break;
+        try {
+            $user = auth()->user();
+            \Log::info('Product index - User: ' . ($user ? $user->id : 'null') . ', Tenant: ' . ($user ? $user->tenant_id : 'null'));
+            
+            // Start with simple query, add relations carefully
+            $query = Product::query();
+            
+            // Try to add category relation
+            try {
+                $query->with('category');
+            } catch (\Exception $e) {
+                \Log::error('Error loading category relation: ' . $e->getMessage());
             }
+
+            // Search
+            if ($request->has('search') && !empty($request->search)) {
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('sku', 'like', "%{$search}%")
+                      ->orWhere('barcode', 'like', "%{$search}%");
+                });
+            }
+
+            // Category filter
+            if ($request->has('category_id') && !empty($request->category_id)) {
+                $query->where('category_id', $request->category_id);
+            }
+
+            $products = $query->latest()->paginate($request->per_page ?? 25);
+
+            return response()->json($products);
+        } catch (\Exception $e) {
+            \Log::error('Error in product index: ' . $e->getMessage());
+            \Log::error($e->getTraceAsString());
+            return response()->json([
+                'message' => 'Error al cargar productos: ' . $e->getMessage()
+            ], 500);
         }
-
-        $products = $query->latest()->paginate($request->per_page ?? 25);
-
-        return response()->json($products);
     }
 
     public function store(Request $request)
