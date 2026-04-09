@@ -42,20 +42,43 @@ export const useProductsStore = defineStore('products', () => {
     error.value = null
 
     try {
+      console.log('Fetching products from:', `${API_URL}/products`)
       const response = await axios.get(`${API_URL}/products`, { 
         params,
         headers: getAuthHeaders()
       })
-      products.value = response.data.data
-      pagination.value = {
-        current_page: response.data.current_page,
-        last_page: response.data.last_page,
-        per_page: response.data.per_page,
-        total: response.data.total,
+      console.log('Products response:', response.data)
+      
+      // Handle different response structures
+      if (response.data.data) {
+        // Laravel pagination format
+        products.value = response.data.data
+        pagination.value = {
+          current_page: response.data.current_page || 1,
+          last_page: response.data.last_page || 1,
+          per_page: response.data.per_page || 25,
+          total: response.data.total || 0,
+        }
+      } else if (Array.isArray(response.data)) {
+        // Simple array format
+        products.value = response.data
+        pagination.value = {
+          current_page: 1,
+          last_page: 1,
+          per_page: response.data.length,
+          total: response.data.length,
+        }
+      } else {
+        console.error('Unexpected response format:', response.data)
+        products.value = []
       }
+      
+      console.log('Products loaded:', products.value.length)
       return response.data
     } catch (err) {
+      console.error('Error fetching products:', err)
       error.value = err.response?.data?.message || 'Error al cargar productos'
+      products.value = []
       throw err
     } finally {
       loading.value = false
