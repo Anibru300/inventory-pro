@@ -15,6 +15,9 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
+        $user = auth()->user();
+        \Log::info('Product index - User: ' . ($user ? $user->id : 'null') . ', Tenant: ' . ($user ? $user->tenant_id : 'null'));
+        
         $query = Product::with(['category', 'stockLevels.warehouse']);
 
         // Search
