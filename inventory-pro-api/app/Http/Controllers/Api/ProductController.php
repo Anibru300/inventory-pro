@@ -97,7 +97,9 @@ class ProductController extends Controller
         } catch (\Exception $e) {
             \Log::error('Error fetching products: ' . $e->getMessage());
             return response()->json([
-                'message' => 'Error al cargar productos'
+                'message' => 'Error al cargar productos: ' . $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
             ], 500);
         }
     }
