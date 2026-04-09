@@ -26,6 +26,24 @@ const routes = [
     meta: { public: true },
   },
   {
+    path: '/forgot-password',
+    name: 'ForgotPassword',
+    component: () => import('../views/auth/ForgotPassword.vue'),
+    meta: { public: true },
+  },
+  {
+    path: '/reset-password',
+    name: 'ResetPassword',
+    component: () => import('../views/auth/ResetPassword.vue'),
+    meta: { public: true },
+  },
+  {
+    path: '/verify-email',
+    name: 'VerifyEmail',
+    component: () => import('../views/auth/VerifyEmail.vue'),
+    meta: { public: true },
+  },
+  {
     path: '/subscribe',
     name: 'Subscribe',
     component: () => import('../views/SubscriptionView.vue'),
@@ -153,6 +171,22 @@ const routes = [
     path: '/suppliers',
     name: 'Suppliers',
     component: () => import('../views/suppliers/SuppliersList.vue'),
+  },
+  // Purchase Orders
+  {
+    path: '/purchase-orders',
+    name: 'PurchaseOrders',
+    component: () => import('../views/purchase-orders/PurchaseOrderList.vue'),
+  },
+  {
+    path: '/purchase-orders/new',
+    name: 'PurchaseOrderNew',
+    component: () => import('../views/purchase-orders/PurchaseOrderForm.vue'),
+  },
+  {
+    path: '/purchase-orders/:id',
+    name: 'PurchaseOrderEdit',
+    component: () => import('../views/purchase-orders/PurchaseOrderForm.vue'),
   },
   // Users
   {

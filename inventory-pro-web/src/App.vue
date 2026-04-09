@@ -24,18 +24,31 @@
     <div class="relative z-10">
       <RouterView />
     </div>
+    
+    <!-- Offline Status -->
+    <OfflineStatusBar v-if="authStore.isAuthenticated" />
   </div>
 </template>
 
 <script setup>
 import { RouterView } from 'vue-router'
+import { onMounted } from 'vue'
 import { useAuthStore } from './stores/auth'
 import { useDarkMode } from './composables/useDarkMode'
+import { syncService } from './services/syncService'
+import OfflineStatusBar from './components/OfflineStatusBar.vue'
 
 const authStore = useAuthStore()
 authStore.initializeAuth()
 
 const { isDark } = useDarkMode()
+
+// Initialize sync service when app loads
+onMounted(() => {
+  if (authStore.isAuthenticated) {
+    syncService.init()
+  }
+})
 </script>
 
 <style>

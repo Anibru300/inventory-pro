@@ -1166,101 +1166,89 @@ async function loadReport() {
   }
 }
 
-// Export functions
-function exportToCSV() {
-  let csv = 'data:text/csv;charset=utf-8,'
-  const filename = `reporte_${currentReport.value}_${new Date().toISOString().split('T')[0]}.csv`
-
-  if (currentReport.value === 'inventory') {
-    csv += 'Producto,SKU,Almacén,Cantidad,Costo Unit,Precio Venta,Valor Total\n'
-    reportData.value?.stock_levels?.forEach(item => {
-      csv += `"${item.product.name}","${item.product.sku}","${item.warehouse}",${item.quantity},${item.unit_cost},${item.selling_price},${item.total_cost}\n`
+// Export functions using backend API
+async function exportToCSV() {
+  try {
+    const params = {
+      type: currentReport.value,
+      date_from: filters.value.dateFrom,
+      date_to: filters.value.dateTo,
+    }
+    
+    const response = await apiClient.get('/reports/export/csv', { 
+      params,
+      responseType: 'blob'
     })
-  } else if (currentReport.value === 'movements') {
-    csv += 'Producto,Entradas,Salidas,Balance\n'
-    Object.entries(reportData.value?.by_product || {}).forEach(([product, data]) => {
-      csv += `"${product}",${data.entries},${data.exits},${data.balance}\n`
-    })
+    
+    const blob = new Blob([response.data], { type: 'text/csv' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `reporte_${currentReport.value}_${new Date().toISOString().split('T')[0]}.csv`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+    showExportModal.value = false
+  } catch (err) {
+    alert('Error al exportar: ' + (err.response?.data?.message || err.message))
   }
-
-  const encodedUri = encodeURI(csv)
-  const link = document.createElement('a')
-  link.setAttribute('href', encodedUri)
-  link.setAttribute('download', filename)
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-  showExportModal.value = false
 }
 
-function exportToExcel() {
-  // Simple HTML table export that opens in Excel
-  let html = `
-    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel">
-    <head>
-      <meta charset="utf-8">
-      <style>
-        table { border-collapse: collapse; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-        th { background-color: #2E7DE8; color: white; font-weight: bold; }
-        .number { text-align: right; }
-      </style>
-    </head>
-    <body>
-      <h2>${currentReportName.value}</h2>
-      <p>Generado: ${new Date().toLocaleString('es-MX')}</p>
-      <table>
-  `
-  
-  if (currentReport.value === 'inventory') {
-    html += `
-      <thead>
-        <tr>
-          <th>Producto</th>
-          <th>SKU</th>
-          <th>Almacén</th>
-          <th>Cantidad</th>
-          <th>Costo Unit.</th>
-          <th>Precio Venta</th>
-          <th>Valor Total</th>
-        </tr>
-      </thead>
-      <tbody>
-    `
-    reportData.value?.stock_levels?.forEach(item => {
-      html += `
-        <tr>
-          <td>${item.product.name}</td>
-          <td>${item.product.sku}</td>
-          <td>${item.warehouse}</td>
-          <td class="number">${item.quantity}</td>
-          <td class="number">$${item.unit_cost}</td>
-          <td class="number">$${item.selling_price}</td>
-          <td class="number">$${item.total_cost}</td>
-        </tr>
-      `
+async function exportToExcel() {
+  try {
+    const params = {
+      type: currentReport.value,
+      date_from: filters.value.dateFrom,
+      date_to: filters.value.dateTo,
+    }
+    
+    const response = await apiClient.get('/reports/export/csv', { 
+      params,
+      responseType: 'blob'
     })
-    html += '</tbody>'
+    
+    const blob = new Blob([response.data], { type: 'application/vnd.ms-excel' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `reporte_${currentReport.value}_${new Date().toISOString().split('T')[0]}.xls`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+    showExportModal.value = false
+  } catch (err) {
+    alert('Error al exportar: ' + (err.response?.data?.message || err.message))
   }
-  
-  html += '</table></body></html>'
-  
-  const blob = new Blob([html], { type: 'application/vnd.ms-excel' })
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = `reporte_${currentReport.value}_${new Date().toISOString().split('T')[0]}.xls`
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-  URL.revokeObjectURL(url)
-  showExportModal.value = false
 }
 
-function exportToPDF() {
-  // Print-friendly view
-  window.print()
-  showExportModal.value = false
+async function exportToPDF() {
+  try {
+    const params = {
+      type: currentReport.value,
+      date_from: filters.value.dateFrom,
+      date_to: filters.value.dateTo,
+    }
+    
+    const response = await apiClient.get('/reports/export/pdf', { 
+      params,
+      responseType: 'blob'
+    })
+    
+    const blob = new Blob([response.data], { type: 'text/html' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `reporte_${currentReport.value}_${new Date().toISOString().split('T')[0]}.html`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+    showExportModal.value = false
+  } catch (err) {
+    alert('Error al exportar: ' + (err.response?.data?.message || err.message))
+  }
 }
 
 // Load initial report

@@ -166,6 +166,18 @@
           </button>
         </form>
 
+        <!-- Divider -->
+        <div class="relative my-6">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-silver-200"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-white text-silver-500">o regístrate con</span>
+          </div>
+        </div>
+
+        <GoogleLoginButton :is-register="true" @error="(msg) => authStore.error = msg" />
+
         <!-- Link to login -->
         <div class="mt-6 text-center text-sm text-silver-600">
           ¿Ya tienes cuenta?
@@ -215,6 +227,7 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
+import GoogleLoginButton from '../../components/GoogleLoginButton.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
