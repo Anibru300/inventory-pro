@@ -132,9 +132,16 @@ class ProductController extends Controller
      */
     private function clearProductsCache($tenantId)
     {
-        // Nota: En caché file/array no podemos borrar por patrón fácilmente
-        // pero podemos usar tags si tenemos Redis
-        // Por ahora, las entradas expirarán en CACHE_TTL segundos
+        // En caché file no podemos borrar por patrón fácilmente
+        // Pero podemos usar el sistema de tags de Laravel si está disponible
+        try {
+            // Intentar borrar con tags (funciona con Redis/Array)
+            Cache::tags(["products:{$tenantId}"])->flush();
+        } catch (\Exception $e) {
+            // Si no soporta tags, la caché expirará en CACHE_TTL segundos
+            // Como workaround, podemos incrementar un "version" en caché
+            Cache::forget("products:{$tenantId}:version");
+        }
     }
 
     public function store(Request $request)
@@ -190,6 +197,9 @@ class ProductController extends Controller
             
             // Create product
             $product = Product::create($validated);
+            
+            // Invalidar caché de productos para que aparezca en el listado
+            $this->clearProductsCache($user->tenant_id);
             
             // Create initial stock if provided
             if (!empty($validated['initial_stock']) && $validated['initial_stock'] > 0) {
@@ -319,8 +329,9 @@ class ProductController extends Controller
             
             $product->update($validated);
             
-            // Invalidar caché del producto
+            // Invalidar caché del producto y del listado
             Cache::forget("product:{$user->tenant_id}:{$id}");
+            $this->clearProductsCache($user->tenant_id);
             
             return response()->json([
                 'message' => 'Producto actualizado exitosamente',
@@ -354,8 +365,9 @@ class ProductController extends Controller
             // Soft delete
             $product->delete();
             
-            // Invalidar caché
+            // Invalidar caché del producto y del listado
             Cache::forget("product:{$user->tenant_id}:{$id}");
+            $this->clearProductsCache($user->tenant_id);
             
             return response()->json([
                 'message' => 'Producto eliminado exitosamente'
