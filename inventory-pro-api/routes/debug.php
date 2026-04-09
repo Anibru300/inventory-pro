@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use App\Models\Warehouse;
 use App\Models\StockMovement;
+use App\Models\Product;
+use Illuminate\Support\Facades\Cache;
 
 // Debug endpoint para verificar headers
 Route::get('/debug/headers', function (Request $request) {
@@ -129,6 +131,66 @@ Route::middleware('auth:sanctum')->get('/debug/stock-movements-summary', functio
             'line' => $e->getLine(),
             'trace' => $e->getTraceAsString(),
             'debug' => $debug
+        ], 500);
+    }
+});
+
+// Debug específico para productos - VER TODOS LOS DATOS
+Route::middleware('auth:sanctum')->get('/debug/products-all', function (Request $request) {
+    $user = auth()->user();
+    
+    try {
+        // TODOS los productos (incluyendo eliminados)
+        $allProducts = Product::where('tenant_id', $user->tenant_id)
+            ->withTrashed() // Incluir eliminados
+            ->get(['id', 'name', 'sku', 'is_active', 'deleted_at', 'created_at']);
+        
+        // Solo activos (no eliminados)
+        $activeProducts = Product::where('tenant_id', $user->tenant_id)
+            ->whereNull('deleted_at')
+            ->get(['id', 'name', 'sku', 'is_active', 'created_at']);
+        
+        // Verificar caché
+        $cacheKey = "products:{$user->tenant_id}:" . md5(serialize([]));
+        $cached = Cache::get($cacheKey);
+        
+        return response()->json([
+            'success' => true,
+            'summary' => [
+                'total_including_deleted' => $allProducts->count(),
+                'active_only' => $activeProducts->count(),
+                'deleted_count' => $allProducts->where('deleted_at', '!=', null)->count(),
+                'has_cache' => $cached !== null,
+            ],
+            'all_products' => $allProducts->toArray(),
+            'active_products' => $activeProducts->toArray(),
+            'user_tenant_id' => $user->tenant_id,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ], 500);
+    }
+});
+
+// Debug: Limpiar caché de productos manualmente
+Route::middleware('auth:sanctum')->post('/debug/clear-products-cache', function (Request $request) {
+    $user = auth()->user();
+    
+    try {
+        // Limpiar todas las entradas de caché que contengan "products:{tenant_id}"
+        Cache::flush(); // Nuclear option - limpia TODA la caché
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Caché de productos limpiada completamente',
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage(),
         ], 500);
     }
 });
