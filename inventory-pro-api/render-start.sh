@@ -3,6 +3,12 @@ set -e
 
 echo "🚀 Starting Inventory Pro API..."
 
+# Configurar Apache para usar el puerto de Render
+PORT=${PORT:-10000}
+echo "🔧 Configurando Apache para puerto $PORT..."
+sed -i "s/Listen 80/Listen $PORT/g" /etc/apache2/ports.conf
+sed -i "s/<VirtualHost \*:80>/<VirtualHost *:$PORT>/g" /etc/apache2/sites-available/*.conf
+
 # Instalar dependencias (por si falta Socialite)
 echo "📦 Instalando dependencias..."
 composer install --no-dev --optimize-autoloader --no-interaction
@@ -22,5 +28,5 @@ done
 echo "📊 Ejecutando migraciones..."
 php artisan migrate --force
 
-echo "✅ Setup completo! Iniciando Apache..."
+echo "✅ Setup completo! Iniciando Apache en puerto $PORT..."
 exec apache2-foreground
