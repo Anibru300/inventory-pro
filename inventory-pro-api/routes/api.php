@@ -16,6 +16,11 @@ use App\Http\Controllers\Api\WarehouseController;
 use App\Http\Controllers\Api\WarehouseTransferController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
+use App\Models\Warehouse;
+
+// Include debug routes
+require __DIR__ . '/debug.php';
 
 // Debug routes (remove in production)
 Route::get('/debug/headers', function (Request $request) {
