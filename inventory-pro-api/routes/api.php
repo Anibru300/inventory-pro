@@ -36,9 +36,19 @@ Route::get('/health', function () {
 Route::get('/debug-headers', function (Request $request) {
     $allHeaders = getallheaders() ?: [];
     $serverAuth = $_SERVER['HTTP_AUTHORIZATION'] ?? 'NOT SET';
+    $allServer = $_SERVER;
+    
+    // Filter only AUTH related server variables
+    $authVars = [];
+    foreach ($allServer as $key => $value) {
+        if (stripos($key, 'auth') !== false || stripos($key, 'HTTP') !== false) {
+            $authVars[$key] = $value;
+        }
+    }
     
     return response()->json([
         'all_headers' => $allHeaders,
+        'auth_related_server_vars' => $authVars,
         'server_http_authorization' => $serverAuth,
         'request_header_authorization' => $request->header('Authorization'),
         'has_auth_header' => !!$request->header('Authorization'),
