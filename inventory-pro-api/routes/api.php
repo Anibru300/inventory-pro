@@ -34,27 +34,35 @@ Route::get('/health', function () {
 
 // Simple test endpoint to check if token is being received
 Route::get('/token-test', function (Request $request) {
-    $allHeaders = $request->headers->all();
-    $normalizedHeaders = [];
-    
-    foreach ($allHeaders as $key => $values) {
-        $normalizedHeaders[$key] = is_array($values) ? implode(', ', $values) : $values;
-    }
-    
     $authHeader = $request->header('Authorization');
     $hasToken = $authHeader && str_starts_with($authHeader, 'Bearer ');
-    $tokenPreview = $hasToken ? substr($authHeader, 7, 20) . '...' : null;
+    $tokenString = $hasToken ? substr($authHeader, 7) : null;
+    
+    // Check if token exists in database
+    $tokenInfo = null;
+    if ($tokenString) {
+        $tokenModel = \Laravel\Sanctum\PersonalAccessToken::findToken($tokenString);
+        if ($tokenModel) {
+            $tokenInfo = [
+                'token_exists' => true,
+                'token_id' => $tokenModel->id,
+                'token_name' => $tokenModel->name,
+                'user_id' => $tokenModel->tokenable_id,
+            ];
+        } else {
+            $tokenInfo = ['token_exists' => false];
+        }
+    }
     
     return response()->json([
         'has_auth_header' => !!$authHeader,
         'auth_header_preview' => $authHeader ? substr($authHeader, 0, 50) : null,
         'has_bearer_token' => $hasToken,
-        'token_preview' => $tokenPreview,
-        'user_authenticated' => auth()->check(),
-        'user_id' => auth()->id(),
-        'all_headers' => $normalizedHeaders,
-        'method' => $request->method(),
-        'origin' => $request->header('Origin'),
+        'token_info' => $tokenInfo,
+        'auth_check' => auth()->check(),
+        'auth_user_id' => auth()->id(),
+        'sanctum_guard' => config('sanctum.guard'),
+        'auth_defaults_guard' => config('auth.defaults.guard'),
     ]);
 });
 
