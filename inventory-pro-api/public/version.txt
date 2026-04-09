@@ -1,2 +1,2 @@
-Build: 2026-04-09-152000
-Fix: Migrated from Apache to NGINX + PHP-FPM for proper Authorization header support
+Build: 2026-04-09-160000
+Fix: Apache with CGIPassAuth On in VirtualHost
