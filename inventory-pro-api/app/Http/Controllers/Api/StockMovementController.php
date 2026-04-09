@@ -9,6 +9,7 @@ use App\Models\StockMovement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class StockMovementController extends Controller
 {
@@ -171,49 +172,68 @@ class StockMovementController extends Controller
      */
     public function summary(Request $request)
     {
-        // Usar el tenant_id del usuario autenticado
-        $tenantId = Auth::user()->tenant_id;
-        
-        $today = now()->startOfDay();
-        $thisMonth = now()->startOfMonth();
-        
-        // Get entry and exit totals for current month
-        $entries = StockMovement::where('tenant_id', $tenantId)
-            ->whereIn('movement_type', StockMovement::getEntryTypes())
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->sum('quantity');
+        try {
+            // Usar el tenant_id del usuario autenticado
+            $tenantId = Auth::user()?->tenant_id;
             
-        $exits = StockMovement::where('tenant_id', $tenantId)
-            ->whereIn('movement_type', StockMovement::getExitTypes())
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->sum('quantity');
-        
-        // Get today's movements count
-        $todayCount = StockMovement::where('tenant_id', $tenantId)
-            ->whereDate('created_at', $today)
-            ->count();
+            if (!$tenantId) {
+                return response()->json([
+                    'message' => 'Usuario no tiene tenant asignado',
+                    'entries' => 0, 'exits' => 0, 'entryUnits' => 0, 
+                    'exitUnits' => 0, 'today_count' => 0, 'month_count' => 0, 'balance' => 0
+                ], 200);
+            }
             
-        // Get this month's count
-        $monthCount = StockMovement::where('tenant_id', $tenantId)
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->count();
-        
-        // Calculate totals (entry units are positive, exit units are negative in DB)
-        $entryUnits = abs((int) $entries);
-        $exitUnits = abs((int) $exits);
-        
-        return response()->json([
-            'entries' => $monthCount,
-            'exits' => $monthCount,
-            'entryUnits' => $entryUnits,
-            'exitUnits' => $exitUnits,
-            'today_count' => $todayCount,
-            'month_count' => $monthCount,
-            'balance' => $entryUnits - $exitUnits,
-        ]);
+            $today = now()->startOfDay();
+            
+            // Get entry and exit totals for current month
+            $entries = StockMovement::where('tenant_id', $tenantId)
+                ->whereIn('movement_type', StockMovement::getEntryTypes())
+                ->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year)
+                ->sum('quantity');
+                
+            $exits = StockMovement::where('tenant_id', $tenantId)
+                ->whereIn('movement_type', StockMovement::getExitTypes())
+                ->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year)
+                ->sum('quantity');
+            
+            // Get today's movements count
+            $todayCount = StockMovement::where('tenant_id', $tenantId)
+                ->whereDate('created_at', $today)
+                ->count();
+                
+            // Get this month's count
+            $monthCount = StockMovement::where('tenant_id', $tenantId)
+                ->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year)
+                ->count();
+            
+            // Calculate totals (entry units are positive, exit units are negative in DB)
+            $entryUnits = abs((int) $entries);
+            $exitUnits = abs((int) $exits);
+            
+            return response()->json([
+                'entries' => $monthCount,
+                'exits' => $monthCount,
+                'entryUnits' => $entryUnits,
+                'exitUnits' => $exitUnits,
+                'today_count' => $todayCount,
+                'month_count' => $monthCount,
+                'balance' => $entryUnits - $exitUnits,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error en StockMovementController@summary: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'message' => 'Error al cargar resumen: ' . $e->getMessage(),
+                'entries' => 0, 'exits' => 0, 'entryUnits' => 0, 
+                'exitUnits' => 0, 'today_count' => 0, 'month_count' => 0, 'balance' => 0
+            ], 500);
+        }
     }
 
     /**
