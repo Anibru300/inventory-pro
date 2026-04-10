@@ -377,27 +377,26 @@ async function handleSubmit() {
     const formData = new FormData()
     
     // Append all form fields con conversión de tipos
+    // IMPORTANTE: Usar nombres de campos que espera el backend
     formData.append('name', form.value.name)
     formData.append('sku', form.value.sku)
     formData.append('description', form.value.description || '')
     formData.append('category_id', form.value.category_id || '')
-    formData.append('cost', parseFloat(form.value.cost) || 0)
-    formData.append('price', parseFloat(form.value.price) || 0)
-    formData.append('min_stock', parseInt(form.value.min_stock) || 0)
+    formData.append('unit_cost', parseFloat(form.value.cost) || 0)  // era 'cost'
+    formData.append('selling_price', parseFloat(form.value.price) || 0)  // era 'price'
+    formData.append('stock_min', parseInt(form.value.min_stock) || 0)  // era 'min_stock'
     formData.append('initial_stock', parseInt(form.value.initial_stock) || 0)
     formData.append('warehouse_id', form.value.warehouse_id || '')
     formData.append('valuation_method', form.value.valuation_method || 'FIFO')
     
-    // Append new images
+    // Append new image (solo la primera imagen como principal)
     const newImages = galleryImages.value.filter(img => img.isNew && img.file)
-    newImages.forEach((img, index) => {
-      formData.append(`images[${index}]`, img.file)
-    })
-    
-    // Append images to delete
-    if (imagesToDelete.value.length > 0) {
-      formData.append('images_to_delete', JSON.stringify(imagesToDelete.value))
+    if (newImages.length > 0) {
+      formData.append('image', newImages[0].file)  // backend espera 'image' singular
     }
+    
+    // TODO: Manejar eliminación de imágenes existentes en el backend
+    // Por ahora no se envía images_to_delete porque el backend no lo procesa
 
     if (isEditing.value) {
       await apiClient.post(`/products/${route.params.id}?_method=PUT`, formData, {
