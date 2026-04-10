@@ -265,8 +265,7 @@ class ProductController extends Controller
             
             $product = Product::with([
                     'category',
-                    'stockLevels.warehouse',
-                    'images'
+                    'stockLevels.warehouse'
                 ])
                 ->where('id', $id)
                 ->where('tenant_id', $user->tenant_id)
