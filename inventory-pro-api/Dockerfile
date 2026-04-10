@@ -45,6 +45,7 @@ RUN mkdir -p storage/framework/cache \
     storage/framework/sessions \
     storage/framework/views \
     storage/logs \
+    storage/app/public/products \
     bootstrap/cache \
     database
 

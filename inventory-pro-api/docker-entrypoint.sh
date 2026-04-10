@@ -34,6 +34,15 @@ for i in {1..30}; do
     sleep 2
 done
 
+# Crear enlace simbólico para storage (imágenes)
+echo "🔗 Creando enlace simbólico para storage..."
+php artisan storage:link --force || true
+
+# Establecer permisos correctos para storage
+echo "🔒 Estableciendo permisos..."
+chmod -R 775 storage/app/public
+chown -R www-data:www-data storage/app/public
+
 # Ejecutar migraciones
 echo "📊 Ejecutando migraciones..."
 php artisan migrate --force
