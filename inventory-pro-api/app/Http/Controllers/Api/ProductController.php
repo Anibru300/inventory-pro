@@ -364,7 +364,8 @@ class ProductController extends Controller
             return response()->json([
                 'message' => 'Error al actualizar producto: ' . $e->getMessage(),
                 'file' => $e->getFile(),
-                'line' => $e->getLine()
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
             ], 500);
         }
     }
