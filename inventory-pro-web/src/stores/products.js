@@ -31,13 +31,20 @@ export const useProductsStore = defineStore('products', () => {
     error.value = null
 
     try {
-      console.log('Fetching products...')
+      console.log('=== DEBUG: Fetching products... ===')
+      console.log('Params:', params)
       const response = await apiClient.get('/products', { params })
-      console.log('Products response:', response.data)
+      console.log('=== DEBUG: Raw response ===', response)
+      console.log('=== DEBUG: Response data ===', response.data)
+      console.log('=== DEBUG: Response data type ===', typeof response.data)
+      console.log('=== DEBUG: Has data property? ===', response.data && 'data' in response.data)
+      console.log('=== DEBUG: data is array? ===', Array.isArray(response.data?.data))
+      console.log('=== DEBUG: data array length ===', response.data?.data?.length)
       
       // Handle different response structures
-      if (response.data.data) {
+      if (response.data && response.data.data && Array.isArray(response.data.data)) {
         // Laravel pagination format
+        console.log('=== DEBUG: Using Laravel pagination format ===')
         products.value = response.data.data
         pagination.value = {
           current_page: response.data.current_page || 1,
@@ -47,6 +54,7 @@ export const useProductsStore = defineStore('products', () => {
         }
       } else if (Array.isArray(response.data)) {
         // Simple array format
+        console.log('=== DEBUG: Using simple array format ===')
         products.value = response.data
         pagination.value = {
           current_page: 1,
@@ -55,11 +63,12 @@ export const useProductsStore = defineStore('products', () => {
           total: response.data.length,
         }
       } else {
-        console.error('Unexpected response format:', response.data)
+        console.error('=== DEBUG: Unexpected response format ===', response.data)
         products.value = []
       }
       
-      console.log('Products loaded:', products.value.length)
+      console.log('=== DEBUG: Final products.value ===', products.value)
+      console.log('=== DEBUG: Products loaded count ===', products.value.length)
       return response.data
     } catch (err) {
       console.error('Error fetching products:', err)
