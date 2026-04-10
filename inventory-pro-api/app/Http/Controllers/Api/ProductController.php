@@ -317,22 +317,22 @@ class ProductController extends Controller
                 'barcode' => 'nullable|string|max:100|unique:products,barcode,' . $id . ',id,tenant_id,' . $user->tenant_id,
                 'description' => 'nullable|string',
                 'category_id' => 'nullable|exists:categories,id',
-                'unit' => 'nullable|string|max:50',
-                'cost' => 'numeric|min:0',
-                'price' => 'numeric|min:0',
-                'min_stock' => 'nullable|numeric|min:0',
-                'max_stock' => 'nullable|numeric|min:0',
+                'unit_of_measure' => 'nullable|string|max:50',
+                'unit_cost' => 'numeric|min:0',
+                'selling_price' => 'numeric|min:0',
+                'stock_min' => 'nullable|numeric|min:0',
+                'stock_max' => 'nullable|numeric|min:0',
                 'is_active' => 'boolean',
                 'image' => 'nullable|image|max:2048',
             ]);
             
             // Track price changes
-            if (isset($validated['price']) && $validated['price'] != $product->price) {
+            if (isset($validated['selling_price']) && $validated['selling_price'] != $product->selling_price) {
                 ProductPriceHistory::create([
                     'tenant_id' => $user->tenant_id,
                     'product_id' => $product->id,
-                    'old_price' => $product->price,
-                    'new_price' => $validated['price'],
+                    'old_price' => $product->selling_price,
+                    'new_price' => $validated['selling_price'],
                     'changed_by' => $user->id,
                     'reason' => $request->input('price_change_reason', 'Actualización manual'),
                 ]);
