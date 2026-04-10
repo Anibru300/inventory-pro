@@ -102,14 +102,32 @@ class ProductController extends Controller
                     ->get()
                     ->keyBy('product_id');
                 
-                // Agregar stock a cada producto
+                // Agregar stock e imágenes a cada producto
                 foreach ($products->items() as $product) {
                     $stock = $stockData->get($product->id);
                     $product->stock_quantity = $stock ? (int) $stock->total_quantity : 0;
                     $product->stock_status = $this->getStockStatus(
                         $product->stock_quantity, 
-                        $product->min_stock ?? 0
+                        $product->stock_min ?? 0
                     );
+                    
+                    // URL completa de la imagen principal
+                    if ($product->image) {
+                        $product->image_url = asset('storage/' . $product->image);
+                    } else {
+                        $product->image_url = null;
+                    }
+                    
+                    // URLs de la galería
+                    if ($product->images) {
+                        $gallery = json_decode($product->images, true);
+                        $product->gallery_urls = array_map(
+                            fn($img) => asset('storage/' . $img), 
+                            is_array($gallery) ? $gallery : []
+                        );
+                    } else {
+                        $product->gallery_urls = [];
+                    }
                 }
             }
             
