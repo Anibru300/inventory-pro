@@ -35,6 +35,9 @@ class ProductController extends Controller
         }
         
         try {
+            // Limpiar caché vieja para forzar recarga con nuevos filtros
+            Cache::flush();
+            
             // Generar cache key única basada en tenant y parámetros
             $cacheKey = "products:{$user->tenant_id}:" . md5(serialize($request->all()));
             
@@ -49,8 +52,8 @@ class ProductController extends Controller
                 ->where('tenant_id', $user->tenant_id)
                 ->whereNull('deleted_at');
             
-            // Filtros opcionales
-            if ($request->has('search')) {
+            // Filtros opcionales (solo aplicar si tienen valor real)
+            if ($request->filled('search')) {
                 $search = $request->get('search');
                 $query->where(function($q) use ($search) {
                     $q->where('name', 'ilike', "%{$search}%")
@@ -59,7 +62,7 @@ class ProductController extends Controller
                 });
             }
             
-            if ($request->has('category_id')) {
+            if ($request->filled('category_id')) {
                 $query->where('category_id', $request->get('category_id'));
             }
             
