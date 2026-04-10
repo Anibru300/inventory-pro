@@ -359,8 +359,6 @@ class ProductController extends Controller
             ]);
             
         } catch (\Exception $e) {
-            \Log::error('Error updating product: ' . $e->getMessage());
-            \Log::error($e->getTraceAsString());
             return response()->json([
                 'message' => 'Error al actualizar producto: ' . $e->getMessage(),
                 'file' => $e->getFile(),
